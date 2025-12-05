@@ -180,12 +180,16 @@ if __name__ == "__main__":
 ║           智慧服务平台后端服务已启动                        ║
 ╚══════════════════════════════════════════════════════════╝
 
-  服务地址: http://{host}:{port}
   移动端首页: http://localhost:{port}/
-  PC端公共收益: http://localhost:{port}/frontend/pc/pages/benefit/index.html
-  移动端公共收益: http://localhost:{port}/frontend/mobile/pages/benefit/index.html
-  健康检查: http://localhost:{port}/health
-  API文档: http://localhost:{port}/docs
+
+  公共收益:
+    PC端: http://localhost:{port}/frontend/pc/pages/benefit/index.html
+    移动端: http://localhost:{port}/frontend/mobile/pages/benefit/index.html
+
+  智能客服:
+    PC端: http://localhost:{port}/frontend/pc/pages/service/index.html
+    移动端: http://localhost:{port}/frontend/mobile/pages/service/index.html
+
 
 按 Ctrl+C 停止服务
     """)
