@@ -186,10 +186,16 @@ if __name__ == "__main__":
     PC端: http://localhost:{port}/frontend/pc/pages/benefit/index.html
     移动端: http://localhost:{port}/frontend/mobile/pages/benefit/index.html
 
+  线上监督:
+    PC端: http://localhost:{port}/frontend/pc/pages/supervision/index.html
+    移动端: http://localhost:{port}/frontend/mobile/pages/supervision/index.html
+
   智能客服:
     PC端: http://localhost:{port}/frontend/pc/pages/service/index.html
     移动端: http://localhost:{port}/frontend/mobile/pages/service/index.html
 
+  健康检查: http://localhost:{port}/health
+  API文档: http://localhost:{port}/docs
 
 按 Ctrl+C 停止服务
     """)

@@ -517,7 +517,7 @@
             </a>
 
             <!-- 线上监督 -->
-            <a href="javascript:void(0)" class="app-icon" data-app="supervision">
+            <a href="/frontend/mobile/pages/supervision/index.html" class="app-icon" data-app="supervision">
                 <div class="icon-box">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
                         <defs>
@@ -654,8 +654,8 @@
                     navigator.vibrate(10);
                 }
 
-                // 如果是公共收益或智能客服，直接跳转
-                if (appName === 'benefit' || appName === 'service') {
+                // 已上线模块直接跳转
+                if (['benefit', 'service', 'supervision'].includes(appName)) {
                     return;
                 }
 

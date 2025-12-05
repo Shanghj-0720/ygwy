@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>线上监督 - 智慧服务平台</title>
+    <link rel="stylesheet" href="assets/css/supervision.css">
+</head>
+<body>
+    <header class="header">
+        <button class="back-btn" onclick="goBack()">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M15.41 7.41 14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
+            </svg>
+        </button>
+        <div class="header-content">
+            <p class="eyebrow">线上监督</p>
+            <h1>月度评价与整改</h1>
+            <p class="subtitle">问卷推送 · 问题汇总 · 整改追踪 · 抽验公示</p>
+        </div>
+        <span class="pill" id="roleBadge"></span>
+    </header>
+
+    <main class="page">
+        <section class="banner" data-roles="owner property">
+            <div class="banner-top">
+                <div>
+                    <p class="eyebrow">当前周期</p>
+                    <h2 id="currentMonth">2025年12月</h2>
+                </div>
+                <div class="badge primary">每月自动推送</div>
+            </div>
+            <p class="banner-hint">平台自动向实名认证业主推送问卷，生成《问题汇总表》，线上闭环整改与公示。</p>
+            <div class="badge-row">
+                <span class="badge">满意/基本满意/不满意</span>
+                <span class="badge">整改期限管控</span>
+                <span class="badge">随机抽验</span>
+            </div>
+        </section>
+
+        <section class="card" data-roles="owner property">
+            <div class="card-header">
+                <div>
+                    <p class="eyebrow">流程状态</p>
+                    <h2>本月进度</h2>
+                </div>
+                <div class="deadline" id="stepSummary"></div>
+            </div>
+            <div class="step-list" id="stepList"></div>
+        </section>
+
+        <section class="card" data-roles="owner">
+            <div class="card-header">
+                <div>
+                    <p class="eyebrow">业主端</p>
+                    <h2>问卷概况</h2>
+                </div>
+                <div class="deadline" id="questionnaireDeadline"></div>
+            </div>
+            <div class="stats-row" id="questionnaireStats"></div>
+            <div class="dimension-list" id="dimensionList"></div>
+            <div class="actions">
+                <a id="questionnaireLink" class="btn primary" href="questionnaire.html?account=1">查看本月问卷</a>
+            </div>
+        </section>
+
+        <section class="card" data-roles="property">
+            <div class="card-header">
+                <div>
+                    <p class="eyebrow">物业</p>
+                    <h2>整改任务</h2>
+                </div>
+                <div class="deadline" id="rectificationDeadline"></div>
+            </div>
+            <div class="rectification-list" id="rectificationList"></div>
+        </section>
+
+        <section class="card" data-roles="owner">
+            <div class="card-header">
+                <div>
+                    <p class="eyebrow">业主代表</p>
+                    <h2>整改核验</h2>
+                </div>
+                <div class="deadline">随机抽取 · 手机端反馈</div>
+            </div>
+            <div class="verification-list" id="verificationList"></div>
+        </section>
+
+        <section class="card" data-roles="owner property">
+            <div class="card-header">
+                <div>
+                    <p class="eyebrow">公示 & 监管</p>
+                    <h2>结果发布</h2>
+                </div>
+            </div>
+            <div class="publish-box" id="publishBox"></div>
+        </section>
+    </main>
+
+    <script src="assets/js/supervision.js"></script>
+</body>
+</html>
