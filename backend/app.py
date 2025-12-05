@@ -155,6 +155,7 @@ if __name__ == "__main__":
   服务地址: http://{host}:{port}
   移动端首页: http://localhost:{port}/
   PC端公共收益: http://localhost:{port}/frontend/pc/pages/benefit/index.html
+  PC端线上监督: http://localhost:{port}/frontend/pc/pages/supervision/index.html
   移动端公共收益: http://localhost:{port}/frontend/mobile/pages/benefit/index.html
   健康检查: http://localhost:{port}/health
   API文档: http://localhost:{port}/docs

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>线上监督（PC）- 智慧服务平台</title>
+    <link rel="stylesheet" href="assets/css/supervision.css">
+</head>
+<body>
+    <div class="layout">
+        <header class="topbar">
+            <div>
+                <p class="eyebrow">PC 端 · 监督中心</p>
+                <h1>问卷推送与整改闭环</h1>
+                <p class="subtitle">问卷 → 问题汇总 → 整改通知 → AI 监管提醒 → 公示</p>
+            </div>
+            <div class="meta">
+                <span class="pill primary">模拟数据</span>
+                <span class="pill ghost" id="cycleTag">2025年15月</span>
+            </div>
+        </header>
+
+        <section class="grid">
+            <article class="card" id="surveyCard">
+                <div class="card-header">
+                    <div>
+                        <p class="eyebrow">问卷推送</p>
+                        <h2>实名认证业主</h2>
+                    </div>
+                    <span class="pill">自动执行</span>
+                </div>
+                <p class="desc">每月初自动向业主手机端推送物业服务评价问卷。</p>
+                <div class="list" id="dimensionList"></div>
+                <div class="footer">
+                    <span class="hint">分级：满意 / 基本满意 / 不满意</span>
+                    <button class="btn ghost">推送计划</button>
+                </div>
+            </article>
+
+            <article class="card" id="noticeCard">
+                <div class="card-header">
+                    <div>
+                        <p class="eyebrow">整改通知</p>
+                        <h2>问题汇总表</h2>
+                    </div>
+                    <span class="pill warning">待执行</span>
+                </div>
+                <p class="desc">评价结束后自动整合业主评价数据，生成《问题汇总表》，并向物业 PC/手机端下达线上整改通知，设定期限。</p>
+                <ul class="timeline" id="noticeTimeline"></ul>
+            </article>
+
+            <article class="card" id="aiCard">
+                <div class="card-header">
+                    <div>
+                        <p class="eyebrow">平台 AI · 监管提醒</p>
+                        <h2>属地住建部门</h2>
+                    </div>
+                    <span class="pill danger">自动提醒</span>
+                </div>
+                <p class="desc">物业逾期未整改，系统自动向属地住建部门 PC 端推送监管提醒，并关联物业企业信用档案。</p>
+                <div class="list" id="aiRules"></div>
+            </article>
+
+            <article class="card" id="publishCard">
+                <div class="card-header">
+                    <div>
+                        <p class="eyebrow">整改公示</p>
+                        <h2>全平台公示</h2>
+                    </div>
+                    <span class="pill success">待公示</span>
+                </div>
+                <p class="desc">核验通过后自动公示整改结果，终端：全平台。</p>
+                <div class="list" id="publishList"></div>
+            </article>
+
+            <article class="card full" id="propertyCard">
+                <div class="card-header">
+                    <div>
+                        <p class="eyebrow">物业工作台</p>
+                        <h2>整改反馈 & 进度跟踪</h2>
+                    </div>
+                    <span class="pill info">物业端</span>
+                </div>
+                <div class="columns">
+                    <div>
+                        <h3>整改反馈</h3>
+                        <p class="desc">接收整改通知，上传整改方案、过程照片、结果证明等材料。</p>
+                        <div class="list" id="uploadList"></div>
+                    </div>
+                    <div>
+                        <h3>进度跟踪</h3>
+                        <p class="desc">查看整改期限、核验状态，接收核验结果反馈。</p>
+                        <div class="list" id="progressList"></div>
+                    </div>
+                </div>
+            </article>
+        </section>
+    </div>
+
+    <script src="assets/js/supervision.js"></script>
+</body>
+</html>

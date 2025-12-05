@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>问卷填写 - 线上监督</title>
+    <link rel="stylesheet" href="assets/css/questionnaire.css">
+</head>
+<body>
+    <header class="header">
+        <button class="back-btn" id="backBtn">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M15.41 7.41 14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
+            </svg>
+        </button>
+        <div class="header-content">
+            <h1>月度问卷</h1>
+            <p class="subtitle">满意度 · 问题反馈 · 线上提交</p>
+        </div>
+        <span class="pill" id="rolePill"></span>
+    </header>
+
+    <main class="page">
+        <section class="banner">
+            <h2 id="monthTitle">2024年12月</h2>
+            <p class="hint">请各个业主回答如下的问题，并补充问题点（如有）。</p>
+        </section>
+
+        <div id="questionList"></div>
+
+        <button class="submit" id="submitBtn">提交问卷</button>
+    </main>
+
+    <script src="assets/js/questionnaire.js"></script>
+</body>
+</html>

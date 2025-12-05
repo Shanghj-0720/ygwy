@@ -497,7 +497,7 @@
             </a>
 
             <!-- 线上监督 -->
-            <a href="javascript:void(0)" class="app-icon" data-app="supervision">
+            <a href="/frontend/mobile/pages/supervision/index.html" class="app-icon" data-app="supervision">
                 <div class="icon-box">
                     <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M12 5C7.5 5 3.73 8.11 2 12.5c1.73 4.39 5.5 7.5 10 7.5s8.27-3.11 10-7.5C20.27 8.11 16.5 5 12 5z" stroke="white" stroke-width="2" stroke-linecap="round"/>
@@ -541,8 +541,8 @@
                     navigator.vibrate(10);
                 }
 
-                // 如果是公共收益或智能客服，直接跳转
-                if (appName === 'benefit' || appName === 'service') {
+                // 已上线模块直接跳转
+                if (['benefit', 'service', 'supervision'].includes(appName)) {
                     return;
                 }
 
