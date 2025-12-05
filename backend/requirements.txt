@@ -1,0 +1,23 @@
+# FastAPI Web框架
+fastapi==0.109.0
+
+# ASGI服务器
+uvicorn[standard]==0.27.0
+
+# CORS支持
+python-multipart==0.0.6
+
+# 环境变量管理
+python-dotenv==1.0.0
+
+# 阿里云DashScope SDK（智能客服使用）
+dashscope==1.14.0
+
+# HTTP请求库
+httpx==0.26.0
+
+# 数据验证
+pydantic==2.5.3
+
+# 日期时间处理
+python-dateutil==2.8.2

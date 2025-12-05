@@ -1,0 +1,228 @@
+{
+  "description": "公共收益收支模拟数据",
+  "lastUpdate": "2024-12-05",
+  "records": [
+    {
+      "id": "20241201001",
+      "date": "2024-12-01",
+      "type": "income",
+      "category": "停车费",
+      "amount": 3500.00,
+      "description": "12月地下停车场月租费收入",
+      "payer": "业主委员会",
+      "detail": "地下停车场A区20个车位，B区15个车位，每个车位100元/月"
+    },
+    {
+      "id": "20241201002",
+      "date": "2024-12-01",
+      "type": "income",
+      "category": "广告收入",
+      "amount": 2000.00,
+      "description": "电梯广告位租赁费",
+      "payer": "某某广告公司",
+      "detail": "8部电梯广告位，每部250元/月，租期一年"
+    },
+    {
+      "id": "20241202001",
+      "date": "2024-12-02",
+      "type": "expense",
+      "category": "物业维修",
+      "amount": 1200.00,
+      "description": "3号楼电梯维修费用",
+      "recipient": "某某电梯维修公司",
+      "detail": "更换电梯门控制器及相关配件，含人工费"
+    },
+    {
+      "id": "20241203001",
+      "date": "2024-12-03",
+      "type": "income",
+      "category": "公共场地租赁",
+      "amount": 1500.00,
+      "description": "社区活动室租赁费",
+      "payer": "瑜伽培训机构",
+      "detail": "每周三、周六晚上19:00-21:00，500元/月"
+    },
+    {
+      "id": "20241203002",
+      "date": "2024-12-03",
+      "type": "expense",
+      "category": "绿化养护",
+      "amount": 800.00,
+      "description": "小区绿化修剪及养护",
+      "recipient": "绿化养护公司",
+      "detail": "修剪草坪、树木造型、补种花卉"
+    },
+    {
+      "id": "20241204001",
+      "date": "2024-12-04",
+      "type": "income",
+      "category": "快递柜收入",
+      "amount": 600.00,
+      "description": "快递柜超时取件费",
+      "payer": "快递柜运营商",
+      "detail": "11月份超时取件费分成，共计600元"
+    },
+    {
+      "id": "20241204002",
+      "date": "2024-12-04",
+      "type": "expense",
+      "category": "公共设施",
+      "amount": 450.00,
+      "description": "更换小区路灯灯泡",
+      "recipient": "照明器材商店",
+      "detail": "更换LED灯泡15个，每个30元"
+    },
+    {
+      "id": "20241205001",
+      "date": "2024-12-05",
+      "type": "income",
+      "category": "停车费",
+      "amount": 2800.00,
+      "description": "地面临时停车费",
+      "payer": "业主委员会",
+      "detail": "访客临时停车费，11月份收入汇总"
+    },
+    {
+      "id": "20241101001",
+      "date": "2024-11-01",
+      "type": "income",
+      "category": "停车费",
+      "amount": 3400.00,
+      "description": "11月地下停车场月租费收入",
+      "payer": "业主委员会",
+      "detail": "地下停车场A区20个车位，B区14个车位"
+    },
+    {
+      "id": "20241101002",
+      "date": "2024-11-05",
+      "type": "income",
+      "category": "广告收入",
+      "amount": 2000.00,
+      "description": "电梯广告位租赁费",
+      "payer": "某某广告公司",
+      "detail": "8部电梯广告位月租金"
+    },
+    {
+      "id": "20241102001",
+      "date": "2024-11-08",
+      "type": "expense",
+      "category": "物业维修",
+      "amount": 2500.00,
+      "description": "屋顶防水维修",
+      "recipient": "防水工程公司",
+      "detail": "5号楼屋顶局部防水修复，包工包料"
+    },
+    {
+      "id": "20241103001",
+      "date": "2024-11-12",
+      "type": "income",
+      "category": "公共场地租赁",
+      "amount": 1500.00,
+      "description": "社区活动室租赁费",
+      "payer": "瑜伽培训机构",
+      "detail": "11月份活动室租赁费"
+    },
+    {
+      "id": "20241104001",
+      "date": "2024-11-15",
+      "type": "expense",
+      "category": "绿化养护",
+      "amount": 800.00,
+      "description": "小区绿化秋季养护",
+      "recipient": "绿化养护公司",
+      "detail": "草坪施肥、树木修剪、落叶清理"
+    },
+    {
+      "id": "20241105001",
+      "date": "2024-11-20",
+      "type": "income",
+      "category": "快递柜收入",
+      "amount": 550.00,
+      "description": "快递柜超时取件费",
+      "payer": "快递柜运营商",
+      "detail": "10月份超时取件费分成"
+    },
+    {
+      "id": "20241106001",
+      "date": "2024-11-25",
+      "type": "expense",
+      "category": "公共设施",
+      "amount": 1800.00,
+      "description": "安装小区监控摄像头",
+      "recipient": "安防设备公司",
+      "detail": "增设2个高清监控摄像头，含安装调试"
+    },
+    {
+      "id": "20241001001",
+      "date": "2024-10-01",
+      "type": "income",
+      "category": "停车费",
+      "amount": 3300.00,
+      "description": "10月地下停车场月租费收入",
+      "payer": "业主委员会",
+      "detail": "地下停车场月租金收入"
+    },
+    {
+      "id": "20241001002",
+      "date": "2024-10-05",
+      "type": "income",
+      "category": "广告收入",
+      "amount": 2000.00,
+      "description": "电梯广告位租赁费",
+      "payer": "某某广告公司",
+      "detail": "8部电梯广告位月租金"
+    },
+    {
+      "id": "20241002001",
+      "date": "2024-10-10",
+      "type": "expense",
+      "category": "物业维修",
+      "amount": 3200.00,
+      "description": "水泵系统维修更换",
+      "recipient": "水电维修公司",
+      "detail": "更换供水加压泵及相关管道配件"
+    },
+    {
+      "id": "20241003001",
+      "date": "2024-10-12",
+      "type": "income",
+      "category": "公共场地租赁",
+      "amount": 1500.00,
+      "description": "社区活动室租赁费",
+      "payer": "瑜伽培训机构",
+      "detail": "10月份活动室租赁费"
+    },
+    {
+      "id": "20241004001",
+      "date": "2024-10-18",
+      "type": "expense",
+      "category": "清洁卫生",
+      "amount": 900.00,
+      "description": "小区公共区域深度清洁",
+      "recipient": "清洁服务公司",
+      "detail": "楼道、地下车库、公共区域清洁消毒"
+    }
+  ],
+  "summary": {
+    "december2024": {
+      "totalIncome": 10400.00,
+      "totalExpense": 2450.00,
+      "balance": 7950.00
+    },
+    "november2024": {
+      "totalIncome": 7450.00,
+      "totalExpense": 5100.00,
+      "balance": 2350.00
+    },
+    "october2024": {
+      "totalIncome": 6800.00,
+      "totalExpense": 4100.00,
+      "balance": 2700.00
+    },
+    "q4_2024": {
+      "totalIncome": 24650.00,
+      "totalExpense": 11650.00,
+      "balance": 13000.00
+    }
+  }
+}

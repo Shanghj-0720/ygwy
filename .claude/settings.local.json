@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__codex__codex",
+      "Skill(frontend-design)",
+      "Bash(mkdir:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
