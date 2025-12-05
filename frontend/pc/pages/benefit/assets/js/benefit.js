@@ -32,7 +32,7 @@ async function initApp() {
 
         setTimeout(() => {
             showLoading(false);
-        }, 600);
+        }, 200);
     } catch (error) {
         console.error('初始化失败:', error);
         showLoading(false);
