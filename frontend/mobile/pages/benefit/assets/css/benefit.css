@@ -252,24 +252,30 @@ body {
 
 .overview-stats {
     display: flex;
-    gap: 16px;
+    gap: 12px;
 }
 
 .stat-item {
-    flex: 1;
+    flex: 1 1 0;
+    min-width: 0;
+    overflow: hidden;
 }
 
 .stat-label {
-    font-size: 12px;
+    font-size: 11px;
     color: rgba(255, 255, 255, 0.75);
-    margin-bottom: 8px;
+    margin-bottom: 6px;
+    white-space: nowrap;
 }
 
 .stat-value {
-    font-size: 20px;
+    font-size: 17px;
     font-weight: 700;
     color: #ffffff;
     margin-bottom: 8px;
+    line-height: 1.2;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
 }
 
 .stat-value.balance {
@@ -697,17 +703,70 @@ body {
 }
 
 /* ==================== 响应式优化 ==================== */
-@media (max-width: 375px) {
+@media (max-width: 360px) {
+    .overview-card {
+        padding: 16px 12px;
+    }
+
     .overview-stats {
         flex-direction: column;
-        gap: 16px;
+        gap: 14px;
+    }
+
+    .stat-item {
+        flex: none;
+        width: 100%;
+    }
+
+    .stat-label {
+        font-size: 12px;
+        margin-bottom: 6px;
     }
 
     .stat-divider {
         display: none;
     }
 
+    .stat-value {
+        font-size: 22px;
+        margin-bottom: 6px;
+    }
+
     .record-amount {
         font-size: 20px;
+    }
+}
+
+@media (min-width: 361px) and (max-width: 420px) {
+    .overview-card {
+        padding: 18px 14px;
+    }
+
+    .overview-stats {
+        gap: 10px;
+    }
+
+    .stat-item {
+        flex: 1 1 0;
+        min-width: 0;
+    }
+
+    .stat-label {
+        font-size: 11px;
+    }
+
+    .stat-value {
+        font-size: 16px;
+    }
+
+    .stat-badge {
+        font-size: 10px;
+        padding: 3px 6px;
+    }
+}
+
+@media (min-width: 421px) {
+    .stat-value {
+        font-size: 19px;
     }
 }

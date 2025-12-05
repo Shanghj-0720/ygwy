@@ -5,7 +5,7 @@
 
 from fastapi import FastAPI, HTTPException
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse, JSONResponse
+from fastapi.responses import FileResponse, JSONResponse, StreamingResponse
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from pathlib import Path
@@ -137,6 +137,34 @@ async def clear_history(session_id: str):
             }
         else:
             raise HTTPException(status_code=404, detail="会话不存在")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.post("/api/chat/stream")
+async def chat_stream(request: ChatRequest):
+    """
+    智能客服流式聊天接口 (SSE)
+    请求体: {"message": "用户消息", "session_id": "会话ID(可选)"}
+    返回: Server-Sent Events 流
+    """
+    try:
+        # 如果没有提供session_id,创建新会话
+        session_id = request.session_id
+        if not session_id:
+            session_id = chat_service.create_session()
+
+        # 返回SSE流式响应
+        return StreamingResponse(
+            chat_service.chat_stream(session_id, request.message),
+            media_type="text/event-stream",
+            headers={
+                "Cache-Control": "no-cache",
+                "Connection": "keep-alive",
+                "X-Accel-Buffering": "no"
+            }
+        )
+
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 

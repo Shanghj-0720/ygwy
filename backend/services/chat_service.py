@@ -6,8 +6,10 @@
 import dashscope
 from dashscope import Generation
 import os
-from typing import List, Dict
+from typing import List, Dict, AsyncGenerator
 import uuid
+import json
+import asyncio
 
 
 class ChatService:
@@ -35,7 +37,8 @@ class ChatService:
 - 语言简洁明了,易于理解
 - 态度友好、专业
 - 如果不确定,请诚实告知并建议联系人工客服
-- 重点关注物业服务相关内容"""
+- 重点关注物业服务相关内容
+- **重要:请使用纯文本回答,不要使用任何Markdown标记(如**、#、-、*等),直接输出文字内容即可**"""
 
         # 会话存储 {session_id: [messages]}
         self.sessions = {}
@@ -137,6 +140,78 @@ class ChatService:
             "history": self.sessions[session_id],
             "message_count": len(self.sessions[session_id])
         }
+
+    async def chat_stream(self, session_id: str, user_message: str) -> AsyncGenerator[str, None]:
+        """
+        流式发送消息并获取AI回复 (使用SSE)
+
+        Args:
+            session_id: 会话ID
+            user_message: 用户消息
+
+        Yields:
+            SSE格式的消息流
+        """
+        try:
+            # 确保会话存在
+            if session_id not in self.sessions:
+                self.sessions[session_id] = []
+
+            # 构建消息列表
+            messages = [
+                {"role": "system", "content": self.system_prompt}
+            ]
+
+            # 添加历史消息(实现记忆功能)
+            messages.extend(self.sessions[session_id])
+
+            # 添加当前用户消息
+            messages.append({"role": "user", "content": user_message})
+
+            # 在线程池中调用DashScope流式API,避免阻塞事件循环
+            def call_api():
+                return Generation.call(
+                    model=self.model,
+                    messages=messages,
+                    result_format='message',
+                    stream=True,
+                    incremental_output=True
+                )
+
+            # 异步执行API调用
+            responses = await asyncio.to_thread(call_api)
+
+            # 收集完整回复用于保存到历史
+            full_response = ""
+
+            # 流式输出 - 在线程中处理每个响应
+            for response in responses:
+                # 让出控制权,允许其他请求处理
+                await asyncio.sleep(0)
+
+                if response.status_code == 200:
+                    # 获取增量内容
+                    chunk = response.output.choices[0].message.content
+                    full_response += chunk
+
+                    # 发送SSE格式的数据
+                    yield f"data: {json.dumps({'type': 'chunk', 'content': chunk}, ensure_ascii=False)}\n\n"
+                else:
+                    # 发送错误消息
+                    error_msg = f"API调用失败: {response.code} - {response.message}"
+                    yield f"data: {json.dumps({'type': 'error', 'error': error_msg}, ensure_ascii=False)}\n\n"
+                    return
+
+            # 保存到会话历史
+            self.sessions[session_id].append({"role": "user", "content": user_message})
+            self.sessions[session_id].append({"role": "assistant", "content": full_response})
+
+            # 发送完成消息
+            yield f"data: {json.dumps({'type': 'done', 'session_id': session_id}, ensure_ascii=False)}\n\n"
+
+        except Exception as e:
+            # 发送异常消息
+            yield f"data: {json.dumps({'type': 'error', 'error': f'服务异常: {str(e)}'}, ensure_ascii=False)}\n\n"
 
 
 # 创建全局服务实例

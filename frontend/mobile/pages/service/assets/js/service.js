@@ -127,7 +127,7 @@ function autoResizeTextarea() {
 }
 
 /**
- * 发送消息
+ * 发送消息 (使用SSE流式接收)
  */
 async function handleSendMessage() {
     const message = elements.messageInput.value.trim();
@@ -141,12 +141,12 @@ async function handleSendMessage() {
     // 显示用户消息
     addMessage('user', message);
 
-    // 显示打字指示器
-    showTypingIndicator();
+    // 创建AI消息气泡(用于流式更新)
+    const aiMessageElement = createStreamingMessage();
 
-    // 调用 API
+    // 调用流式API
     try {
-        const response = await fetch(`${CONFIG.API_BASE_URL}/chat`, {
+        const response = await fetch(`${CONFIG.API_BASE_URL}/chat/stream`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -157,25 +157,54 @@ async function handleSendMessage() {
             })
         });
 
-        const data = await response.json();
-
-        // 移除打字指示器
-        hideTypingIndicator();
-
-        if (data.success) {
-            // 更新 session_id (如果服务器返回了新的)
-            if (data.session_id) {
-                state.sessionId = data.session_id;
-                sessionStorage.setItem(CONFIG.SESSION_STORAGE_KEY, state.sessionId);
-            }
-
-            // 显示 AI 回复
-            addMessage('assistant', data.message);
-        } else {
-            showError('抱歉,服务暂时不可用,请稍后重试');
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
         }
+
+        // 读取SSE流
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder();
+        let buffer = '';
+        let fullContent = '';
+
+        while (true) {
+            const { done, value } = await reader.read();
+
+            if (done) break;
+
+            // 解码数据
+            buffer += decoder.decode(value, { stream: true });
+
+            // 处理完整的SSE消息
+            const lines = buffer.split('\n');
+            buffer = lines.pop() || ''; // 保留不完整的行
+
+            for (const line of lines) {
+                if (line.startsWith('data: ')) {
+                    const data = JSON.parse(line.slice(6));
+
+                    if (data.type === 'chunk') {
+                        // 追加内容到消息气泡
+                        fullContent += data.content;
+                        updateStreamingMessage(aiMessageElement, fullContent);
+                    } else if (data.type === 'done') {
+                        // 流式传输完成
+                        if (data.session_id) {
+                            state.sessionId = data.session_id;
+                            sessionStorage.setItem(CONFIG.SESSION_STORAGE_KEY, state.sessionId);
+                        }
+                        finalizeStreamingMessage(aiMessageElement, fullContent);
+                    } else if (data.type === 'error') {
+                        // 出现错误
+                        removeStreamingMessage(aiMessageElement);
+                        showError(data.error || '抱歉,服务暂时不可用,请稍后重试');
+                    }
+                }
+            }
+        }
+
     } catch (error) {
-        hideTypingIndicator();
+        removeStreamingMessage(aiMessageElement);
         console.error('发送消息失败:', error);
         showError('网络错误,请检查连接后重试');
     }
@@ -196,7 +225,8 @@ function addMessage(role, content) {
 
     const bubble = document.createElement('div');
     bubble.className = 'message-bubble';
-    bubble.textContent = content;
+    // 使用 innerHTML 支持换行
+    bubble.innerHTML = formatTextContent(content);
 
     const time = document.createElement('div');
     time.className = 'message-time';
@@ -215,6 +245,101 @@ function addMessage(role, content) {
 
     // 保存消息
     state.messages.push({ role, content, time: time.textContent });
+}
+
+/**
+ * 创建流式消息气泡
+ */
+function createStreamingMessage() {
+    const messageDiv = document.createElement('div');
+    messageDiv.className = 'message assistant';
+    messageDiv.dataset.streaming = 'true';
+
+    const avatar = document.createElement('div');
+    avatar.className = 'message-avatar';
+    avatar.textContent = 'AI';
+
+    const bubbleWrapper = document.createElement('div');
+
+    const bubble = document.createElement('div');
+    bubble.className = 'message-bubble';
+    bubble.textContent = '';
+
+    // 添加光标效果
+    const cursor = document.createElement('span');
+    cursor.className = 'streaming-cursor';
+    cursor.textContent = '▋';
+    bubble.appendChild(cursor);
+
+    const time = document.createElement('div');
+    time.className = 'message-time';
+    time.textContent = getCurrentTime();
+
+    bubbleWrapper.appendChild(bubble);
+    bubbleWrapper.appendChild(time);
+
+    messageDiv.appendChild(avatar);
+    messageDiv.appendChild(bubbleWrapper);
+
+    elements.messageList.appendChild(messageDiv);
+    scrollToBottom();
+
+    return messageDiv;
+}
+
+/**
+ * 格式化文本内容,处理换行
+ */
+function formatTextContent(text) {
+    // 将换行符转换为 <br> 标签
+    return text.replace(/\n/g, '<br>');
+}
+
+/**
+ * 更新流式消息内容
+ */
+function updateStreamingMessage(messageElement, content) {
+    const bubble = messageElement.querySelector('.message-bubble');
+    const cursor = bubble.querySelector('.streaming-cursor');
+
+    // 更新内容,保留光标,支持换行
+    bubble.innerHTML = formatTextContent(content);
+    bubble.appendChild(cursor);
+
+    // 滚动到底部
+    scrollToBottom();
+}
+
+/**
+ * 完成流式消息
+ */
+function finalizeStreamingMessage(messageElement, content) {
+    const bubble = messageElement.querySelector('.message-bubble');
+    const cursor = bubble.querySelector('.streaming-cursor');
+
+    // 移除光标
+    if (cursor) {
+        cursor.remove();
+    }
+
+    // 设置最终内容,支持换行
+    bubble.innerHTML = formatTextContent(content);
+
+    // 移除流式标记
+    delete messageElement.dataset.streaming;
+
+    // 保存消息
+    const time = messageElement.querySelector('.message-time').textContent;
+    state.messages.push({ role: 'assistant', content, time });
+}
+
+/**
+ * 移除流式消息
+ */
+function removeStreamingMessage(messageElement) {
+    if (messageElement && messageElement.parentNode) {
+        messageElement.remove();
+    }
 }
 
 /**
@@ -280,10 +405,42 @@ function getCurrentTime() {
 }
 
 /**
- * 显示错误消息
+ * 显示错误消息(添加到聊天记录)
  */
 function showError(message) {
     addMessage('assistant', message);
+}
+
+/**
+ * 显示临时提示(Toast)
+ */
+function showToast(message) {
+    // 检查是否已存在toast
+    let existingToast = document.querySelector('.toast-message');
+    if (existingToast) {
+        existingToast.remove();
+    }
+
+    // 创建toast元素
+    const toast = document.createElement('div');
+    toast.className = 'toast-message';
+    toast.textContent = message;
+
+    // 添加到页面
+    document.body.appendChild(toast);
+
+    // 触发动画
+    setTimeout(() => {
+        toast.classList.add('show');
+    }, 10);
+
+    // 3秒后自动隐藏
+    setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => {
+            toast.remove();
+        }, 300);
+    }, 3000);
 }
 
 /**
@@ -328,13 +485,19 @@ function initSpeechRecognition() {
         console.error('语音识别错误:', event.error);
         stopRecording();
 
+        let errorMessage = '';
         if (event.error === 'no-speech') {
-            showError('未检测到语音,请重试');
+            errorMessage = '未检测到语音,请重试';
         } else if (event.error === 'not-allowed') {
-            showError('请允许使用麦克风权限');
+            errorMessage = '请允许使用麦克风权限';
+        } else if (event.error === 'aborted') {
+            errorMessage = '语音识别已取消';
         } else {
-            showError('语音识别失败,请重试');
+            errorMessage = '语音识别失败,请重试';
         }
+
+        // 使用原生提示,不添加到聊天记录
+        showToast(errorMessage);
     };
 
     // 识别结束
@@ -375,7 +538,7 @@ function startRecording() {
         console.log('开始语音识别');
     } catch (error) {
         console.error('启动语音识别失败:', error);
-        showError('启动语音识别失败');
+        showToast('启动语音识别失败');
     }
 }
 
@@ -458,7 +621,8 @@ async function clearChat() {
  * 返回上一页
  */
 function goBack() {
-    window.history.back();
+    // 返回到移动端首页(抽屉柜)
+    window.location.href = '/';
 }
 
 // 页面加载完成后初始化
