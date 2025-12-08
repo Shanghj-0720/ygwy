@@ -2,87 +2,122 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>装修登记 - AI业委会</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>线上装修 - 智慧服务平台</title>
+    <link rel="stylesheet" href="assets/css/renovation.css">
 </head>
-<body class="bg-gray-50 text-gray-900 font-sans">
-    <div class="max-w-xl mx-auto p-4 space-y-4">
-        <header class="flex items-center justify-between">
-            <div class="text-sm text-blue-600 flex items-center gap-1">
-                <span class="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></span>
-                在线装修登记
+<body>
+    <header class="header">
+        <button class="back-btn" onclick="goBack()">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M15.41 7.41 14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
+            </svg>
+        </button>
+        <div class="header-content">
+            <p class="eyebrow">线上装修</p>
+            <h1>装修登记办理</h1>
+            <p class="subtitle">材料上传 · 物业审核 · 登记确认</p>
+        </div>
+        <button class="pill role-toggle" id="roleBadge" type="button"></button>
+    </header>
+
+    <main class="page">
+        <!-- 流程说明卡片 -->
+        <section class="banner" data-roles="owner tenant property">
+            <div class="banner-top">
+                <div>
+                    <p class="eyebrow">办理须知</p>
+                    <h2>装修登记流程</h2>
+                </div>
             </div>
-            <button onclick="window.top && window.top.closeIframeModal && window.top.closeIframeModal();" class="text-xs text-gray-500 hover:text-gray-900 flex items-center gap-1">
-                <i class="fa fa-close"></i> 关闭
-            </button>
-        </header>
-
-        <section class="bg-white rounded-2xl shadow p-4 space-y-3">
-            <h1 class="text-lg font-semibold">提交装修申请</h1>
-            <p class="text-sm text-gray-500">填写以下信息即可提交装修审批，业委会将实时反馈进度。</p>
-            <form id="renovation-form" class="space-y-3">
-                <div>
-                    <label class="text-xs text-gray-500">业主姓名</label>
-                    <input required class="mt-1 w-full rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring focus:ring-blue-200" placeholder="请输入姓名" name="owner">
-                </div>
-                <div class="grid grid-cols-2 gap-3">
-                    <div>
-                        <label class="text-xs text-gray-500">房号</label>
-                        <input required class="mt-1 w-full rounded-xl border border-gray-200 px-3 py-2 text-sm focus:ring focus:ring-blue-200" placeholder="如：5幢1202" name="room">
-                    </div>
-                    <div>
-                        <label class="text-xs text-gray-500">联系电话</label>
-                        <input required type="tel" pattern="1[3-9]\d{9}" class="mt-1 w-full rounded-xl border border-gray-200 px-3 py-2 text-sm focus:ring focus:ring-blue-200" placeholder="11位手机号" name="phone">
-                    </div>
-                </div>
-                <div>
-                    <label class="text-xs text-gray-500">装修类型</label>
-                    <select class="mt-1 w-full rounded-xl border border-gray-200 px-3 py-2 text-sm focus:ring focus:ring-blue-200" name="type">
-                        <option value="全屋硬装">全屋硬装</option>
-                        <option value="局部改造">局部改造</option>
-                        <option value="软装升级">软装升级</option>
-                    </select>
-                </div>
-                <div class="grid grid-cols-2 gap-3">
-                    <div>
-                        <label class="text-xs text-gray-500">计划开始</label>
-                        <input type="date" required class="mt-1 w-full rounded-xl border border-gray-200 px-3 py-2 text-sm focus:ring focus:ring-blue-200" name="start">
-                    </div>
-                    <div>
-                        <label class="text-xs text-gray-500">计划结束</label>
-                        <input type="date" required class="mt-1 w-full rounded-xl border border-gray-200 px-3 py-2 text-sm focus:ring focus:ring-blue-200" name="end">
-                    </div>
-                </div>
-                <div>
-                    <label class="text-xs text-gray-500">施工单位及负责人</label>
-                    <input class="mt-1 w-full rounded-xl border border-gray-200 px-3 py-2 text-sm focus:ring focus:ring-blue-200" placeholder="请输入公司及联系人" name="contractor">
-                </div>
-                <div>
-                    <label class="text-xs text-gray-500">特殊需求说明</label>
-                    <textarea class="mt-1 w-full rounded-2xl border border-gray-200 px-3 py-2 text-sm focus:ring focus:ring-blue-200 min-h-[90px]" placeholder="例如：夜间施工申请、封闭电梯等" name="notes"></textarea>
-                </div>
-                <button class="w-full bg-blue-600 text-white rounded-2xl py-2.5 text-sm font-medium hover:bg-blue-700 transition" type="submit">提交登记</button>
-            </form>
+            <p class="banner-hint">通过平台提交装修登记材料，物业在线审核确认，实现装修登记全流程线上办理。</p>
         </section>
 
-        <section id="result-card" class="hidden bg-white rounded-2xl shadow p-4 text-sm space-y-2">
-            <p class="text-green-600 font-semibold">提交成功，已生成装修备案号：</p>
-            <p id="record-id" class="text-base font-mono text-gray-900"></p>
-            <p class="text-gray-500">审批结果将推送至手机与AI业委会助手，如需修改请联系业委会。</p>
-            <button class="text-blue-600 text-xs underline" onclick="document.getElementById('result-card').classList.add('hidden'); document.getElementById('renovation-form').classList.remove('hidden');">继续提交</button>
+        <!-- 产权人材料 -->
+        <section class="card" data-roles="owner">
+            <div class="card-header">
+                <div>
+                    <p class="eyebrow">产权人</p>
+                    <h2>所需材料 & 上传</h2>
+                </div>
+            </div>
+            <iframe class="embed-frame" src="upload.html?inline=1" title="产权人装修登记"></iframe>
         </section>
-    </div>
 
-    <script>
-        document.getElementById('renovation-form').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const recordId = 'ZX-' + Math.random().toString(36).substring(2, 8).toUpperCase();
-            document.getElementById('record-id').textContent = recordId;
-            this.classList.add('hidden');
-            document.getElementById('result-card').classList.remove('hidden');
-        });
-    </script>
+        <!-- 房屋使用人材料 -->
+        <section class="card" data-roles="tenant">
+            <div class="card-header">
+                <div>
+                    <p class="eyebrow">房屋使用人</p>
+                    <h2>所需材料 & 上传</h2>
+                </div>
+            </div>
+            <iframe class="embed-frame" src="upload-tenant.html?inline=1" title="房屋使用人装修登记"></iframe>
+        </section>
+
+        <!-- 物业端信息 -->
+        <section class="card" data-roles="property">
+            <div class="card-header">
+                <div>
+                    <p class="eyebrow">物业端</p>
+                    <h2>审核与巡查</h2>
+                </div>
+            </div>
+            <iframe class="embed-frame" src="upload-property.html?inline=1" title="物业端装修登记"></iframe>
+        </section>
+
+        <!-- 查询入口 -->
+        <section class="card" data-roles="owner tenant property">
+            <div class="card-header">
+                <div>
+                    <p class="eyebrow">登记查询</p>
+                    <h2>查询装修登记</h2>
+                </div>
+            </div>
+            <p class="card-desc">登记成功后，可通过以下方式查询登记信息。</p>
+            <div class="query-options">
+                <button class="query-btn" onclick="queryByPhone()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+                    </svg>
+                    手机号查询
+                </button>
+                <button class="query-btn" onclick="queryByHouse()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                        <polyline points="9,22 9,12 15,12 15,22"/>
+                    </svg>
+                    房屋编号查询
+                </button>
+            </div>
+        </section>
+
+        <!-- 历史记录卡片 -->
+        <section class="card" id="historyCard" data-roles="owner tenant" style="display: none;">
+            <div class="card-header">
+                <div>
+                    <p class="eyebrow">历史记录</p>
+                    <h2>我的装修登记</h2>
+                </div>
+            </div>
+            <div class="history-list" id="historyList">
+                <!-- 动态生成 -->
+            </div>
+        </section>
+
+        <!-- 帮助提示 -->
+        <section class="help-tips" data-roles="owner tenant property">
+            <div class="tip-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <path d="M12 16v-4"/>
+                    <path d="M12 8h.01"/>
+                </svg>
+                <span>产权人可线上办理；房屋使用人需携带材料至物业办理</span>
+            </div>
+        </section>
+    </main>
+
+    <script src="assets/js/renovation.js"></script>
 </body>
 </html>

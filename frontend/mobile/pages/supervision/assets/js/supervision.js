@@ -104,7 +104,8 @@ const state = {
                 status: '待核验',
                 due: '12/18 18:00',
                 focus: '楼道保洁、车库照明恢复情况',
-                materials: ['整改照片', '照明恢复视频']
+                materials: ['整改照片', '照明恢复视频'],
+                detail: '查看车库照明亮度对比，确认楼道地面清洁无积尘。'
             },
             {
                 id: 'v2',
@@ -115,7 +116,8 @@ const state = {
                 result: '夜间巡逻打卡完整，岗亭值守正常',
                 due: '12/18 18:00',
                 focus: '巡逻频次 + 打卡轨迹',
-                materials: ['巡逻记录', '岗亭签到']
+                materials: ['巡逻记录', '岗亭签到'],
+                detail: '核验打卡轨迹、岗亭值守照片与夜间巡逻频次。'
             },
             {
                 id: 'v3',
@@ -125,7 +127,8 @@ const state = {
                 status: '待核验',
                 due: '12/18 18:00',
                 focus: '抽查随机报修回访满意度',
-                materials: ['派单记录', '回访录音']
+                materials: ['派单记录', '回访录音'],
+                detail: '抽查随机报修闭环，核查派单时效与回访满意度。'
             }
         ]
     },
@@ -142,10 +145,14 @@ function getRoleFromUrl() {
     return { ...ROLE_MAP[account] || ROLE_MAP['1'], account };
 }
 
-function setRoleBadge(label) {
+function setRoleBadge(label, nextLabel, account) {
     const badge = document.getElementById('roleBadge');
     if (badge) {
         badge.textContent = `${label}视图`;
+        const hint = nextLabel ? `切换到${nextLabel}视图` : '切换视图';
+        badge.title = hint;
+        badge.setAttribute('aria-label', hint);
+        badge.dataset.account = account;
     }
 }
 
@@ -156,15 +163,55 @@ function applyRoleVisibility(roleKey) {
     });
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    const roleInfo = getRoleFromUrl();
-    state.role = roleInfo.key;
-    setRoleBadge(roleInfo.label);
-    applyRoleVisibility(state.role);
+function updateQuestionnaireLink(account) {
     const qLink = document.getElementById('questionnaireLink');
     if (qLink) {
-        qLink.href = `questionnaire.html?account=${roleInfo.account}`;
+        qLink.href = `questionnaire.html?account=${account}`;
     }
+}
+
+function updateUrlAccount(account) {
+    const url = new URL(window.location.href);
+    url.searchParams.set('account', account);
+    window.history.replaceState({}, '', url.toString());
+}
+
+function applyRole(roleInfo) {
+    const nextAccount = roleInfo.account === '1' ? '2' : '1';
+    const nextRoleLabel = (ROLE_MAP[nextAccount] || ROLE_MAP['1']).label;
+    state.role = roleInfo.key;
+    setRoleBadge(roleInfo.label, nextRoleLabel, roleInfo.account);
+    applyRoleVisibility(roleInfo.key);
+    updateQuestionnaireLink(roleInfo.account);
+    updateUrlAccount(roleInfo.account);
+}
+
+function toggleRole() {
+    const badge = document.getElementById('roleBadge');
+    const currentAccount = badge?.dataset.account || '1';
+    const account = currentAccount === '1' ? '2' : '1';
+    const roleInfo = { ...ROLE_MAP[account] || ROLE_MAP['1'], account };
+    applyRole(roleInfo);
+}
+
+function bindRoleSwitch(initialAccount) {
+    const badge = document.getElementById('roleBadge');
+    if (!badge) return;
+
+    badge.dataset.account = initialAccount;
+    badge.addEventListener('click', toggleRole);
+    badge.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            toggleRole();
+        }
+    });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const roleInfo = getRoleFromUrl();
+    applyRole(roleInfo);
+    bindRoleSwitch(roleInfo.account);
 
     document.getElementById('currentMonth').textContent = state.month;
     renderOverview();
@@ -256,6 +303,7 @@ function renderRectification() {
     state.rectification.items.forEach((item) => {
         const card = document.createElement('div');
         card.className = 'rect-card';
+        card.addEventListener('click', () => goRectificationDetail(item.id));
         card.innerHTML = `
             <div class="row">
                 <div class="title">${item.title}</div>
@@ -280,15 +328,7 @@ function renderVerification() {
     state.verification.tasks.forEach((task) => {
         const card = document.createElement('div');
         card.className = 'verify-card';
-
-        const actions = task.status === '待核验'
-            ? `
-                <div class="actions">
-                    <button class="btn primary" onclick="updateVerification('${task.id}', 'pass')">通过</button>
-                    <button class="btn outline" onclick="updateVerification('${task.id}', 'fail')">不通过</button>
-                </div>
-            `
-            : `<div class="muted">反馈：${task.result || '已记录'}</div>`;
+        card.addEventListener('click', () => goVerificationDetail(task.id));
 
         card.innerHTML = `
             <div class="row">
@@ -299,7 +339,6 @@ function renderVerification() {
             <div class="muted">关注点：${task.focus}</div>
             <div class="muted">核验截止：${task.due}</div>
             <div class="tags">${task.materials.map((m) => `<span class="tag">${m}</span>`).join('')}</div>
-            ${actions}
         `;
 
         list.appendChild(card);
@@ -337,6 +376,7 @@ function renderPublish() {
             <span>${state.publish.regulator}</span>
         </div>
         <div class="issues">${desc}。${state.publish.risk}</div>
+        <button class="link" onclick="goPublishDetail()">查看详情</button>
     `;
 }
 
@@ -354,6 +394,18 @@ function updateVerification(id, result) {
 
     renderVerification();
     renderPublish();
+}
+
+function goVerificationDetail(id) {
+    window.location.href = `verification.html?id=${id}`;
+}
+
+function goRectificationDetail(id) {
+    window.location.href = `rectification.html?id=${id}`;
+}
+
+function goPublishDetail() {
+    window.location.href = 'publish.html';
 }
 
 function statusClass(status) {

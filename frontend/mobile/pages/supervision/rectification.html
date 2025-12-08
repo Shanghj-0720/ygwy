@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>整改任务详情</title>
+    <link rel="stylesheet" href="assets/css/supervision.css">
+    <link rel="stylesheet" href="assets/css/rectification-detail.css">
+</head>
+<body>
+    <header class="header">
+        <button class="back-btn" onclick="goBack()">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M15.41 7.41 14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
+            </svg>
+        </button>
+        <div class="header-content">
+            <p class="eyebrow">整改任务</p>
+            <h1 id="taskTitle">任务详情</h1>
+            <p class="subtitle" id="taskSubtitle">责任人 · 截止时间</p>
+        </div>
+        <span class="pill" id="statusPill"></span>
+    </header>
+
+    <main class="page">
+        <section class="card detail-card">
+            <div class="detail-row">
+                <div class="label">责任人</div>
+                <div class="value" id="taskOwner"></div>
+            </div>
+            <div class="detail-row">
+                <div class="label">截止时间</div>
+                <div class="value" id="taskDue"></div>
+            </div>
+            <div class="detail-row">
+                <div class="label">进度</div>
+                <div class="value" id="taskProgress"></div>
+            </div>
+            <div class="detail-row">
+                <div class="label">整改要求</div>
+                <div class="value tags" id="taskRequirements"></div>
+            </div>
+            <div class="detail-row">
+                <div class="label">已上传</div>
+                <div class="value tags" id="taskUploads"></div>
+            </div>
+        </section>
+
+    </main>
+
+    <script src="assets/js/rectification-detail.js"></script>
+</body>
+</html>

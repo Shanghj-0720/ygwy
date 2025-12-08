@@ -4,9 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>智慧服务平台</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
             /* 企业主色调 - 专业蓝 (与benefit页面一致) */
@@ -47,7 +44,7 @@
         }
 
         body {
-            font-family: 'Inter', 'Noto Sans SC', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: 'Inter', 'Noto Sans SC', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
             background: var(--bg-primary);
             min-height: 100vh;
             overflow-x: hidden;
@@ -220,6 +217,9 @@
         .app-icon:nth-child(3) {
             animation-delay: 0.3s;
         }
+        .app-icon:nth-child(4) {
+            animation-delay: 0.4s;
+        }
 
         @keyframes scaleIn {
             from {
@@ -299,6 +299,10 @@
 
         .app-icon:nth-child(3) .icon-box {
             --gradient: linear-gradient(135deg, var(--success) 0%, #10b981 100%);
+        }
+
+        .app-icon:nth-child(4) .icon-box {
+            --gradient: linear-gradient(135deg, #f59e0b 0%, #ea580c 100%);
         }
 
         /* SVG图标 */
@@ -569,7 +573,7 @@
                             <stop offset="0%" stop-color="#334155" />
                             <stop offset="100%" stop-color="#0f172a" />
                             </linearGradient>
-                            
+
                             <!-- Golden Gradient for Accents (High-end feel) -->
                             <linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
                             <stop offset="0%" stop-color="#fbbf24" />
@@ -599,28 +603,28 @@
 
                         <!-- Background decorative ring (Abstract connection) -->
                         <circle cx="100" cy="100" r="85" fill="none" stroke="#e2e8f0" stroke-width="1" opacity="0.3" stroke-dasharray="5,5" />
-                        
+
                         <!-- Main Group with Shadow -->
                         <g filter="url(#softShadow)">
                             <!-- Robot Head Shape -->
                             <path d="M100,40 C70,40 45,62 45,95 C45,125 65,150 95,154 L95,165 L105,165 L105,154 C135,150 155,125 155,95 C155,62 130,40 100,40 Z" fill="url(#headGradient)" />
-                            
+
                             <!-- Face Screen Area (Visor) -->
                             <path d="M65,90 C65,80 75,72 100,72 C125,72 135,80 135,90 C135,115 120,130 100,130 C80,130 65,115 65,90 Z" fill="#1e293b" />
-                            
+
                             <!-- Digital Pulse/Waveform (Intelligence) -->
                             <path d="M75,100 Q82,100 85,95 T95,100 T105,105 T115,100 T125,100" fill="none" stroke="url(#techGradient)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
-                            
+
                             <!-- Headset Band -->
                             <path d="M45,95 C45,60 65,30 100,30 C135,30 155,60 155,95" fill="none" stroke="#f1f5f9" stroke-width="6" stroke-linecap="round" />
-                            
+
                             <!-- Headset Earpiece (Left) -->
                             <rect x="38" y="80" width="14" height="30" rx="7" fill="url(#goldGradient)" />
-                            
+
                             <!-- Headset Microphone Boom -->
                             <path d="M45,105 C45,105 45,145 85,145" fill="none" stroke="#f1f5f9" stroke-width="4" stroke-linecap="round" />
                             <circle cx="85" cy="145" r="5" fill="url(#goldGradient)" />
-                            
+
                             <!-- Antenna/Node on top -->
                             <line x1="100" y1="40" x2="100" y2="25" stroke="#94a3b8" stroke-width="3" />
                             <circle cx="100" cy="22" r="4" fill="#3b82f6" />
@@ -635,6 +639,7 @@
                 </div>
                 <div class="app-name">智能客服</div>
             </a>
+
         </div>
     </div>
 

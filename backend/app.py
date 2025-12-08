@@ -63,7 +63,7 @@ async def get_info():
     return {
         "name": "智慧服务平台",
         "version": "1.0.0",
-        "modules": ["公共收益", "线上监督", "智能客服"],
+        "modules": ["公共收益", "线上监督", "智能客服", "线上装修"],
         "status": "running"
     }
 
@@ -204,6 +204,8 @@ if __name__ == "__main__":
 
   原移动端首页 (应用列表):
     http://localhost:{port}/frontend/mobile/index.html
+  线上装修:
+    移动端: http://localhost:{port}/frontend/mobile/pages/renovation/index.html
 
   健康检查: http://localhost:{port}/health
   API文档: http://localhost:{port}/docs

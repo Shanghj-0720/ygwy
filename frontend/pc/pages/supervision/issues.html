@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>问题汇总表 - 线上监督</title>
+    <link rel="stylesheet" href="assets/css/supervision.css">
+</head>
+<body>
+    <div class="layout">
+        <header class="topbar">
+            <div>
+                <p class="eyebrow">问题汇总表</p>
+                <h1>本期整改问题清单</h1>
+                <p class="subtitle">包含问题编号、类型、反馈人数、严重度、截止时间与整改方案摘要</p>
+            </div>
+            <div class="meta">
+                <a class="btn ghost" href="index.html">返回监督页</a>
+            </div>
+        </header>
+
+        <article class="card">
+            <div class="card-header">
+                <div>
+                    <p class="eyebrow">汇总数据</p>
+                    <h2>按严重度与状态展示</h2>
+                </div>
+                <span class="pill warning">问题汇总</span>
+            </div>
+            <p class="desc">以下为本期问题汇总示例，用于演示 PC 端整改池的完整字段展示。</p>
+            <div class="table-wrapper scrollable">
+                <table class="data-table" id="issueTable">
+                    <thead>
+                        <tr>
+                            <th>编号</th>
+                            <th>类型</th>
+                            <th>问题描述</th>
+                            <th>小区</th>
+                            <th>反馈</th>
+                            <th>严重度</th>
+                            <th>状态</th>
+                            <th>截止</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </article>
+    </div>
+
+    <script>
+        const issues = [
+            { id: 'WJ-2025-0001', type: '维修响应', desc: '电梯故障报修后 48 小时未响应', community: '翠苑花园', feedback: 23, level: '紧急', levelTone: 'danger', status: '逾期', statusTone: 'danger', deadline: '12/10' },
+            { id: 'WJ-2025-0002', type: '保洁', desc: '地下车库垃圾清运不及时，有异味', community: '阳光城', feedback: 18, level: '紧急', levelTone: 'danger', status: '整改中', statusTone: 'warning', deadline: '12/12' },
+            { id: 'WJ-2025-0003', type: '安保', desc: '门禁系统故障，外来人员可随意进入', community: '金桂园', feedback: 15, level: '高', levelTone: 'warning', status: '整改中', statusTone: 'warning', deadline: '12/11' },
+            { id: 'WJ-2025-0004', type: '绿化', desc: '中心花园草坪枯黄，绿化杂草丛生', community: '翠苑花园', feedback: 12, level: '高', levelTone: 'warning', status: '整改中', statusTone: 'warning', deadline: '12/15' },
+            { id: 'WJ-2025-0005', type: '设施维护', desc: '儿童游乐区设施破损有安全隐患', community: '阳光城', feedback: 11, level: '高', levelTone: 'warning', status: '待整改', statusTone: 'info', deadline: '12/16' },
+            { id: 'WJ-2025-0006', type: '维修响应', desc: '单元门对讲系统故障，无法与访客通话', community: '金桂园', feedback: 9, level: '中', levelTone: 'info', status: '整改中', statusTone: 'warning', deadline: '12/14' },
+            { id: 'WJ-2025-0007', type: '保洁', desc: '楼道公共区域灰尘堆积，窗台污渍明显', community: '翠苑花园', feedback: 8, level: '中', levelTone: 'info', status: '已完成', statusTone: 'success', deadline: '12/09' },
+            { id: 'WJ-2025-0008', type: '设施维护', desc: '监控摄像头损坏，地下车库有盲区', community: '阳光城', feedback: 7, level: '高', levelTone: 'warning', status: '整改中', statusTone: 'warning', deadline: '12/13' },
+            { id: 'WJ-2025-0009', type: '绿化', desc: '行道树遮挡路灯，夜间照度不足', community: '金桂园', feedback: 6, level: '中', levelTone: 'info', status: '待整改', statusTone: 'info', deadline: '12/18' },
+            { id: 'WJ-2025-0010', type: '维修响应', desc: '地下车库排水泵噪音过大，影响休息', community: '阳光城', feedback: 5, level: '中', levelTone: 'info', status: '整改中', statusTone: 'warning', deadline: '12/17' }
+        ];
+
+        function renderIssues() {
+            const tbody = document.querySelector('#issueTable tbody');
+            if (!tbody) return;
+            tbody.innerHTML = issues.map((issue) => `
+                <tr>
+                    <td><code>${issue.id}</code></td>
+                    <td>${issue.type}</td>
+                    <td>${issue.desc}</td>
+                    <td>${issue.community}</td>
+                    <td>${issue.feedback}</td>
+                    <td><span class="badge ${issue.levelTone}">${issue.level}</span></td>
+                    <td><span class="badge ${issue.statusTone}">${issue.status}</span></td>
+                    <td>${issue.deadline}</td>
+                </tr>
+            `).join('');
+        }
+
+        document.addEventListener('DOMContentLoaded', renderIssues);
+    </script>
+</body>
+</html>

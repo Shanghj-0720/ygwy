@@ -15,8 +15,7 @@
                 <p class="subtitle">问卷 → 问题汇总 → 整改通知 → AI 监管提醒 → 公示</p>
             </div>
             <div class="meta">
-                <span class="pill primary">模拟数据</span>
-                <span class="pill ghost" id="cycleTag">2025年15月</span>
+                <span class="pill ghost" id="cycleTag">2025年12月</span>
             </div>
         </header>
 
@@ -47,6 +46,9 @@
                 </div>
                 <p class="desc">评价结束后自动整合业主评价数据，生成《问题汇总表》，并向物业 PC/手机端下达线上整改通知，设定期限。</p>
                 <ul class="timeline" id="noticeTimeline"></ul>
+                <div class="notice-actions">
+                    <a class="btn ghost" href="issues.html">查看本期问题汇总表</a>
+                </div>
             </article>
 
             <article class="card" id="aiCard">
@@ -93,6 +95,18 @@
                         <div class="list" id="progressList"></div>
                     </div>
                 </div>
+            </article>
+
+            <article class="card" id="regCard">
+                <div class="card-header">
+                    <div>
+                        <p class="eyebrow">属地住建</p>
+                        <h2>监管处置</h2>
+                    </div>
+                    <span class="pill danger">监管中</span>
+                </div>
+                <p class="desc">接收逾期整改提醒，查看涉事小区、物业公司及未整改事项，开展后续监管动作。</p>
+                <div class="list" id="regList"></div>
             </article>
         </section>
     </div>

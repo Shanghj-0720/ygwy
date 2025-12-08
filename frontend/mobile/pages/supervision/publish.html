@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>整改结果公示</title>
+    <link rel="stylesheet" href="assets/css/supervision.css">
+    <link rel="stylesheet" href="assets/css/publish-detail.css">
+</head>
+<body>
+    <header class="header">
+        <button class="back-btn" onclick="goBack()">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M15.41 7.41 14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
+            </svg>
+        </button>
+        <div class="header-content">
+            <p class="eyebrow">整改公示</p>
+            <h1>本期公示详情</h1>
+            <p class="subtitle">公示时间 · 渠道 · 结果摘要</p>
+        </div>
+        <span class="pill" id="publishStatus"></span>
+    </header>
+
+    <main class="page">
+        <section class="card">
+            <div class="card-header">
+                <div>
+                    <p class="eyebrow">公示概览</p>
+                    <h2 id="publishTitle">整改结果</h2>
+                </div>
+                <div class="deadline" id="publishTime"></div>
+            </div>
+            <p class="desc" id="publishResult"></p>
+            <div class="list" id="publishChannels"></div>
+        </section>
+
+        <section class="card">
+            <div class="card-header">
+                <div>
+                    <p class="eyebrow">监管提醒</p>
+                    <h2>处置动作</h2>
+                </div>
+            </div>
+            <div class="list" id="publishReg"></div>
+        </section>
+    </main>
+
+    <script src="assets/js/publish-detail.js"></script>
+</body>
+</html>
