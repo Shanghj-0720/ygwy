@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer">
+    <title>房源筛选 - AI荐房</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/common.css">
+    <style>
+        body {
+            font-family: 'PingFang SC', 'Helvetica Neue', 'Arial', sans-serif;
+            background: #F5F7FA;
+            padding-top: 60px;
+            padding-bottom: 70px;
+        }
+
+        .filter-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            padding: 12px 16px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .filter-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1D2129;
+            flex: 1;
+        }
+
+        .filter-section {
+            background: white;
+            margin: 12px 16px;
+            padding: 16px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        }
+
+        .filter-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1D2129;
+            margin-bottom: 12px;
+            display: block;
+        }
+
+        .filter-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .filter-option {
+            padding: 8px 16px;
+            background: #F5F7FA;
+            color: #4E5969;
+            border: 1px solid transparent;
+            border-radius: 20px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .filter-option.active {
+            background: rgba(22, 93, 255, 0.1);
+            color: #165DFF;
+            border-color: #165DFF;
+            font-weight: 500;
+        }
+
+        .price-slider-container {
+            padding: 12px 0;
+        }
+
+        .price-inputs {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            margin-top: 16px;
+        }
+
+        .price-input {
+            flex: 1;
+            padding: 8px 12px;
+            border: 1px solid #E5E6EB;
+            border-radius: 8px;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        .slider-track {
+            position: relative;
+            height: 4px;
+            background: #E5E6EB;
+            border-radius: 2px;
+            margin: 20px 0;
+        }
+
+        .slider-range {
+            position: absolute;
+            height: 100%;
+            background: #165DFF;
+            border-radius: 2px;
+        }
+
+        .slider-thumb {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border: 2px solid #165DFF;
+            border-radius: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .house-card {
+            background: white;
+            margin: 12px 16px;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .house-card:active {
+            transform: scale(0.98);
+        }
+
+        .house-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            background: #F5F7FA;
+        }
+
+        .house-info {
+            padding: 16px;
+        }
+
+        .house-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1D2129;
+            margin-bottom: 8px;
+        }
+
+        .house-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 12px;
+        }
+
+        .house-price {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-top: 12px;
+        }
+
+        .total-price {
+            font-size: 24px;
+            font-weight: 700;
+            color: #F53F3F;
+        }
+
+        .unit-price {
+            font-size: 14px;
+            color: #86909C;
+        }
+
+        .match-rate {
+            background: linear-gradient(135deg, #165DFF 0%, #0F4CD3 100%);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .results-header {
+            padding: 12px 16px;
+            background: white;
+            margin: 12px 16px 0;
+            border-radius: 12px 12px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .results-count {
+            font-size: 14px;
+            color: #4E5969;
+        }
+
+        .sort-btn {
+            padding: 6px 12px;
+            background: #F5F7FA;
+            border: none;
+            border-radius: 6px;
+            font-size: 13px;
+            color: #4E5969;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .sort-dropdown {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-radius: 12px 12px 0 0;
+            box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.15);
+            z-index: 200;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+        }
+
+        .sort-dropdown.show {
+            transform: translateY(0);
+        }
+
+        .sort-option {
+            padding: 16px;
+            border-bottom: 1px solid #F5F7FA;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .sort-option:last-child {
+            border-bottom: none;
+        }
+
+        .sort-option.active {
+            color: #165DFF;
+            font-weight: 500;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 199;
+            display: none;
+        }
+
+        .overlay.show {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <!-- 固定头部 -->
+    <div class="filter-header">
+        <button onclick="history.back()" style="background: none; border: none; font-size: 20px; color: #165DFF; cursor: pointer;">
+            <i class="fa fa-arrow-left"></i>
+        </button>
+        <div class="filter-title">房源筛选</div>
+    </div>
+
+    <!-- 筛选条件 -->
+    <div class="filter-section">
+        <label class="filter-label">区域</label>
+        <div class="filter-options" id="districtOptions">
+            <div class="filter-option" data-value="">不限</div>
+            <div class="filter-option" data-value="钟楼区">钟楼区</div>
+            <div class="filter-option" data-value="天宁区">天宁区</div>
+            <div class="filter-option" data-value="新北区">新北区</div>
+        </div>
+    </div>
+
+    <div class="filter-section">
+        <label class="filter-label">价格区间（万元）</label>
+        <div class="price-slider-container">
+            <div class="slider-track" id="priceSliderTrack">
+                <div class="slider-range" id="priceSliderRange"></div>
+                <div class="slider-thumb" id="priceMinThumb" style="left: 0%;"></div>
+                <div class="slider-thumb" id="priceMaxThumb" style="left: 100%;"></div>
+            </div>
+            <div class="price-inputs">
+                <input type="number" class="price-input" id="minPrice" value="0" readonly>
+                <span>-</span>
+                <input type="number" class="price-input" id="maxPrice" value="1500" readonly>
+            </div>
+        </div>
+    </div>
+
+    <div class="filter-section">
+        <label class="filter-label">面积（平米）</label>
+        <div class="filter-options" id="areaOptions">
+            <div class="filter-option" data-value="">不限</div>
+            <div class="filter-option" data-value="0-100">100以下</div>
+            <div class="filter-option" data-value="100-150">100-150</div>
+            <div class="filter-option" data-value="150-200">150-200</div>
+            <div class="filter-option" data-value="200-999">200以上</div>
+        </div>
+    </div>
+
+    <div class="filter-section">
+        <label class="filter-label">户型</label>
+        <div class="filter-options" id="roomOptions">
+            <div class="filter-option" data-value="">不限</div>
+            <div class="filter-option" data-value="1">一室</div>
+            <div class="filter-option" data-value="2">两室</div>
+            <div class="filter-option" data-value="3">三室</div>
+            <div class="filter-option" data-value="4">四室</div>
+            <div class="filter-option" data-value="5">五室及以上</div>
+        </div>
+    </div>
+
+    <!-- 结果列表头部 -->
+    <div class="results-header">
+        <div class="results-count">共 <span id="resultCount">0</span> 套房源</div>
+        <button class="sort-btn" onclick="showSortOptions()">
+            <span id="currentSort">匹配度</span>
+            <i class="fa fa-angle-down"></i>
+        </button>
+    </div>
+
+    <!-- 房源列表 -->
+    <div id="houseList">
+        <!-- 动态加载 -->
+    </div>
+
+    <!-- 排序弹窗 -->
+    <div class="overlay" id="sortOverlay" onclick="hideSortOptions()"></div>
+    <div class="sort-dropdown" id="sortDropdown">
+        <div class="sort-option active" data-sort="match" onclick="selectSort('match', '匹配度')">
+            <span>匹配度</span>
+            <i class="fa fa-check"></i>
+        </div>
+        <div class="sort-option" data-sort="price-asc" onclick="selectSort('price-asc', '价格升序')">
+            <span>价格升序</span>
+            <i class="fa fa-check" style="visibility: hidden;"></i>
+        </div>
+        <div class="sort-option" data-sort="price-desc" onclick="selectSort('price-desc', '价格降序')">
+            <span>价格降序</span>
+            <i class="fa fa-check" style="visibility: hidden;"></i>
+        </div>
+    </div>
+
+    <!-- 底部操作栏 -->
+    <div class="bottom-bar">
+        <button class="btn-secondary" onclick="resetFilters()">
+            <i class="fa fa-refresh mr-2"></i>重置
+        </button>
+        <button class="btn-primary" onclick="applyFilters()">
+            <i class="fa fa-check mr-2"></i>确定
+        </button>
+    </div>
+
+    <script>
+        let allHouses = [];
+        let filteredHouses = [];
+        let currentFilters = {
+            district: '',
+            priceMin: 0,
+            priceMax: 1500,
+            area: '',
+            rooms: ''
+        };
+        let currentSort = 'match';
+
+        // 价格滑块相关
+        let isDragging = false;
+        let activeThumb = null;
+        const MIN_PRICE = 0;
+        const MAX_PRICE = 1500;
+
+        // 加载房源数据
+        async function loadHouses() {
+            try {
+                const response = await fetch('../assets/data/houses.json');
+                const data = await response.json();
+                allHouses = data.houses;
+                filteredHouses = [...allHouses];
+                renderHouses();
+            } catch (error) {
+                console.error('加载房源数据失败:', error);
+                document.getElementById('houseList').innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon"><i class="fa fa-exclamation-circle"></i></div>
+                        <div class="empty-text">加载失败，请重试</div>
+                    </div>
+                `;
+            }
+        }
+
+        // 初始化价格滑块
+        function initPriceSlider() {
+            const track = document.getElementById('priceSliderTrack');
+            const minThumb = document.getElementById('priceMinThumb');
+            const maxThumb = document.getElementById('priceMaxThumb');
+
+            function handleMouseDown(e, thumb) {
+                isDragging = true;
+                activeThumb = thumb;
+                e.preventDefault();
+            }
+
+            function handleMouseMove(e) {
+                if (!isDragging || !activeThumb) return;
+
+                const rect = track.getBoundingClientRect();
+                const x = Math.max(0, Math.min(e.clientX - rect.left, rect.width));
+                const percent = (x / rect.width) * 100;
+                const value = Math.round((percent / 100) * MAX_PRICE);
+
+                if (activeThumb === minThumb) {
+                    const maxValue = parseInt(document.getElementById('maxPrice').value);
+                    if (value <= maxValue) {
+                        currentFilters.priceMin = value;
+                        document.getElementById('minPrice').value = value;
+                        minThumb.style.left = percent + '%';
+                        updateSliderRange();
+                    }
+                } else {
+                    const minValue = parseInt(document.getElementById('minPrice').value);
+                    if (value >= minValue) {
+                        currentFilters.priceMax = value;
+                        document.getElementById('maxPrice').value = value;
+                        maxThumb.style.left = percent + '%';
+                        updateSliderRange();
+                    }
+                }
+            }
+
+            function handleMouseUp() {
+                isDragging = false;
+                activeThumb = null;
+            }
+
+            minThumb.addEventListener('mousedown', (e) => handleMouseDown(e, minThumb));
+            maxThumb.addEventListener('mousedown', (e) => handleMouseDown(e, maxThumb));
+            document.addEventListener('mousemove', handleMouseMove);
+            document.addEventListener('mouseup', handleMouseUp);
+
+            // 触摸事件支持
+            minThumb.addEventListener('touchstart', (e) => {
+                isDragging = true;
+                activeThumb = minThumb;
+            });
+            maxThumb.addEventListener('touchstart', (e) => {
+                isDragging = true;
+                activeThumb = maxThumb;
+            });
+
+            document.addEventListener('touchmove', (e) => {
+                if (!isDragging || !activeThumb) return;
+                const touch = e.touches[0];
+                const rect = track.getBoundingClientRect();
+                const x = Math.max(0, Math.min(touch.clientX - rect.left, rect.width));
+                const percent = (x / rect.width) * 100;
+                const value = Math.round((percent / 100) * MAX_PRICE);
+
+                if (activeThumb === minThumb) {
+                    const maxValue = parseInt(document.getElementById('maxPrice').value);
+                    if (value <= maxValue) {
+                        currentFilters.priceMin = value;
+                        document.getElementById('minPrice').value = value;
+                        minThumb.style.left = percent + '%';
+                        updateSliderRange();
+                    }
+                } else {
+                    const minValue = parseInt(document.getElementById('minPrice').value);
+                    if (value >= minValue) {
+                        currentFilters.priceMax = value;
+                        document.getElementById('maxPrice').value = value;
+                        maxThumb.style.left = percent + '%';
+                        updateSliderRange();
+                    }
+                }
+            });
+
+            document.addEventListener('touchend', () => {
+                isDragging = false;
+                activeThumb = null;
+            });
+        }
+
+        function updateSliderRange() {
+            const range = document.getElementById('priceSliderRange');
+            const minPercent = (currentFilters.priceMin / MAX_PRICE) * 100;
+            const maxPercent = (currentFilters.priceMax / MAX_PRICE) * 100;
+            range.style.left = minPercent + '%';
+            range.style.width = (maxPercent - minPercent) + '%';
+        }
+
+        // 初始化筛选选项
+        function initFilterOptions() {
+            // 区域筛选
+            document.getElementById('districtOptions').addEventListener('click', (e) => {
+                if (e.target.classList.contains('filter-option')) {
+                    document.querySelectorAll('#districtOptions .filter-option').forEach(opt => {
+                        opt.classList.remove('active');
+                    });
+                    e.target.classList.add('active');
+                    currentFilters.district = e.target.dataset.value;
+                }
+            });
+
+            // 面积筛选
+            document.getElementById('areaOptions').addEventListener('click', (e) => {
+                if (e.target.classList.contains('filter-option')) {
+                    document.querySelectorAll('#areaOptions .filter-option').forEach(opt => {
+                        opt.classList.remove('active');
+                    });
+                    e.target.classList.add('active');
+                    currentFilters.area = e.target.dataset.value;
+                }
+            });
+
+            // 户型筛选
+            document.getElementById('roomOptions').addEventListener('click', (e) => {
+                if (e.target.classList.contains('filter-option')) {
+                    document.querySelectorAll('#roomOptions .filter-option').forEach(opt => {
+                        opt.classList.remove('active');
+                    });
+                    e.target.classList.add('active');
+                    currentFilters.rooms = e.target.dataset.value;
+                }
+            });
+
+            // 默认选中"不限"
+            document.querySelectorAll('.filter-option[data-value=""]').forEach(opt => {
+                opt.classList.add('active');
+            });
+        }
+
+        // 应用筛选
+        function applyFilters() {
+            filteredHouses = allHouses.filter(house => {
+                // 区域筛选
+                if (currentFilters.district && house.district !== currentFilters.district) {
+                    return false;
+                }
+
+                // 价格筛选
+                if (house.totalPrice < currentFilters.priceMin || house.totalPrice > currentFilters.priceMax) {
+                    return false;
+                }
+
+                // 面积筛选
+                if (currentFilters.area) {
+                    const [min, max] = currentFilters.area.split('-').map(Number);
+                    if (house.area < min || house.area > max) {
+                        return false;
+                    }
+                }
+
+                // 户型筛选
+                if (currentFilters.rooms) {
+                    const roomNum = parseInt(house.rooms.charAt(0));
+                    const filterRoom = parseInt(currentFilters.rooms);
+                    if (filterRoom === 5) {
+                        if (roomNum < 5) return false;
+                    } else {
+                        if (roomNum !== filterRoom) return false;
+                    }
+                }
+
+                return true;
+            });
+
+            sortHouses();
+            renderHouses();
+        }
+
+        // 重置筛选
+        function resetFilters() {
+            currentFilters = {
+                district: '',
+                priceMin: 0,
+                priceMax: 1500,
+                area: '',
+                rooms: ''
+            };
+
+            // 重置UI
+            document.querySelectorAll('.filter-option').forEach(opt => {
+                opt.classList.remove('active');
+            });
+            document.querySelectorAll('.filter-option[data-value=""]').forEach(opt => {
+                opt.classList.add('active');
+            });
+
+            document.getElementById('minPrice').value = 0;
+            document.getElementById('maxPrice').value = 1500;
+            document.getElementById('priceMinThumb').style.left = '0%';
+            document.getElementById('priceMaxThumb').style.left = '100%';
+            updateSliderRange();
+
+            filteredHouses = [...allHouses];
+            sortHouses();
+            renderHouses();
+        }
+
+        // 排序
+        function sortHouses() {
+            if (currentSort === 'match') {
+                filteredHouses.sort((a, b) => b.matchRate - a.matchRate);
+            } else if (currentSort === 'price-asc') {
+                filteredHouses.sort((a, b) => a.totalPrice - b.totalPrice);
+            } else if (currentSort === 'price-desc') {
+                filteredHouses.sort((a, b) => b.totalPrice - a.totalPrice);
+            }
+        }
+
+        // 显示排序选项
+        function showSortOptions() {
+            document.getElementById('sortOverlay').classList.add('show');
+            document.getElementById('sortDropdown').classList.add('show');
+        }
+
+        // 隐藏排序选项
+        function hideSortOptions() {
+            document.getElementById('sortOverlay').classList.remove('show');
+            document.getElementById('sortDropdown').classList.remove('show');
+        }
+
+        // 选择排序方式
+        function selectSort(sort, name) {
+            currentSort = sort;
+            document.getElementById('currentSort').textContent = name;
+
+            // 更新选中状态
+            document.querySelectorAll('.sort-option').forEach(opt => {
+                opt.classList.remove('active');
+                opt.querySelector('.fa-check').style.visibility = 'hidden';
+            });
+            const activeOpt = document.querySelector(`.sort-option[data-sort="${sort}"]`);
+            activeOpt.classList.add('active');
+            activeOpt.querySelector('.fa-check').style.visibility = 'visible';
+
+            hideSortOptions();
+            sortHouses();
+            renderHouses();
+        }
+
+        // 渲染房源列表
+        function renderHouses() {
+            const list = document.getElementById('houseList');
+            document.getElementById('resultCount').textContent = filteredHouses.length;
+
+            if (filteredHouses.length === 0) {
+                list.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon"><i class="fa fa-home"></i></div>
+                        <div class="empty-text">暂无符合条件的房源</div>
+                    </div>
+                `;
+                return;
+            }
+
+            list.innerHTML = filteredHouses.map(house => {
+                const tagColors = ['primary', 'success', 'warning'];
+                const displayTags = house.tags.slice(0, 3);
+
+                return `
+                    <div class="house-card" onclick="viewHouseDetail(${house.id})">
+                        <img src="${house.images[0]}" alt="${house.name}" class="house-image" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22400%22 height=%22200%22%3E%3Crect fill=%22%23f5f7fa%22 width=%22400%22 height=%22200%22/%3E%3Ctext fill=%22%2386909c%22 x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22%3E${house.name}%3C/text%3E%3C/svg%3E'">
+                        <div class="house-info">
+                            <h3 class="house-name">${house.name}（${house.district}）</h3>
+                            <div class="house-tags">
+                                ${displayTags.map((tag, i) =>
+                                    `<span class="tag tag-${tagColors[i % tagColors.length]}">${tag}</span>`
+                                ).join('')}
+                            </div>
+                            <div style="font-size: 14px; color: #4E5969; margin: 8px 0;">
+                                ${house.rooms} | ${house.area}㎡
+                            </div>
+                            <div class="house-price">
+                                <div>
+                                    <span class="total-price">¥${house.totalPrice}万</span>
+                                    <span class="unit-price" style="margin-left: 8px;">¥${house.price}/㎡</span>
+                                </div>
+                                <div class="match-rate">匹配度 ${house.matchRate}%</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // 查看房源详情
+        function viewHouseDetail(id) {
+            window.location.href = `house-detail.html?id=${id}`;
+        }
+
+        // 页面加载
+        window.addEventListener('load', () => {
+            loadHouses();
+            initPriceSlider();
+            initFilterOptions();
+        });
+    </script>
+</body>
+</html>

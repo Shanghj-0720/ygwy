@@ -1,0 +1,145 @@
+{
+  "houses": [
+    {
+      "id": 1,
+      "name": "国色风华",
+      "district": "钟楼区",
+      "location": "常州市钟楼区勤业路与龙江路交汇处",
+      "price": 38000,
+      "totalPrice": 714.4,
+      "area": 188,
+      "rooms": "4室2厅3卫",
+      "type": "改善型住宅",
+      "developer": "建发集团",
+      "property": "建发物业",
+      "propertyFee": 4.2,
+      "greenRate": 38,
+      "volumeRate": 2.0,
+      "status": "现房在售",
+      "deliveryStandard": "精装交付",
+      "matchRate": 96,
+      "images": [
+        "https://img2-build.jiwu.com/album/manual/2025/07/09/141142450286.jpg/jiwu$800x600",
+        "https://img2-build.jiwu.com/album/manual/2025/07/09/141142450286.jpg/jiwu$800x600",
+        "https://img2-build.jiwu.com/album/manual/2025/07/09/141142450286.jpg/jiwu$800x600"
+      ],
+      "tags": ["AI推荐", "品牌房企（建发）", "现房在售", "中式园林", "改善型住宅", "精装交付"],
+      "school": {
+        "name": "常州市钟楼区实验小学",
+        "level": "省重点",
+        "distance": "步行3分钟"
+      },
+      "metro": {
+        "line": "地铁2号线",
+        "station": "勤业站",
+        "distance": "300米"
+      },
+      "facilities": [
+        {"name": "龙湖天街购物中心", "distance": "500米", "type": "商圈"},
+        {"name": "常州市第二人民医院", "distance": "1.2km", "type": "医院"},
+        {"name": "青枫公园", "distance": "800米", "type": "公园"}
+      ],
+      "description": "国色风华由建发集团打造的新中式高端住宅项目，位于钟楼区核心改善板块。项目紧邻常州市钟楼区实验小学，距离地铁2号线勤业站仅300米。周边配套齐全，龙湖天街购物中心、常州市第二人民医院、青枫公园等生活配套一应俱全。项目采用新中式园林设计，绿化率38%，现房在售，精装交付，是改善型购房的理想选择。",
+      "agent": {
+        "name": "张经理",
+        "phone": "13800138000",
+        "avatar": "",
+        "experience": "5年"
+      }
+    },
+    {
+      "id": 2,
+      "name": "翠礼峰天玺",
+      "district": "天宁区",
+      "location": "常州市天宁区文化宫附近",
+      "price": 35000,
+      "totalPrice": 500.5,
+      "area": 143,
+      "rooms": "3室2厅2卫",
+      "type": "高端住宅",
+      "developer": "保利地产",
+      "property": "保利物业",
+      "propertyFee": 3.8,
+      "greenRate": 40,
+      "volumeRate": 1.8,
+      "status": "准现房",
+      "deliveryStandard": "精装交付",
+      "matchRate": 93,
+      "images": [
+        "https://p9.itc.cn/q_70/images01/20231012/ce912d35e8164e26819d0c08969e1d5a.png",
+        "https://p9.itc.cn/q_70/images01/20231012/ce912d35e8164e26819d0c08969e1d5a.png",
+        "https://p9.itc.cn/q_70/images01/20231012/ce912d35e8164e26819d0c08969e1d5a.png"
+      ],
+      "tags": ["AI推荐", "央企开发（保利）", "准现房", "高端住宅", "绿化率40%", "智能家居"],
+      "school": {
+        "name": "常州市局前街小学教育集团",
+        "level": "市重点",
+        "distance": "步行5分钟"
+      },
+      "metro": {
+        "line": "地铁1号线",
+        "station": "文化宫站",
+        "distance": "600米"
+      },
+      "facilities": [
+        {"name": "泰富百货", "distance": "800米", "type": "商圈"},
+        {"name": "常州市第一人民医院", "distance": "1.5km", "type": "医院"},
+        {"name": "红梅公园", "distance": "1km", "type": "公园"}
+      ],
+      "description": "翠礼峰天玺是保利地产在天宁区打造的高端住宅项目。项目对口常州市局前街小学教育集团，距离地铁1号线文化宫站600米。项目绿化率高达40%，采用现代轻奢园林设计，配备智能家居系统。保利物业提供一级物业服务，准现房在售，精装交付。",
+      "agent": {
+        "name": "李经理",
+        "phone": "13900139000",
+        "avatar": "",
+        "experience": "8年"
+      }
+    },
+    {
+      "id": 3,
+      "name": "桃花院子",
+      "district": "新北区",
+      "location": "常州市新北区河海路",
+      "price": 42000,
+      "totalPrice": 1092,
+      "area": 260,
+      "rooms": "5室2厅4卫",
+      "type": "别墅",
+      "developer": "绿城集团",
+      "property": "绿城物业",
+      "propertyFee": 5.5,
+      "greenRate": 45,
+      "volumeRate": 0.8,
+      "status": "现房在售",
+      "deliveryStandard": "毛坯交付",
+      "matchRate": 90,
+      "images": [
+        "https://q3.itc.cn/images01/20251028/1f1fc69ea4c44290b8a39bcac27e65cd.jpeg",
+        "https://q3.itc.cn/images01/20251028/1f1fc69ea4c44290b8a39bcac27e65cd.jpeg",
+        "https://q3.itc.cn/images01/20251028/1f1fc69ea4c44290b8a39bcac27e65cd.jpeg"
+      ],
+      "tags": ["AI推荐", "品牌物业（绿城）", "别墅产品", "纯改善", "低密社区", "人车分流"],
+      "school": {
+        "name": "常州市新北区河海实验小学",
+        "level": "区重点",
+        "distance": "步行8分钟"
+      },
+      "metro": {
+        "line": "地铁1号线",
+        "station": "河海站",
+        "distance": "400米"
+      },
+      "facilities": [
+        {"name": "万达广场", "distance": "2km", "type": "商圈"},
+        {"name": "新北区人民医院", "distance": "1.8km", "type": "医院"},
+        {"name": "新龙生态林", "distance": "500米", "type": "公园"}
+      ],
+      "description": "桃花院子是绿城集团在新北区打造的低密度别墅项目。项目容积率仅0.8，绿化率高达45%，采用人车分流设计，营造纯粹的改善型居住环境。项目对口河海实验小学，距离地铁1号线河海站400米。绿城物业提供五星级管家服务，是追求品质生活的理想选择。",
+      "agent": {
+        "name": "王经理",
+        "phone": "13700137000",
+        "avatar": "",
+        "experience": "10年"
+      }
+    }
+  ]
+}

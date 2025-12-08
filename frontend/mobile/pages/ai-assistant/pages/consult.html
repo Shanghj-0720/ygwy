@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer">
+    <title>在线咨询 - AI荐房</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/common.css">
+    <style>
+        body {
+            font-family: 'PingFang SC', 'Helvetica Neue', 'Arial', sans-serif;
+            background: #F5F7FA;
+            padding-bottom: 80px;
+        }
+
+        .page-container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .house-preview {
+            background: white;
+            margin: 16px;
+            padding: 16px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            display: flex;
+            gap: 12px;
+        }
+
+        .preview-image {
+            width: 100px;
+            height: 80px;
+            border-radius: 8px;
+            object-fit: cover;
+            background: #F5F7FA;
+        }
+
+        .preview-info {
+            flex: 1;
+        }
+
+        .preview-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1D2129;
+            margin-bottom: 6px;
+        }
+
+        .preview-detail {
+            font-size: 13px;
+            color: #86909C;
+            margin-bottom: 4px;
+        }
+
+        .preview-price {
+            font-size: 18px;
+            font-weight: 700;
+            color: #F53F3F;
+            margin-top: 6px;
+        }
+
+        .form-container {
+            background: white;
+            margin: 16px;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        }
+
+        .form-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1D2129;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .form-title i {
+            color: #165DFF;
+        }
+
+        .required {
+            color: #F53F3F;
+            margin-left: 2px;
+        }
+
+        .form-textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #E5E6EB;
+            border-radius: 8px;
+            font-size: 14px;
+            color: #1D2129;
+            resize: vertical;
+            min-height: 100px;
+            font-family: inherit;
+            transition: all 0.3s ease;
+        }
+
+        .form-textarea:focus {
+            outline: none;
+            border-color: #165DFF;
+            box-shadow: 0 0 0 3px rgba(22, 93, 255, 0.1);
+        }
+
+        .datetime-input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #E5E6EB;
+            border-radius: 8px;
+            font-size: 14px;
+            color: #1D2129;
+            transition: all 0.3s ease;
+        }
+
+        .datetime-input:focus {
+            outline: none;
+            border-color: #165DFF;
+            box-shadow: 0 0 0 3px rgba(22, 93, 255, 0.1);
+        }
+
+        .tips {
+            background: #F0F4FF;
+            border-left: 3px solid #165DFF;
+            padding: 12px;
+            margin-top: 16px;
+            border-radius: 4px;
+            font-size: 13px;
+            color: #4E5969;
+            line-height: 1.6;
+        }
+
+        .tips i {
+            color: #165DFF;
+            margin-right: 6px;
+        }
+
+        .success-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .success-modal.show {
+            display: flex;
+        }
+
+        .success-content {
+            background: white;
+            border-radius: 16px;
+            padding: 32px;
+            text-align: center;
+            max-width: 300px;
+            animation: scaleIn 0.3s ease;
+        }
+
+        @keyframes scaleIn {
+            from {
+                transform: scale(0.9);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .success-icon {
+            width: 64px;
+            height: 64px;
+            background: #00B96B;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            margin: 0 auto 16px;
+        }
+
+        .success-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1D2129;
+            margin-bottom: 8px;
+        }
+
+        .success-text {
+            font-size: 14px;
+            color: #86909C;
+            margin-bottom: 20px;
+        }
+
+        .success-btn {
+            width: 100%;
+            padding: 12px;
+            background: #165DFF;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <!-- 返回按钮 -->
+    <button class="back-btn" onclick="history.back()">
+        <i class="fa fa-arrow-left"></i>
+    </button>
+
+    <div class="page-container">
+        <!-- 房源预览 -->
+        <div class="house-preview">
+            <img id="houseImage" src="" alt="" class="preview-image">
+            <div class="preview-info">
+                <div class="preview-name" id="houseName">加载中...</div>
+                <div class="preview-detail" id="houseDetail">-</div>
+                <div class="preview-price">¥<span id="housePrice">0</span>万</div>
+            </div>
+        </div>
+
+        <!-- 表单 -->
+        <div class="form-container">
+            <h2 class="form-title" id="formTitle">
+                <i class="fa fa-comments"></i>
+                在线咨询
+            </h2>
+
+            <form id="consultForm">
+                <div class="form-group">
+                    <label class="form-label">
+                        您的姓名<span class="required">*</span>
+                    </label>
+                    <input type="text" class="form-input" id="userName" placeholder="请输入您的姓名" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">
+                        联系电话<span class="required">*</span>
+                    </label>
+                    <input type="tel" class="form-input" id="userPhone" placeholder="请输入您的手机号" pattern="[0-9]{11}" required>
+                </div>
+
+                <div class="form-group" id="consultContentGroup">
+                    <label class="form-label">
+                        咨询内容<span class="required">*</span>
+                    </label>
+                    <textarea class="form-textarea" id="consultContent" placeholder="请描述您想咨询的问题，如：房源配套、付款方式、优惠政策等" required></textarea>
+                </div>
+
+                <div class="form-group" id="appointmentTimeGroup" style="display: none;">
+                    <label class="form-label">
+                        预约时间<span class="required">*</span>
+                    </label>
+                    <input type="datetime-local" class="datetime-input" id="appointmentTime">
+                </div>
+
+                <div class="tips">
+                    <i class="fa fa-info-circle"></i>
+                    <span id="tipsText">提交后，专属经纪人将在30分钟内与您联系，为您提供一对一专业服务。</span>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 底部操作栏 -->
+    <div class="bottom-bar">
+        <button class="btn-primary" onclick="submitForm()" style="width: 100%;">
+            <i class="fa fa-paper-plane mr-2"></i>提交
+        </button>
+    </div>
+
+    <!-- 成功提示模态框 -->
+    <div class="success-modal" id="successModal">
+        <div class="success-content">
+            <div class="success-icon">
+                <i class="fa fa-check"></i>
+            </div>
+            <div class="success-title" id="successTitle">提交成功</div>
+            <div class="success-text" id="successText">我们的经纪人将尽快与您联系</div>
+            <button class="success-btn" onclick="closeSuccessModal()">我知道了</button>
+        </div>
+    </div>
+
+    <script>
+        let consultType = 'consult'; // consult 或 appointment
+        let houseData = null;
+
+        // 获取URL参数
+        function getQueryParam(param) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param);
+        }
+
+        // 加载房源数据
+        async function loadHouseData() {
+            const houseId = parseInt(getQueryParam('id') || '1');
+            consultType = getQueryParam('type') || 'consult';
+
+            try {
+                const response = await fetch('../assets/data/houses.json');
+                const data = await response.json();
+                houseData = data.houses.find(h => h.id === houseId);
+
+                if (!houseData) {
+                    alert('房源不存在');
+                    history.back();
+                    return;
+                }
+
+                // 渲染房源信息
+                renderHousePreview();
+                // 切换表单模式
+                switchFormMode();
+            } catch (error) {
+                console.error('加载房源数据失败:', error);
+                alert('加载失败，请重试');
+            }
+        }
+
+        // 渲染房源预览
+        function renderHousePreview() {
+            document.getElementById('houseImage').src = houseData.images[0];
+            document.getElementById('houseImage').alt = houseData.name;
+            document.getElementById('houseName').textContent = houseData.name;
+            document.getElementById('houseDetail').textContent = `${houseData.district} | ${houseData.rooms} | ${houseData.area}㎡`;
+            document.getElementById('housePrice').textContent = houseData.totalPrice;
+        }
+
+        // 切换表单模式
+        function switchFormMode() {
+            const formTitle = document.getElementById('formTitle');
+            const consultContentGroup = document.getElementById('consultContentGroup');
+            const appointmentTimeGroup = document.getElementById('appointmentTimeGroup');
+            const tipsText = document.getElementById('tipsText');
+
+            if (consultType === 'appointment') {
+                formTitle.innerHTML = '<i class="fa fa-calendar"></i>预约看房';
+                consultContentGroup.style.display = 'none';
+                appointmentTimeGroup.style.display = 'block';
+                tipsText.textContent = '提交后，专属经纪人将在您预约的时间前与您联系确认，并提供专业的看房服务。';
+
+                // 设置最小时间为当前时间
+                const now = new Date();
+                now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+                document.getElementById('appointmentTime').min = now.toISOString().slice(0, 16);
+            } else {
+                formTitle.innerHTML = '<i class="fa fa-comments"></i>在线咨询';
+                consultContentGroup.style.display = 'block';
+                appointmentTimeGroup.style.display = 'none';
+                tipsText.textContent = '提交后，专属经纪人将在30分钟内与您联系，为您提供一对一专业服务。';
+            }
+        }
+
+        // 提交表单
+        function submitForm() {
+            const form = document.getElementById('consultForm');
+
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+
+            const userName = document.getElementById('userName').value.trim();
+            const userPhone = document.getElementById('userPhone').value.trim();
+
+            // 验证手机号
+            if (!/^1[3-9]\d{9}$/.test(userPhone)) {
+                alert('请输入正确的手机号码');
+                return;
+            }
+
+            let formData = {
+                houseId: houseData.id,
+                houseName: houseData.name,
+                userName: userName,
+                userPhone: userPhone,
+                type: consultType
+            };
+
+            if (consultType === 'appointment') {
+                const appointmentTime = document.getElementById('appointmentTime').value;
+                if (!appointmentTime) {
+                    alert('请选择预约时间');
+                    return;
+                }
+                formData.appointmentTime = appointmentTime;
+            } else {
+                const consultContent = document.getElementById('consultContent').value.trim();
+                if (!consultContent) {
+                    alert('请填写咨询内容');
+                    return;
+                }
+                formData.consultContent = consultContent;
+            }
+
+            // 模拟提交（实际项目中应该调用API）
+            console.log('提交数据:', formData);
+
+            // 显示成功提示
+            showSuccessModal();
+        }
+
+        // 显示成功提示
+        function showSuccessModal() {
+            const modal = document.getElementById('successModal');
+            const title = document.getElementById('successTitle');
+            const text = document.getElementById('successText');
+
+            if (consultType === 'appointment') {
+                title.textContent = '预约成功';
+                text.textContent = '我们的经纪人将在预约时间前与您联系确认';
+            } else {
+                title.textContent = '提交成功';
+                text.textContent = '我们的经纪人将尽快与您联系';
+            }
+
+            modal.classList.add('show');
+        }
+
+        // 关闭成功提示
+        function closeSuccessModal() {
+            document.getElementById('successModal').classList.remove('show');
+            // 返回上一页
+            setTimeout(() => {
+                history.back();
+            }, 300);
+        }
+
+        // 页面加载
+        window.addEventListener('load', loadHouseData);
+    </script>
+</body>
+</html>
