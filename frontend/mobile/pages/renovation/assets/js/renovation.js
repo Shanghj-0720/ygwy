@@ -75,8 +75,8 @@ function queryByPhone() {
             alert('请输入正确的手机号码');
             return;
         }
-        // 模拟查询
-        alert(`正在查询手机号 ${phone} 的装修登记信息...`);
+        // 模拟查询 - 跳转到详情页
+        window.location.href = 'detail.html?phone=' + phone;
     }
 }
 
@@ -84,8 +84,17 @@ function queryByPhone() {
 function queryByHouse() {
     const houseId = prompt('请输入房屋公安编号：');
     if (houseId) {
-        // 模拟查询
-        alert(`正在查询房屋编号 ${houseId} 的装修登记信息...`);
+        // 模拟查询 - 跳转到详情页
+        window.location.href = 'detail.html?houseId=' + houseId;
+    }
+}
+
+// 物业端查询登记
+function queryByHouseProperty() {
+    const houseId = prompt('请输入房屋公安编号：');
+    if (houseId) {
+        // 模拟查询 - 跳转到物业端详情页
+        window.location.href = 'detail-property.html?houseId=' + houseId;
     }
 }
 

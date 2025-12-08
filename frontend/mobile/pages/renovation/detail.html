@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>装修登记详情 - 智慧服务平台</title>
+    <link rel="stylesheet" href="assets/css/renovation.css">
+</head>
+<body>
+    <header class="header">
+        <button class="back-btn" onclick="goBack()">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M15.41 7.41 14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
+            </svg>
+        </button>
+        <div class="header-content">
+            <p class="eyebrow">登记查询</p>
+            <h1>装修登记详情</h1>
+            <p class="subtitle">查看登记材料 · 补充方案</p>
+        </div>
+        <span class="pill success">已登记</span>
+    </header>
+
+    <main class="page">
+        <!-- 登记状态卡片 -->
+        <section class="card">
+            <div class="card-header">
+                <div>
+                    <p class="eyebrow">登记状态</p>
+                    <h2>装修登记已完成</h2>
+                </div>
+                <span class="status-tag success">已登记</span>
+            </div>
+            <div class="info-list">
+                <div class="info-item">
+                    <span class="info-label">登记编号</span>
+                    <span class="info-value">ZX2024011500001</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">登记时间</span>
+                    <span class="info-value">2024-01-16 10:30</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">审核人</span>
+                    <span class="info-value">物业管理员</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- 房屋信息 -->
+        <section class="card">
+            <div class="card-header">
+                <div>
+                    <p class="eyebrow">房屋信息</p>
+                    <h2>装修房屋</h2>
+                </div>
+            </div>
+            <div class="house-info">
+                <div class="house-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                        <polyline points="9,22 9,12 15,12 15,22"/>
+                    </svg>
+                </div>
+                <div class="house-detail">
+                    <div class="house-address">常州市天宁区某某花园12栋1单元101室</div>
+                    <div class="house-meta">
+                        <span>公安编号: 320400001234</span>
+                        <span>产权人: 张三</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 申请人信息 -->
+        <section class="card">
+            <div class="card-header">
+                <div>
+                    <p class="eyebrow">申请信息</p>
+                    <h2>登记申请人</h2>
+                </div>
+            </div>
+            <div class="info-list">
+                <div class="info-item">
+                    <span class="info-label">申请人</span>
+                    <span class="info-value">李四</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">申请身份</span>
+                    <span class="info-value">房屋使用人（租赁人）</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">联系电话</span>
+                    <span class="info-value">138****1234</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">申请时间</span>
+                    <span class="info-value">2024-01-15 14:30</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- 登记材料 -->
+        <section class="card">
+            <div class="card-header">
+                <div>
+                    <p class="eyebrow">登记材料</p>
+                    <h2>已提交材料</h2>
+                </div>
+                <div class="deadline">共5项</div>
+            </div>
+
+            <div class="review-list">
+                <div class="review-item" onclick="previewMaterial('idcard')">
+                    <div class="review-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="4" width="18" height="16" rx="2"/>
+                            <circle cx="9" cy="10" r="2"/>
+                            <path d="M15 8h2"/>
+                            <path d="M15 12h2"/>
+                            <path d="M7 16h10"/>
+                        </svg>
+                    </div>
+                    <div class="review-info">
+                        <div class="review-title">使用人身份证</div>
+                        <div class="review-meta">已上传 1 张</div>
+                    </div>
+                    <div class="review-action">
+                        <span class="review-link">查看</span>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="9,18 15,12 9,6"/>
+                        </svg>
+                    </div>
+                </div>
+
+                <div class="review-item" onclick="previewMaterial('lease')">
+                    <div class="review-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                            <polyline points="14,2 14,8 20,8"/>
+                            <line x1="16" y1="13" x2="8" y2="13"/>
+                            <line x1="16" y1="17" x2="8" y2="17"/>
+                        </svg>
+                    </div>
+                    <div class="review-info">
+                        <div class="review-title">有效房屋租赁合同</div>
+                        <div class="review-meta">已上传 3 张</div>
+                    </div>
+                    <div class="review-action">
+                        <span class="review-link">查看</span>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="9,18 15,12 9,6"/>
+                        </svg>
+                    </div>
+                </div>
+
+                <div class="review-item" onclick="previewMaterial('ownerConsent')">
+                    <div class="review-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                            <polyline points="14,2 14,8 20,8"/>
+                            <path d="M9 15l2 2 4-4"/>
+                        </svg>
+                    </div>
+                    <div class="review-info">
+                        <div class="review-title">产权人同意装修书面材料</div>
+                        <div class="review-meta">已上传 1 张</div>
+                    </div>
+                    <div class="review-action">
+                        <span class="review-link">查看</span>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="9,18 15,12 9,6"/>
+                        </svg>
+                    </div>
+                </div>
+
+                <div class="review-item" onclick="previewMaterial('property')">
+                    <div class="review-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                            <polyline points="9,22 9,12 15,12 15,22"/>
+                        </svg>
+                    </div>
+                    <div class="review-info">
+                        <div class="review-title">房屋所有权证</div>
+                        <div class="review-meta">已上传 1 张</div>
+                    </div>
+                    <div class="review-action">
+                        <span class="review-link">查看</span>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="9,18 15,12 9,6"/>
+                        </svg>
+                    </div>
+                </div>
+
+                <div class="review-item" onclick="previewMaterial('plan')">
+                    <div class="review-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="3" width="18" height="18" rx="2"/>
+                            <path d="M3 9h18"/>
+                            <path d="M9 21V9"/>
+                        </svg>
+                    </div>
+                    <div class="review-info">
+                        <div class="review-title">装饰装修方案</div>
+                        <div class="review-meta">已上传 2 张</div>
+                    </div>
+                    <div class="review-action">
+                        <span class="review-link">查看</span>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="9,18 15,12 9,6"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 补充方案记录 -->
+        <section class="card" id="supplementCard" style="display: none;">
+            <div class="card-header">
+                <div>
+                    <p class="eyebrow">补充记录</p>
+                    <h2>补充装修方案</h2>
+                </div>
+            </div>
+            <div class="supplement-list" id="supplementList">
+                <!-- 动态生成 -->
+            </div>
+        </section>
+
+        <!-- 告知书 -->
+        <section class="card">
+            <div class="card-header">
+                <div>
+                    <p class="eyebrow">告知书</p>
+                    <h2>装饰装修告知书</h2>
+                </div>
+                <span class="status-tag success">已签署</span>
+            </div>
+            <p class="card-desc">房屋使用人已签署《住宅室内装饰装修告知书》。</p>
+            <div class="action-buttons">
+                <button class="btn outline" onclick="downloadTemplate('notice')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                        <polyline points="7,10 12,15 17,10"/>
+                        <line x1="12" y1="15" x2="12" y2="3"/>
+                    </svg>
+                    查看告知书
+                </button>
+            </div>
+        </section>
+
+        <!-- 操作区域 -->
+        <div class="submit-area">
+            <button type="button" class="btn outline" onclick="goToIndex()">返回首页</button>
+            <button type="button" class="btn primary" onclick="goToSupplement()">补充装修方案</button>
+        </div>
+
+        <!-- 帮助提示 -->
+        <section class="help-tips">
+            <div class="tip-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <path d="M12 16v-4"/>
+                    <path d="M12 8h.01"/>
+                </svg>
+                <span>如装修方案变更或超范围施工，需补充上传装修方案</span>
+            </div>
+        </section>
+    </main>
+
+    <script src="assets/js/renovation.js"></script>
+    <script>
+        // 预览材料
+        function previewMaterial(type) {
+            alert('查看材料：' + type);
+        }
+
+        // 跳转到补充方案页面
+        function goToSupplement() {
+            window.location.href = 'supplement.html';
+        }
+
+        // 模拟加载补充记录
+        function loadSupplementRecords() {
+            // 模拟数据
+            const records = [
+                // { date: '2024-01-20 15:30', reason: '方案变更', files: 2 }
+            ];
+
+            if (records.length > 0) {
+                document.getElementById('supplementCard').style.display = 'block';
+                const list = document.getElementById('supplementList');
+                list.innerHTML = records.map(r => `
+                    <div class="supplement-item" onclick="viewSupplement('${r.date}')">
+                        <div class="supplement-info">
+                            <div class="supplement-date">${r.date}</div>
+                            <div class="supplement-reason">${r.reason}</div>
+                        </div>
+                        <div class="supplement-files">${r.files}个文件</div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        // 页面加载
+        document.addEventListener('DOMContentLoaded', function() {
+            loadSupplementRecords();
+        });
+    </script>
+</body>
+</html>
