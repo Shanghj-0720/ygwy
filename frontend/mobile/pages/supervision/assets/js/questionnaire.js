@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function setMonth() {
     const title = document.getElementById('monthTitle');
-    if (title) title.textContent = '2025年15月';
+    if (title) title.textContent = '2025年12月';
 }
 
 function parseParams() {
