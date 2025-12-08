@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>产权人装修登记 - 智慧服务平台</title>
+    <link rel="stylesheet" href="assets/css/renovation.css">
+</head>
+<body>
+    <header class="header">
+        <button class="back-btn" onclick="goBack()">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M15.41 7.41 14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
+            </svg>
+        </button>
+        <div class="header-content">
+            <p class="eyebrow">装修登记</p>
+            <h1>材料上传</h1>
+            <p class="subtitle">请按要求上传装修登记材料</p>
+        </div>
+        <span class="pill">产权人</span>
+    </header>
+
+    <main class="page">
+        <!-- 进度指示器 -->
+        <section class="progress-bar">
+            <div class="progress-step active">
+                <div class="step-dot">1</div>
+                <div class="step-label">上传材料</div>
+            </div>
+            <div class="progress-line"></div>
+            <div class="progress-step">
+                <div class="step-dot">2</div>
+                <div class="step-label">物业审核</div>
+            </div>
+            <div class="progress-line"></div>
+            <div class="progress-step">
+                <div class="step-dot">3</div>
+                <div class="step-label">登记完成</div>
+            </div>
+        </section>
+
+        <!-- 房屋信息 -->
+        <section class="card">
+            <div class="card-header">
+                <div>
+                    <p class="eyebrow">房屋信息</p>
+                    <h2>装修房屋</h2>
+                </div>
+                <button class="btn-link" onclick="selectHouse()">更换</button>
+            </div>
+            <div class="house-info">
+                <div class="house-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                        <polyline points="9,22 9,12 15,12 15,22"/>
+                    </svg>
+                </div>
+                <div class="house-detail">
+                    <div class="house-address">常州市天宁区某某花园12栋1单元101室</div>
+                    <div class="house-meta">
+                        <span>公安编号: 320400001234</span>
+                        <span>产权人: 张三</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 材料上传表单 -->
+        <form id="uploadForm" class="upload-form">
+            <!-- 必填材料 -->
+            <section class="card">
+                <div class="card-header">
+                    <div>
+                        <p class="eyebrow required-label">必填材料</p>
+                        <h2>基础材料</h2>
+                    </div>
+                    <div class="deadline">2项必传</div>
+                </div>
+
+                <!-- 装修告知书 -->
+                <div class="upload-item">
+                    <div class="upload-header">
+                        <div class="upload-title">
+                            <span class="required-mark">*</span>
+                            住宅室内装饰装修告知书
+                        </div>
+                        <a href="#" class="download-link" onclick="downloadTemplate('notice')">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                <polyline points="7,10 12,15 17,10"/>
+                                <line x1="12" y1="15" x2="12" y2="3"/>
+                            </svg>
+                            下载模板
+                        </a>
+                    </div>
+                    <div class="upload-desc">请下载告知书模板，打印后由产权人签字，拍照或扫描上传</div>
+                    <div class="upload-zone" data-field="notice" onclick="triggerUpload('notice')">
+                        <input type="file" id="file-notice" accept="image/*,.pdf" hidden onchange="handleFileSelect(this, 'notice')">
+                        <div class="upload-placeholder" id="placeholder-notice">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                <polyline points="17,8 12,3 7,8"/>
+                                <line x1="12" y1="3" x2="12" y2="15"/>
+                            </svg>
+                            <span>点击上传告知书</span>
+                            <span class="upload-hint">支持 JPG、PNG、PDF 格式</span>
+                        </div>
+                        <div class="upload-preview" id="preview-notice" style="display: none;">
+                            <img id="img-notice" src="" alt="预览">
+                            <div class="preview-actions">
+                                <button type="button" class="btn-icon" onclick="event.stopPropagation(); removeFile('notice')">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="3,6 5,6 21,6"/>
+                                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 装修方案 -->
+                <div class="upload-item">
+                    <div class="upload-header">
+                        <div class="upload-title">
+                            <span class="required-mark">*</span>
+                            装饰装修方案
+                        </div>
+                    </div>
+                    <div class="upload-desc">包括装修平面布置图、效果图等（可上传多张）</div>
+                    <div class="upload-zone multi" data-field="plan" onclick="triggerUpload('plan')">
+                        <input type="file" id="file-plan" accept="image/*,.pdf" multiple hidden onchange="handleMultiFileSelect(this, 'plan')">
+                        <div class="upload-placeholder" id="placeholder-plan">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                <polyline points="17,8 12,3 7,8"/>
+                                <line x1="12" y1="3" x2="12" y2="15"/>
+                            </svg>
+                            <span>点击上传装修方案</span>
+                            <span class="upload-hint">可上传多张，支持 JPG、PNG、PDF 格式</span>
+                        </div>
+                        <div class="upload-gallery" id="gallery-plan"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 选填材料 -->
+            <section class="card">
+                <div class="card-header">
+                    <div>
+                        <p class="eyebrow">选填材料</p>
+                        <h2>身份证明</h2>
+                    </div>
+                    <div class="deadline">人、房绑定后可免传</div>
+                </div>
+
+                <!-- 身份证 -->
+                <div class="upload-item">
+                    <div class="upload-header">
+                        <div class="upload-title">产权人身份证</div>
+                        <span class="upload-tag optional">选填</span>
+                    </div>
+                    <div class="upload-desc">已完成人房绑定的用户可不上传</div>
+                    <div class="upload-zone" data-field="idcard" onclick="triggerUpload('idcard')">
+                        <input type="file" id="file-idcard" accept="image/*,.pdf" hidden onchange="handleFileSelect(this, 'idcard')">
+                        <div class="upload-placeholder" id="placeholder-idcard">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="4" width="18" height="16" rx="2"/>
+                                <circle cx="9" cy="10" r="2"/>
+                                <path d="M15 8h2"/>
+                                <path d="M15 12h2"/>
+                                <path d="M7 16h10"/>
+                            </svg>
+                            <span>点击上传身份证</span>
+                        </div>
+                        <div class="upload-preview" id="preview-idcard" style="display: none;">
+                            <img id="img-idcard" src="" alt="预览">
+                            <div class="preview-actions">
+                                <button type="button" class="btn-icon" onclick="event.stopPropagation(); removeFile('idcard')">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="3,6 5,6 21,6"/>
+                                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 房屋所有权证 -->
+                <div class="upload-item">
+                    <div class="upload-header">
+                        <div class="upload-title">房屋所有权证</div>
+                        <span class="upload-tag optional">选填</span>
+                    </div>
+                    <div class="upload-desc">已完成人房绑定的用户可不上传</div>
+                    <div class="upload-zone" data-field="property" onclick="triggerUpload('property')">
+                        <input type="file" id="file-property" accept="image/*,.pdf" hidden onchange="handleFileSelect(this, 'property')">
+                        <div class="upload-placeholder" id="placeholder-property">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                                <polyline points="9,22 9,12 15,12 15,22"/>
+                            </svg>
+                            <span>点击上传房屋所有权证</span>
+                        </div>
+                        <div class="upload-preview" id="preview-property" style="display: none;">
+                            <img id="img-property" src="" alt="预览">
+                            <div class="preview-actions">
+                                <button type="button" class="btn-icon" onclick="event.stopPropagation(); removeFile('property')">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="3,6 5,6 21,6"/>
+                                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 条件必填材料 -->
+            <section class="card">
+                <div class="card-header">
+                    <div>
+                        <p class="eyebrow conditional-label">条件必填</p>
+                        <h2>特殊情况材料</h2>
+                    </div>
+                    <div class="deadline">按实际情况上传</div>
+                </div>
+
+                <!-- 设计方案 -->
+                <div class="upload-item">
+                    <div class="upload-header">
+                        <div class="upload-title">设计方案</div>
+                        <span class="upload-tag conditional">条件必填</span>
+                    </div>
+                    <div class="upload-desc">涉及变动建筑主体或承重结构、超过设计标准增加楼面荷载时，需上传原设计单位或具有相应资质的设计单位出具的设计方案</div>
+                    <div class="condition-check">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="check-design" onchange="toggleConditional('design')">
+                            <span class="checkbox-custom"></span>
+                            本次装修涉及变动主体/承重结构或增加楼面荷载
+                        </label>
+                    </div>
+                    <div class="upload-zone conditional-zone" data-field="design" id="zone-design" style="display: none;" onclick="triggerUpload('design')">
+                        <input type="file" id="file-design" accept="image/*,.pdf" multiple hidden onchange="handleMultiFileSelect(this, 'design')">
+                        <div class="upload-placeholder" id="placeholder-design">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                <polyline points="17,8 12,3 7,8"/>
+                                <line x1="12" y1="3" x2="12" y2="15"/>
+                            </svg>
+                            <span>点击上传设计方案</span>
+                        </div>
+                        <div class="upload-gallery" id="gallery-design"></div>
+                    </div>
+                </div>
+
+                <!-- 装修企业资质 -->
+                <div class="upload-item">
+                    <div class="upload-header">
+                        <div class="upload-title">装饰装修企业资质</div>
+                        <span class="upload-tag conditional">条件必填</span>
+                    </div>
+                    <div class="upload-desc">委托装饰装修企业施工时，需上传企业资质证书或营业执照复印件</div>
+                    <div class="condition-check">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="check-company" onchange="toggleConditional('company')">
+                            <span class="checkbox-custom"></span>
+                            本次装修委托装修企业施工
+                        </label>
+                    </div>
+                    <div class="upload-zone conditional-zone" data-field="company" id="zone-company" style="display: none;" onclick="triggerUpload('company')">
+                        <input type="file" id="file-company" accept="image/*,.pdf" hidden onchange="handleFileSelect(this, 'company')">
+                        <div class="upload-placeholder" id="placeholder-company">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="2" y="7" width="20" height="14" rx="2"/>
+                                <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>
+                            </svg>
+                            <span>点击上传企业资质</span>
+                        </div>
+                        <div class="upload-preview" id="preview-company" style="display: none;">
+                            <img id="img-company" src="" alt="预览">
+                            <div class="preview-actions">
+                                <button type="button" class="btn-icon" onclick="event.stopPropagation(); removeFile('company')">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="3,6 5,6 21,6"/>
+                                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 共用人同意证明 -->
+                <div class="upload-item">
+                    <div class="upload-header">
+                        <div class="upload-title">共用人同意书面证明</div>
+                        <span class="upload-tag conditional">条件必填</span>
+                    </div>
+                    <div class="upload-desc">装修涉及共用部位时，需提供房屋共用人同意装饰装修的书面证明</div>
+                    <div class="condition-check">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="check-shared" onchange="toggleConditional('shared')">
+                            <span class="checkbox-custom"></span>
+                            本次装修涉及共用部位
+                        </label>
+                    </div>
+                    <div class="upload-zone conditional-zone" data-field="shared" id="zone-shared" style="display: none;" onclick="triggerUpload('shared')">
+                        <input type="file" id="file-shared" accept="image/*,.pdf" hidden onchange="handleFileSelect(this, 'shared')">
+                        <div class="upload-placeholder" id="placeholder-shared">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                                <circle cx="9" cy="7" r="4"/>
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                            </svg>
+                            <span>点击上传共用人同意证明</span>
+                        </div>
+                        <div class="upload-preview" id="preview-shared" style="display: none;">
+                            <img id="img-shared" src="" alt="预览">
+                            <div class="preview-actions">
+                                <button type="button" class="btn-icon" onclick="event.stopPropagation(); removeFile('shared')">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="3,6 5,6 21,6"/>
+                                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 提交按钮 -->
+            <div class="submit-area">
+                <button type="button" class="btn outline" onclick="saveDraft()">保存草稿</button>
+                <button type="submit" class="btn primary" onclick="submitForm(event)">提交审核</button>
+            </div>
+        </form>
+
+        <!-- 帮助提示 -->
+        <section class="help-tips">
+            <div class="tip-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <path d="M12 16v-4"/>
+                    <path d="M12 8h.01"/>
+                </svg>
+                <span>提交后物业将在1-3个工作日内完成审核，请保持手机畅通</span>
+            </div>
+        </section>
+    </main>
+
+    <!-- 提交成功弹窗 -->
+    <div class="modal" id="successModal" style="display: none;">
+        <div class="modal-backdrop" onclick="closeModal()"></div>
+        <div class="modal-content">
+            <div class="modal-icon success">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                    <polyline points="22,4 12,14.01 9,11.01"/>
+                </svg>
+            </div>
+            <h3>提交成功</h3>
+            <p>您的装修登记材料已提交，物业将在1-3个工作日内完成审核。审核结果将通过短信和站内信通知您。</p>
+            <div class="modal-actions">
+                <button class="btn primary" onclick="goToIndex()">返回首页</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="assets/js/renovation.js"></script>
+</body>
+</html>
