@@ -442,6 +442,7 @@
             // 图片轮播
             const swiper = document.getElementById('imageSwiper');
             const pagination = document.getElementById('pagination');
+            const swiperContainer = document.querySelector('.swiper-container');
 
             swiper.innerHTML = house.images.map(img =>
                 `<div class="swiper-slide"><img src="${img}" alt="${house.name}"></div>`
@@ -451,21 +452,91 @@
                 `<div class="swiper-pagination-bullet ${i === 0 ? 'active' : ''}" data-index="${i}"></div>`
             ).join('');
 
-            // 简单轮播功能（可后续优化）
+            // 轮播功能（支持触摸滑动）
             let currentIndex = 0;
-            pagination.querySelectorAll('.swiper-pagination-bullet').forEach(bullet => {
-                bullet.addEventListener('click', () => {
-                    currentIndex = parseInt(bullet.dataset.index);
-                    swiper.style.transform = `translateX(-${currentIndex * 100}%)`;
-                    updatePagination();
-                });
-            });
+            let startX = 0;
+            let isDragging = false;
+            let currentTranslate = 0;
+            let prevTranslate = 0;
 
+            // 更新分页指示器
             function updatePagination() {
                 pagination.querySelectorAll('.swiper-pagination-bullet').forEach((b, i) => {
                     b.classList.toggle('active', i === currentIndex);
                 });
             }
+
+            // 设置位置
+            function setPositionByIndex() {
+                currentTranslate = currentIndex * -100;
+                prevTranslate = currentTranslate;
+                swiper.style.transform = `translateX(${currentTranslate}%)`;
+            }
+
+            // 点击分页指示器
+            pagination.querySelectorAll('.swiper-pagination-bullet').forEach(bullet => {
+                bullet.addEventListener('click', () => {
+                    currentIndex = parseInt(bullet.dataset.index);
+                    setPositionByIndex();
+                    updatePagination();
+                });
+            });
+
+            // 触摸开始
+            function touchStart(e) {
+                startX = e.type.includes('mouse') ? e.pageX : e.touches[0].clientX;
+                isDragging = true;
+                swiper.style.transition = 'none';
+            }
+
+            // 触摸移动
+            function touchMove(e) {
+                if (!isDragging) return;
+
+                const currentX = e.type.includes('mouse') ? e.pageX : e.touches[0].clientX;
+                const diff = currentX - startX;
+                const containerWidth = swiperContainer.offsetWidth;
+                const movePercent = (diff / containerWidth) * 100;
+
+                currentTranslate = prevTranslate + movePercent;
+                swiper.style.transform = `translateX(${currentTranslate}%)`;
+            }
+
+            // 触摸结束
+            function touchEnd() {
+                if (!isDragging) return;
+                isDragging = false;
+
+                swiper.style.transition = 'transform 0.3s ease';
+
+                const movedBy = currentTranslate - prevTranslate;
+
+                // 滑动超过30%才切换
+                if (movedBy < -30 && currentIndex < house.images.length - 1) {
+                    currentIndex++;
+                } else if (movedBy > 30 && currentIndex > 0) {
+                    currentIndex--;
+                }
+
+                setPositionByIndex();
+                updatePagination();
+            }
+
+            // 绑定事件
+            swiperContainer.addEventListener('touchstart', touchStart);
+            swiperContainer.addEventListener('touchmove', touchMove);
+            swiperContainer.addEventListener('touchend', touchEnd);
+
+            // 支持鼠标拖拽（桌面端）
+            swiperContainer.addEventListener('mousedown', touchStart);
+            swiperContainer.addEventListener('mousemove', touchMove);
+            swiperContainer.addEventListener('mouseup', touchEnd);
+            swiperContainer.addEventListener('mouseleave', touchEnd);
+
+            // 防止图片拖拽
+            swiper.querySelectorAll('img').forEach(img => {
+                img.addEventListener('dragstart', e => e.preventDefault());
+            });
         }
 
         // 打开咨询弹窗

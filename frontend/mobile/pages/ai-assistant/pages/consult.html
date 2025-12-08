@@ -264,9 +264,25 @@
 
                 <div class="form-group" id="appointmentTimeGroup" style="display: none;">
                     <label class="form-label">
-                        预约时间<span class="required">*</span>
+                        预约日期<span class="required">*</span>
                     </label>
-                    <input type="datetime-local" class="datetime-input" id="appointmentTime">
+                    <select class="form-input" id="appointmentDate" style="margin-bottom: 12px;">
+                        <option value="">请选择日期</option>
+                    </select>
+
+                    <label class="form-label" style="margin-top: 12px;">
+                        预约时段<span class="required">*</span>
+                    </label>
+                    <select class="form-input" id="appointmentTime">
+                        <option value="">请选择时段</option>
+                        <option value="09:00-10:00">上午 09:00-10:00</option>
+                        <option value="10:00-11:00">上午 10:00-11:00</option>
+                        <option value="11:00-12:00">上午 11:00-12:00</option>
+                        <option value="14:00-15:00">下午 14:00-15:00</option>
+                        <option value="15:00-16:00">下午 15:00-16:00</option>
+                        <option value="16:00-17:00">下午 16:00-17:00</option>
+                        <option value="17:00-18:00">下午 17:00-18:00</option>
+                    </select>
                 </div>
 
                 <div class="tips">
@@ -347,6 +363,7 @@
             const consultContentGroup = document.getElementById('consultContentGroup');
             const appointmentTimeGroup = document.getElementById('appointmentTimeGroup');
             const tipsText = document.getElementById('tipsText');
+            const consultContent = document.getElementById('consultContent');
 
             if (consultType === 'appointment') {
                 formTitle.innerHTML = '<i class="fa fa-calendar"></i>预约看房';
@@ -354,15 +371,45 @@
                 appointmentTimeGroup.style.display = 'block';
                 tipsText.textContent = '提交后，专属经纪人将在您预约的时间前与您联系确认，并提供专业的看房服务。';
 
-                // 设置最小时间为当前时间
-                const now = new Date();
-                now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
-                document.getElementById('appointmentTime').min = now.toISOString().slice(0, 16);
+                // 移除咨询内容的必填验证
+                consultContent.removeAttribute('required');
+
+                // 动态生成未来7天的日期选项
+                generateDateOptions();
             } else {
                 formTitle.innerHTML = '<i class="fa fa-comments"></i>在线咨询';
                 consultContentGroup.style.display = 'block';
                 appointmentTimeGroup.style.display = 'none';
                 tipsText.textContent = '提交后，专属经纪人将在30分钟内与您联系，为您提供一对一专业服务。';
+
+                // 添加咨询内容的必填验证
+                consultContent.setAttribute('required', 'required');
+            }
+        }
+
+        // 生成未来7天的日期选项
+        function generateDateOptions() {
+            const dateSelect = document.getElementById('appointmentDate');
+            const today = new Date();
+            const weekdays = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
+
+            for (let i = 0; i < 7; i++) {
+                const date = new Date(today);
+                date.setDate(today.getDate() + i);
+
+                const month = date.getMonth() + 1;
+                const day = date.getDate();
+                const weekday = weekdays[date.getDay()];
+
+                const dateValue = `${date.getFullYear()}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                const dateLabel = i === 0 ? `今天 ${month}月${day}日 ${weekday}` :
+                                i === 1 ? `明天 ${month}月${day}日 ${weekday}` :
+                                `${month}月${day}日 ${weekday}`;
+
+                const option = document.createElement('option');
+                option.value = dateValue;
+                option.textContent = dateLabel;
+                dateSelect.appendChild(option);
             }
         }
 
@@ -393,12 +440,23 @@
             };
 
             if (consultType === 'appointment') {
+                const appointmentDate = document.getElementById('appointmentDate').value;
                 const appointmentTime = document.getElementById('appointmentTime').value;
-                if (!appointmentTime) {
-                    alert('请选择预约时间');
+
+                if (!appointmentDate) {
+                    alert('请选择预约日期');
                     return;
                 }
+
+                if (!appointmentTime) {
+                    alert('请选择预约时段');
+                    return;
+                }
+
+                // 组合日期和时段
+                formData.appointmentDate = appointmentDate;
                 formData.appointmentTime = appointmentTime;
+                formData.appointmentDateTime = `${appointmentDate} ${appointmentTime}`;
             } else {
                 const consultContent = document.getElementById('consultContent').value.trim();
                 if (!consultContent) {

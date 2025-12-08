@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer">
+    <title>用户画像详情 - AI荐房</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <link rel="stylesheet" href="../assets/css/common.css">
+    <style>
+        body {
+            font-family: 'PingFang SC', 'Helvetica Neue', 'Arial', sans-serif;
+            background: #F5F7FA;
+            padding-bottom: 20px;
+        }
+
+        .page-container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .header-section {
+            background: linear-gradient(135deg, #165DFF 0%, #0F4CD3 100%);
+            color: white;
+            padding: 60px 16px 24px;
+            margin-bottom: 16px;
+        }
+
+        .profile-summary {
+            text-align: center;
+        }
+
+        .profile-avatar {
+            width: 80px;
+            height: 80px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            margin: 0 auto 16px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .profile-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .profile-subtitle {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-top: 20px;
+        }
+
+        .stat-item {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 12px;
+            border-radius: 8px;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            opacity: 0.8;
+        }
+
+        .section-card {
+            background: white;
+            margin: 12px 16px;
+            padding: 16px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1D2129;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+        }
+
+        .section-title i {
+            color: #165DFF;
+            margin-right: 8px;
+        }
+
+        .preference-item {
+            padding: 12px;
+            background: #F5F7FA;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            border-left: 3px solid #165DFF;
+        }
+
+        .preference-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .preference-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .preference-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1D2129;
+        }
+
+        .preference-score {
+            font-size: 12px;
+            color: #165DFF;
+            background: rgba(22, 93, 255, 0.1);
+            padding: 2px 8px;
+            border-radius: 10px;
+        }
+
+        .preference-content {
+            font-size: 13px;
+            color: #4E5969;
+            line-height: 1.6;
+        }
+
+        .preference-detail {
+            font-size: 12px;
+            color: #86909C;
+            margin-top: 6px;
+            padding-top: 6px;
+            border-top: 1px dashed #E5E6EB;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 200px;
+            margin: 16px 0;
+        }
+
+        .behavior-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #F5F7FA;
+        }
+
+        .behavior-item:last-child {
+            border-bottom: none;
+        }
+
+        .behavior-icon {
+            width: 36px;
+            height: 36px;
+            background: #F0F4FF;
+            color: #165DFF;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            font-size: 16px;
+        }
+
+        .behavior-info {
+            flex: 1;
+        }
+
+        .behavior-title {
+            font-size: 14px;
+            color: #1D2129;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .behavior-desc {
+            font-size: 12px;
+            color: #86909C;
+        }
+
+        .behavior-count {
+            font-size: 16px;
+            font-weight: 600;
+            color: #165DFF;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 20px;
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-bottom: 20px;
+        }
+
+        .timeline-item:last-child {
+            padding-bottom: 0;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -16px;
+            top: 6px;
+            width: 8px;
+            height: 8px;
+            background: #165DFF;
+            border-radius: 50%;
+            box-shadow: 0 0 0 3px rgba(22, 93, 255, 0.2);
+        }
+
+        .timeline-item::after {
+            content: '';
+            position: absolute;
+            left: -12.5px;
+            top: 14px;
+            width: 1px;
+            height: calc(100% - 14px);
+            background: #E5E6EB;
+        }
+
+        .timeline-item:last-child::after {
+            display: none;
+        }
+
+        .timeline-time {
+            font-size: 12px;
+            color: #86909C;
+            margin-bottom: 4px;
+        }
+
+        .timeline-content {
+            font-size: 13px;
+            color: #1D2129;
+            line-height: 1.6;
+        }
+
+        .recommendation-card {
+            background: #F5F7FA;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            display: flex;
+            gap: 12px;
+        }
+
+        .recommendation-card:last-child {
+            margin-bottom: 0;
+        }
+
+        .recommendation-image {
+            width: 80px;
+            height: 60px;
+            border-radius: 6px;
+            object-fit: cover;
+            background: white;
+        }
+
+        .recommendation-info {
+            flex: 1;
+        }
+
+        .recommendation-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1D2129;
+            margin-bottom: 4px;
+        }
+
+        .recommendation-meta {
+            font-size: 12px;
+            color: #86909C;
+        }
+
+        .tag-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .insight-card {
+            background: linear-gradient(135deg, #F0F4FF 0%, #E8F0FF 100%);
+            padding: 16px;
+            border-radius: 8px;
+            border-left: 4px solid #165DFF;
+            margin-bottom: 12px;
+        }
+
+        .insight-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #165DFF;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+        }
+
+        .insight-title i {
+            margin-right: 6px;
+        }
+
+        .insight-content {
+            font-size: 13px;
+            color: #4E5969;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <!-- 返回按钮 -->
+    <button class="back-btn" onclick="history.back()">
+        <i class="fa fa-arrow-left"></i>
+    </button>
+
+    <div class="page-container">
+        <!-- 头部用户画像概览 -->
+        <div class="header-section">
+            <div class="profile-summary">
+                <div class="profile-avatar">
+                    <i class="fa fa-user"></i>
+                </div>
+                <div class="profile-title">高端改善型购房用户</div>
+                <div class="profile-subtitle">画像匹配度：96% | 最后更新：2025年12月8日</div>
+
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-value">128</div>
+                        <div class="stat-label">浏览房源数</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">37</div>
+                        <div class="stat-label">活跃天数</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">15</div>
+                        <div class="stat-label">咨询次数</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 核心偏好分析 -->
+        <div class="section-card">
+            <h2 class="section-title">
+                <i class="fa fa-star"></i>
+                核心偏好分析
+            </h2>
+
+            <div class="preference-item">
+                <div class="preference-header">
+                    <span class="preference-label">区域偏好</span>
+                    <span class="preference-score">权重: 35%</span>
+                </div>
+                <div class="preference-content">
+                    核心偏好：钟楼区 > 天宁区 > 新北区
+                </div>
+                <div class="preference-detail">
+                    <i class="fa fa-lightbulb-o"></i> 数据来源：用户浏览钟楼区高端房源次数达86次，占总浏览量67%，远超其他区域。结合改善型购房需求，判定核心偏好为钟楼区改善板块。
+                </div>
+            </div>
+
+            <div class="preference-item">
+                <div class="preference-header">
+                    <span class="preference-label">面积需求</span>
+                    <span class="preference-score">权重: 25%</span>
+                </div>
+                <div class="preference-content">
+                    核心需求：140-300㎡（改善型大平层/别墅）
+                </div>
+                <div class="preference-detail">
+                    <i class="fa fa-lightbulb-o"></i> 数据来源：用户筛选房源时18次选择140㎡以上区间，问卷明确填写需要改善型大户型，户型浏览集中在4室2厅及以上。
+                </div>
+            </div>
+
+            <div class="preference-item">
+                <div class="preference-header">
+                    <span class="preference-label">价格预算</span>
+                    <span class="preference-score">权重: 30%</span>
+                </div>
+                <div class="preference-content">
+                    核心预算：500-1200万
+                </div>
+                <div class="preference-detail">
+                    <i class="fa fa-lightbulb-o"></i> 数据来源：用户筛选房源时价格区间均设置为500-1200万，咨询过高端房源的贷款方案，单价关注集中在35000-45000元/㎡。
+                </div>
+            </div>
+
+            <div class="preference-item">
+                <div class="preference-header">
+                    <span class="preference-label">配套需求</span>
+                    <span class="preference-score">权重: 10%</span>
+                </div>
+                <div class="preference-content">
+                    核心需求：高端学区、地铁沿线、中式园林
+                </div>
+                <div class="preference-detail">
+                    <i class="fa fa-lightbulb-o"></i> 数据来源：用户多次选择"高端学区"、"地铁沿线"、"中式园林"筛选标签，搜索记录包含"常州钟楼区 中式园林 大平层"等关键词。
+                </div>
+            </div>
+        </div>
+
+        <!-- 行为数据分析 -->
+        <div class="section-card">
+            <h2 class="section-title">
+                <i class="fa fa-bar-chart"></i>
+                行为数据分析
+            </h2>
+
+            <div class="behavior-item">
+                <div class="behavior-icon">
+                    <i class="fa fa-eye"></i>
+                </div>
+                <div class="behavior-info">
+                    <div class="behavior-title">浏览行为</div>
+                    <div class="behavior-desc">最近30天浏览房源</div>
+                </div>
+                <div class="behavior-count">128次</div>
+            </div>
+
+            <div class="behavior-item">
+                <div class="behavior-icon">
+                    <i class="fa fa-search"></i>
+                </div>
+                <div class="behavior-info">
+                    <div class="behavior-title">搜索行为</div>
+                    <div class="behavior-desc">主动搜索关键词</div>
+                </div>
+                <div class="behavior-count">34次</div>
+            </div>
+
+            <div class="behavior-item">
+                <div class="behavior-icon">
+                    <i class="fa fa-filter"></i>
+                </div>
+                <div class="behavior-info">
+                    <div class="behavior-title">筛选行为</div>
+                    <div class="behavior-desc">使用筛选功能</div>
+                </div>
+                <div class="behavior-count">23次</div>
+            </div>
+
+            <div class="behavior-item">
+                <div class="behavior-icon">
+                    <i class="fa fa-comments"></i>
+                </div>
+                <div class="behavior-info">
+                    <div class="behavior-title">咨询行为</div>
+                    <div class="behavior-desc">咨询房源或经纪人</div>
+                </div>
+                <div class="behavior-count">15次</div>
+            </div>
+
+            <div class="chart-container">
+                <canvas id="behaviorChart"></canvas>
+            </div>
+        </div>
+
+        <!-- AI深度洞察 -->
+        <div class="section-card">
+            <h2 class="section-title">
+                <i class="fa fa-brain"></i>
+                AI深度洞察
+            </h2>
+
+            <div class="insight-card">
+                <div class="insight-title">
+                    <i class="fa fa-check-circle"></i>
+                    改善型购房特征明显
+                </div>
+                <div class="insight-content">
+                    用户当前关注的房源面积、价格、配套水平均显著高于首次购房群体平均水平，判定为改善型购房需求。建议优先推荐品牌开发商、成熟板块、完善配套的高端住宅项目。
+                </div>
+            </div>
+
+            <div class="insight-card">
+                <div class="insight-title">
+                    <i class="fa fa-check-circle"></i>
+                    教育资源高度重视
+                </div>
+                <div class="insight-content">
+                    用户浏览房源时67%的时间停留在学区信息板块，搜索关键词中"学区"出现频率最高。推测用户家庭有学龄儿童或正在规划子女教育，建议优先推荐优质学区房源。
+                </div>
+            </div>
+
+            <div class="insight-card">
+                <div class="insight-title">
+                    <i class="fa fa-check-circle"></i>
+                    决策周期较长
+                </div>
+                <div class="insight-content">
+                    用户已持续关注房源37天，平均每天浏览3.5套房源，咨询转化率较低（11.7%），属于理性决策型用户。建议提供更详细的房源对比分析，协助用户科学决策。
+                </div>
+            </div>
+        </div>
+
+        <!-- 活动时间线 -->
+        <div class="section-card">
+            <h2 class="section-title">
+                <i class="fa fa-clock-o"></i>
+                最近活动记录
+            </h2>
+
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-time">2025-12-08 14:23</div>
+                    <div class="timeline-content">浏览了"国色风华"房源详情，停留时间3分42秒</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-time">2025-12-08 10:15</div>
+                    <div class="timeline-content">咨询了"翠礼峰天玺"的物业费和学区信息</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-time">2025-12-07 16:48</div>
+                    <div class="timeline-content">筛选了钟楼区500-800万、140㎡以上的房源</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-time">2025-12-07 11:20</div>
+                    <div class="timeline-content">收藏了"桃花院子"并预约看房</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-time">2025-12-06 15:35</div>
+                    <div class="timeline-content">搜索了"常州钟楼区 中式园林 大平层"</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 历史推荐 -->
+        <div class="section-card">
+            <h2 class="section-title">
+                <i class="fa fa-history"></i>
+                历史推荐记录
+            </h2>
+
+            <div class="recommendation-card">
+                <img src="https://img2-build.jiwu.com/album/manual/2025/07/09/141142450286.jpg/jiwu$800x600" alt="国色风华" class="recommendation-image">
+                <div class="recommendation-info">
+                    <div class="recommendation-title">国色风华</div>
+                    <div class="recommendation-meta">匹配度96% | 钟楼区 | 714.4万</div>
+                    <div class="tag-list">
+                        <span class="tag tag-primary">已咨询</span>
+                        <span class="tag tag-success">高匹配</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="recommendation-card">
+                <img src="https://p9.itc.cn/q_70/images01/20231012/ce912d35e8164e26819d0c08969e1d5a.png" alt="翠礼峰天玺" class="recommendation-image">
+                <div class="recommendation-info">
+                    <div class="recommendation-title">翠礼峰天玺</div>
+                    <div class="recommendation-meta">匹配度93% | 天宁区 | 500.5万</div>
+                    <div class="tag-list">
+                        <span class="tag tag-primary">已浏览</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="recommendation-card">
+                <img src="https://q3.itc.cn/images01/20251028/1f1fc69ea4c44290b8a39bcac27e65cd.jpeg" alt="桃花院子" class="recommendation-image">
+                <div class="recommendation-info">
+                    <div class="recommendation-title">桃花院子</div>
+                    <div class="recommendation-meta">匹配度90% | 新北区 | 1092万</div>
+                    <div class="tag-list">
+                        <span class="tag tag-warning">已收藏</span>
+                        <span class="tag tag-success">已预约</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 页面加载完成后初始化图表
+        window.addEventListener('load', function() {
+            initBehaviorChart();
+        });
+
+        // 初始化行为数据图表
+        function initBehaviorChart() {
+            const ctx = document.getElementById('behaviorChart');
+            if (!ctx) return;
+
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['12-02', '12-03', '12-04', '12-05', '12-06', '12-07', '12-08'],
+                    datasets: [{
+                        label: '浏览房源数',
+                        data: [5, 8, 3, 7, 6, 4, 9],
+                        borderColor: '#165DFF',
+                        backgroundColor: 'rgba(22, 93, 255, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 2
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>

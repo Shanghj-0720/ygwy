@@ -153,10 +153,10 @@
                     </div>
                 </div>
 
-                <!-- 各项画像数据卡片 - 移除查看详情按钮 -->
+                <!-- 各项画像数据卡片 -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
                     <!-- 区域偏好 -->
-                    <div class="border border-gray-200 rounded-lg p-2">
+                    <div class="border border-gray-200 rounded-lg p-2 cursor-pointer hover:border-primary hover:shadow-md transition-all" onclick="window.location.href='pages/user-profile.html'">
                         <div class="flex justify-between items-center mb-1">
                             <h3 class="text-xs font-medium">区域偏好</h3>
                         </div>
@@ -168,7 +168,7 @@
                     </div>
 
                     <!-- 面积需求 -->
-                    <div class="border border-gray-200 rounded-lg p-2">
+                    <div class="border border-gray-200 rounded-lg p-2 cursor-pointer hover:border-primary hover:shadow-md transition-all" onclick="window.location.href='pages/user-profile.html'">
                         <div class="flex justify-between items-center mb-1">
                             <h3 class="text-xs font-medium">面积需求</h3>
                         </div>
@@ -180,7 +180,7 @@
                     </div>
 
                     <!-- 价格预算 -->
-                    <div class="border border-gray-200 rounded-lg p-2">
+                    <div class="border border-gray-200 rounded-lg p-2 cursor-pointer hover:border-primary hover:shadow-md transition-all" onclick="window.location.href='pages/user-profile.html'">
                         <div class="flex justify-between items-center mb-1">
                             <h3 class="text-xs font-medium">价格预算</h3>
                         </div>
@@ -192,7 +192,7 @@
                     </div>
 
                     <!-- 配套需求 -->
-                    <div class="border border-gray-200 rounded-lg p-2">
+                    <div class="border border-gray-200 rounded-lg p-2 cursor-pointer hover:border-primary hover:shadow-md transition-all" onclick="window.location.href='pages/user-profile.html'">
                         <div class="flex justify-between items-center mb-1">
                             <h3 class="text-xs font-medium">配套需求</h3>
                         </div>
@@ -202,6 +202,13 @@
                             <p class="mt-0.5"><i class="fa fa-lightbulb-o mr-1"></i> 处理理由：用户多次选择"高端学区"、"地铁沿线"、"中式园林"筛选标签，搜索记录包含"常州钟楼区 中式园林 大平层"，判定核心配套需求为高端学区、地铁沿线、中式园林</p>
                         </div>
                     </div>
+                </div>
+
+                <!-- 查看完整画像按钮 -->
+                <div class="mt-3 text-center">
+                    <button class="px-4 py-2 bg-white border border-primary text-primary text-xs rounded-full hover:bg-primary/5 transition" onclick="window.location.href='pages/user-profile.html'">
+                        <i class="fa fa-user-circle mr-1"></i>查看完整用户画像
+                    </button>
                 </div>
             </section>
 

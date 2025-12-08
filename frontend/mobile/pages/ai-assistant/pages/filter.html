@@ -361,11 +361,11 @@
     </div>
 
     <!-- 底部操作栏 -->
-    <div class="bottom-bar">
+    <div class="bottom-bar" id="bottomBar">
         <button class="btn-secondary" onclick="resetFilters()">
             <i class="fa fa-refresh mr-2"></i>重置
         </button>
-        <button class="btn-primary" onclick="applyFilters()">
+        <button class="btn-primary" id="confirmBtn" onclick="applyFilters()">
             <i class="fa fa-check mr-2"></i>确定
         </button>
     </div>
@@ -678,7 +678,7 @@
                 const displayTags = house.tags.slice(0, 3);
 
                 return `
-                    <div class="house-card" onclick="viewHouseDetail(${house.id})">
+                    <div class="house-card" data-house-id="${house.id}" onclick="viewHouseDetail(${house.id})">
                         <img src="${house.images[0]}" alt="${house.name}" class="house-image" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22400%22 height=%22200%22%3E%3Crect fill=%22%23f5f7fa%22 width=%22400%22 height=%22200%22/%3E%3Ctext fill=%22%2386909c%22 x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22%3E${house.name}%3C/text%3E%3C/svg%3E'">
                         <div class="house-info">
                             <h3 class="house-name">${house.name}（${house.district}）</h3>
