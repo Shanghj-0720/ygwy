@@ -1,0 +1,22 @@
+:root {
+    --info-text: #1e40af;
+}
+
+.list .channel-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: #f8fafc;
+}
+
+.list .channel-item .title {
+    font-weight: 700;
+}
+
+.list .channel-item .meta {
+    font-size: 12px;
+    color: var(--muted);
+}

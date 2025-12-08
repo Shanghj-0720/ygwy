@@ -2,19 +2,44 @@
  * 线上装修模块 - JavaScript
  */
 
+const ROLE_MAP = {
+    owner: { label: '产权人', roles: 'owner' },
+    tenant: { label: '房屋使用人', roles: 'tenant' },
+    property: { label: '物业端', roles: 'property' }
+};
+
+const MATERIALS = {
+    owner: [
+        { field: 'notice', title: '室内装修告知书（必传）', desc: '下载模板签字后拍照/扫描上传', multi: false },
+        { field: 'plan', title: '装修方案附件（必传）', desc: '平面布置图、效果图等，可多张', multi: true },
+        { field: 'property', title: '房产证明', desc: '房产证或不动产登记证明', multi: false },
+        { field: 'idcard', title: '身份证明', desc: '产权人身份证正反面（已绑定可免）', multi: false },
+        { field: 'design', title: '设计方案（条件）', desc: '涉及主体/承重/荷载变更时上传', multi: true },
+        { field: 'company', title: '装修企业资质（条件）', desc: '委托装修企业施工时上传', multi: false },
+        { field: 'shared', title: '共用人同意书（条件）', desc: '涉及共用部位时上传书面同意', multi: false }
+    ],
+    tenant: [
+        { field: 'lease', title: '租赁合同（必传）', desc: '有效期内租赁合同，可多张', multi: true },
+        { field: 'ownerConsent', title: '产权人同意书（必传）', desc: '产权人签字同意装修，可下载模板', multi: false },
+        { field: 'idcard', title: '使用人身份证（必传）', desc: '身份证正反面照片', multi: false },
+        { field: 'property', title: '房屋所有权证（必传）', desc: '房产证或不动产权证', multi: false },
+        { field: 'plan', title: '装修方案附件（必传）', desc: '施工方案/平面图、材料清单，可多张', multi: true },
+        { field: 'design', title: '设计方案（条件）', desc: '涉及主体/承重/荷载变更时上传', multi: true },
+        { field: 'company', title: '装修企业资质（条件）', desc: '委托装修企业施工时上传', multi: false },
+        { field: 'shared', title: '共用人同意书（条件）', desc: '涉及共用部位时上传书面同意', multi: false }
+    ]
+};
+
 // 全局状态
 const state = {
-    identity: 'owner', // owner | tenant
+    identity: 'owner',
     files: {
-        // 产权人材料
         notice: null,
         plan: [],
         idcard: null,
         property: null,
-        // 房屋使用人/租赁人材料
         lease: [],
         ownerConsent: null,
-        // 通用条件材料
         design: [],
         company: null,
         shared: null
@@ -30,6 +55,7 @@ const state = {
 // 页面加载
 document.addEventListener('DOMContentLoaded', function() {
     initPage();
+    applyRoleFromUrl();
     loadDraft();
     loadHistory();
 });
@@ -42,6 +68,11 @@ function initPage() {
         zone.addEventListener('dragleave', handleDragLeave);
         zone.addEventListener('drop', handleDrop);
     });
+
+    const badge = document.getElementById('roleBadge');
+    if (badge) {
+        badge.addEventListener('click', toggleRole);
+    }
 }
 
 // 返回上一页
@@ -53,18 +84,10 @@ function goBack() {
     }
 }
 
-// 选择身份
-function selectIdentity(identity) {
-    if (identity === 'owner') {
-        // 产权人 - 跳转到产权人上传页面
-        window.location.href = 'upload.html';
-    } else if (identity === 'tenant') {
-        // 房屋使用人 - 跳转到租赁人上传页面
-        window.location.href = 'upload-tenant.html';
-    } else if (identity === 'property') {
-        // 物业端 - 跳转到物业端上传页面
-        window.location.href = 'upload-property.html';
-    }
+// 设置身份并切换视图
+function setRole(identity) {
+    state.identity = identity;
+    applyRole(identity);
 }
 
 // 手机号查询
@@ -103,47 +126,55 @@ function startApplication() {
     window.location.href = 'upload.html?identity=owner';
 }
 
-// 切换身份 - 打开弹窗
-function toggleIdentity() {
-    const modal = document.getElementById('identityModal');
-    if (modal) {
-        modal.style.display = 'flex';
-    }
+// 角色徽章切换
+function toggleRole() {
+    const order = ['owner', 'tenant', 'property'];
+    const idx = order.indexOf(state.identity);
+    const next = order[(idx + 1) % order.length];
+    setRole(next);
 }
 
-// 关闭身份弹窗
-function closeIdentityModal() {
-    const modal = document.getElementById('identityModal');
-    if (modal) {
-        modal.style.display = 'none';
-    }
+function applyRole(identity) {
+    const info = ROLE_MAP[identity] || ROLE_MAP.owner;
+    state.identity = info.roles;
+    setRoleBadge(info.label, getNextLabel(info.roles));
+    applyRoleVisibility(info.roles);
+    updateUrlRole(info.roles);
 }
 
-// 设置身份
-function setIdentity(identity) {
-    state.identity = identity;
+function getNextLabel(current) {
+    const order = ['owner', 'tenant', 'property'];
+    const idx = order.indexOf(current);
+    const next = order[(idx + 1) % order.length];
+    return ROLE_MAP[next].label;
+}
 
-    const identityLabel = document.getElementById('identityLabel');
-    const identitySwitch = document.getElementById('identitySwitch');
-    const ownerMaterials = document.getElementById('ownerMaterials');
-    const tenantMaterials = document.getElementById('tenantMaterials');
-    const ownerInfo = document.getElementById('ownerInfo');
+function setRoleBadge(label, nextLabel) {
+    const badge = document.getElementById('roleBadge');
+    if (!badge) return;
+    badge.textContent = `${label}视图`;
+    const hint = `切换到${nextLabel}视图`;
+    badge.title = hint;
+    badge.setAttribute('aria-label', hint);
+}
 
-    if (identity === 'owner') {
-        if (identityLabel) identityLabel.textContent = '产权人';
-        if (identitySwitch) identitySwitch.classList.remove('tenant');
-        if (ownerMaterials) ownerMaterials.style.display = 'block';
-        if (tenantMaterials) tenantMaterials.style.display = 'none';
-        if (ownerInfo) ownerInfo.textContent = '产权人: 张三';
-    } else {
-        if (identityLabel) identityLabel.textContent = '房屋使用人';
-        if (identitySwitch) identitySwitch.classList.add('tenant');
-        if (ownerMaterials) ownerMaterials.style.display = 'none';
-        if (tenantMaterials) tenantMaterials.style.display = 'block';
-        if (ownerInfo) ownerInfo.textContent = '使用人: 李四（租赁）';
-    }
+function applyRoleVisibility(roleKey) {
+    document.querySelectorAll('[data-roles]').forEach((section) => {
+        const roles = (section.dataset.roles || '').split(/\s+/);
+        section.style.display = roles.includes(roleKey) ? '' : 'none';
+    });
+}
 
-    closeIdentityModal();
+function updateUrlRole(role) {
+    const url = new URL(window.location.href);
+    url.searchParams.set('role', role);
+    window.history.replaceState({}, '', url.toString());
+}
+
+function applyRoleFromUrl() {
+    const params = new URLSearchParams(window.location.search);
+    const role = params.get('role') || 'owner';
+    applyRole(role);
 }
 
 // 触发文件上传
@@ -620,7 +651,7 @@ function loadHistory() {
 
     historyCard.style.display = 'block';
     historyList.innerHTML = applications.map(app => `
-        <div class="history-item">
+        <div class="history-item" onclick="openHistoryDetail('${app.id || ''}')">
             <div class="history-info">
                 <div class="history-title">${app.address}</div>
                 <div class="history-date">提交时间：${app.submitTime}</div>
@@ -631,6 +662,11 @@ function loadHistory() {
 
     // 更新当前状态卡片
     updateStatusCard(applications[0]);
+}
+
+function openHistoryDetail(id) {
+    const url = id ? `detail.html?id=${id}` : 'detail.html';
+    window.location.href = url;
 }
 
 // 更新状态卡片

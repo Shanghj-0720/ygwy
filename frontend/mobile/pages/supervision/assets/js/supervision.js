@@ -229,7 +229,6 @@ function renderOverview() {
     state.steps.forEach((step, index) => {
         const item = document.createElement('div');
         item.className = `step-item ${step.status}`;
-        item.dataset.status = step.status;
         item.innerHTML = `
             <div class="step-index">${index + 1}</div>
             <div class="step-body">
@@ -241,18 +240,12 @@ function renderOverview() {
                 </div>
             </div>
         `;
-        item.addEventListener('click', () => showStepStatus(step.status));
         container.appendChild(item);
     });
 
     const activeStep = state.steps.find((s) => s.status === 'active');
     const summary = activeStep ? `当前阶段：${activeStep.title} · ${activeStep.time}` : '流程正常';
     document.getElementById('stepSummary').textContent = summary;
-}
-
-function showStepStatus(status) {
-    const text = status === 'done' ? '已完成' : status === 'active' ? '正在执行' : '待开始';
-    alert(text);
 }
 
 function renderQuestionnaire() {
@@ -383,6 +376,7 @@ function renderPublish() {
             <span>${state.publish.regulator}</span>
         </div>
         <div class="issues">${desc}。${state.publish.risk}</div>
+        <button class="link" onclick="goPublishDetail()">查看详情</button>
     `;
 }
 
@@ -408,6 +402,10 @@ function goVerificationDetail(id) {
 
 function goRectificationDetail(id) {
     window.location.href = `rectification.html?id=${id}`;
+}
+
+function goPublishDetail() {
+    window.location.href = 'publish.html';
 }
 
 function statusClass(status) {

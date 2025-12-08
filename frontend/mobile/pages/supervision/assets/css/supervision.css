@@ -472,6 +472,17 @@ body {
     color: var(--text);
 }
 
+.link {
+    margin-top: 8px;
+    background: none;
+    border: none;
+    padding: 0;
+    color: var(--primary);
+    font-weight: 700;
+    cursor: pointer;
+    text-align: left;
+}
+
 .btn:active {
     transform: scale(0.97);
 }

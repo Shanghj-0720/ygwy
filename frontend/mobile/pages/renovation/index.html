@@ -18,127 +18,56 @@
             <h1>装修登记办理</h1>
             <p class="subtitle">材料上传 · 物业审核 · 登记确认</p>
         </div>
+        <button class="pill role-toggle" id="roleBadge" type="button"></button>
     </header>
 
     <main class="page">
         <!-- 流程说明卡片 -->
-        <section class="banner">
+        <section class="banner" data-roles="owner tenant property">
             <div class="banner-top">
                 <div>
                     <p class="eyebrow">办理须知</p>
                     <h2>装修登记流程</h2>
                 </div>
-                <div class="badge primary">在线办理</div>
             </div>
             <p class="banner-hint">通过平台提交装修登记材料，物业在线审核确认，实现装修登记全流程线上办理。</p>
         </section>
 
-        <!-- 身份选择卡片 -->
-        <section class="card">
+        <!-- 产权人材料 -->
+        <section class="card" data-roles="owner">
             <div class="card-header">
                 <div>
-                    <p class="eyebrow">选择身份</p>
-                    <h2>您的办理身份</h2>
+                    <p class="eyebrow">产权人</p>
+                    <h2>所需材料 & 上传</h2>
                 </div>
             </div>
-            <p class="card-desc">请根据您的实际情况选择办理身份，不同身份所需材料不同。</p>
-
-            <div class="identity-options">
-                <div class="identity-card" onclick="selectIdentity('owner')">
-                    <div class="identity-icon owner">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
-                            <polyline points="9,22 9,12 15,12 15,22"/>
-                        </svg>
-                    </div>
-                    <div class="identity-info">
-                        <div class="identity-title">产权人</div>
-                        <div class="identity-desc">房屋所有权人，持有房产证</div>
-                    </div>
-                    <div class="identity-arrow">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <polyline points="9,18 15,12 9,6"/>
-                        </svg>
-                    </div>
-                </div>
-
-                <div class="identity-card" onclick="selectIdentity('tenant')">
-                    <div class="identity-icon tenant">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-                            <circle cx="9" cy="7" r="4"/>
-                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
-                            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-                        </svg>
-                    </div>
-                    <div class="identity-info">
-                        <div class="identity-title">房屋使用人（租赁人）</div>
-                        <div class="identity-desc">非业主，持有租赁合同</div>
-                    </div>
-                    <div class="identity-arrow">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <polyline points="9,18 15,12 9,6"/>
-                        </svg>
-                    </div>
-                </div>
-
-                <div class="identity-card property" onclick="selectIdentity('property')">
-                    <div class="identity-icon property">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <rect x="2" y="7" width="20" height="14" rx="2"/>
-                            <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>
-                            <path d="M12 12v4"/>
-                            <path d="M12 12a2 2 0 1 0 0-4 2 2 0 0 0 0 4z"/>
-                        </svg>
-                    </div>
-                    <div class="identity-info">
-                        <div class="identity-title">物业端</div>
-                        <div class="identity-desc">物业企业操作入口</div>
-                    </div>
-                    <div class="identity-arrow">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <polyline points="9,18 15,12 9,6"/>
-                        </svg>
-                    </div>
-                </div>
-            </div>
+            <iframe class="embed-frame" src="upload.html?inline=1" title="产权人装修登记"></iframe>
         </section>
 
-        <!-- 办理流程简要说明 -->
-        <section class="card">
+        <!-- 房屋使用人材料 -->
+        <section class="card" data-roles="tenant">
             <div class="card-header">
                 <div>
-                    <p class="eyebrow">办理流程</p>
-                    <h2>三步完成登记</h2>
+                    <p class="eyebrow">房屋使用人</p>
+                    <h2>所需材料 & 上传</h2>
                 </div>
             </div>
-            <div class="step-list">
-                <div class="step-item">
-                    <div class="step-index">1</div>
-                    <div class="step-content">
-                        <div class="step-title">上传材料</div>
-                        <div class="step-desc">在线提交装修登记所需材料</div>
-                    </div>
-                </div>
-                <div class="step-item">
-                    <div class="step-index">2</div>
-                    <div class="step-content">
-                        <div class="step-title">物业审核</div>
-                        <div class="step-desc">物业1-3个工作日内完成审核</div>
-                    </div>
-                </div>
-                <div class="step-item">
-                    <div class="step-index">3</div>
-                    <div class="step-content">
-                        <div class="step-title">登记完成</div>
-                        <div class="step-desc">短信/站内信通知审核结果</div>
-                    </div>
+            <iframe class="embed-frame" src="upload-tenant.html?inline=1" title="房屋使用人装修登记"></iframe>
+        </section>
+
+        <!-- 物业端信息 -->
+        <section class="card" data-roles="property">
+            <div class="card-header">
+                <div>
+                    <p class="eyebrow">物业端</p>
+                    <h2>审核与巡查</h2>
                 </div>
             </div>
+            <iframe class="embed-frame" src="upload-property.html?inline=1" title="物业端装修登记"></iframe>
         </section>
 
         <!-- 查询入口 -->
-        <section class="card">
+        <section class="card" data-roles="owner tenant property">
             <div class="card-header">
                 <div>
                     <p class="eyebrow">登记查询</p>
@@ -164,7 +93,7 @@
         </section>
 
         <!-- 历史记录卡片 -->
-        <section class="card" id="historyCard" style="display: none;">
+        <section class="card" id="historyCard" data-roles="owner tenant" style="display: none;">
             <div class="card-header">
                 <div>
                     <p class="eyebrow">历史记录</p>
@@ -177,7 +106,7 @@
         </section>
 
         <!-- 帮助提示 -->
-        <section class="help-tips">
+        <section class="help-tips" data-roles="owner tenant property">
             <div class="tip-item">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <circle cx="12" cy="12" r="10"/>
