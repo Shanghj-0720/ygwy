@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer">
+    <title>小区数据概览 - AI业委会</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="../../assets/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#165DFF',
+                        'primary-light': '#4080FF',
+                        'primary-dark': '#0F4CD3',
+                        secondary: '#2D5CF6',
+                        accent: '#00B96B',
+                        neutral: '#F5F7FA',
+                        'neutral-light': '#FAFBFC',
+                        dark: '#1D2129',
+                        light: '#86909C',
+                        border: '#E5E6EB',
+                        success: '#00B96B',
+                        warning: '#FF7D00',
+                        purple: '#8B5CF6',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .data-card {
+            transition: all 0.3s ease;
+        }
+        .data-card:hover {
+            transform: translateY(-2px);
+        }
+        .progress-bar {
+            height: 4px;
+            border-radius: 2px;
+            background: #E5E6EB;
+            position: relative;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            border-radius: 2px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .number-animate {
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+        .pulse-animation {
+            animation: pulse 2s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body class="bg-neutral-light">
+    <!-- 头部 -->
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="flex items-center justify-between px-4 py-3">
+            <button onclick="history.back()" class="w-8 h-8 flex items-center justify-center">
+                <i class="fa fa-arrow-left text-dark text-lg"></i>
+            </button>
+            <h1 class="text-lg font-bold text-dark">小区数据概览</h1>
+            <button id="auto-refresh-btn" onclick="toggleAutoRefresh()" class="text-xs text-primary">
+                <i class="fa fa-refresh"></i> 实时
+            </button>
+        </div>
+    </header>
+
+    <!-- 主内容 -->
+    <main class="container mx-auto px-4 py-4 pb-20">
+        <!-- 数据更新提示 -->
+        <div class="bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl p-3 mb-4">
+            <div class="flex items-center gap-2">
+                <div class="w-2 h-2 rounded-full bg-success pulse-animation"></div>
+                <p class="text-xs text-dark">数据实时更新中</p>
+                <span class="ml-auto text-xs text-light" id="update-time">刚刚更新</span>
+            </div>
+        </div>
+
+        <!-- 核心数据卡片 -->
+        <div class="grid grid-cols-2 gap-3 mb-4">
+            <!-- 物业服务费 -->
+            <div class="data-card bg-white rounded-xl p-4 shadow-sm">
+                <div class="flex items-center justify-between mb-2">
+                    <p class="text-xs text-light font-medium">物业服务费</p>
+                    <i class="fa fa-rmb text-primary/70 text-xs"></i>
+                </div>
+                <p class="text-2xl font-bold text-primary number-animate">
+                    ¥ <span id="fee-value">2.6</span>
+                    <span class="text-sm font-medium text-primary/80">元/平</span>
+                </p>
+                <div class="progress-bar mt-3">
+                    <div class="progress-fill bg-gradient-to-r from-primary to-primary-light" id="fee-progress" style="width: 85%"></div>
+                </div>
+                <p class="text-xs text-light mt-2">
+                    缴费率 <span class="text-success font-medium" id="fee-rate">85%</span>
+                </p>
+            </div>
+
+            <!-- 公共收益 -->
+            <div class="data-card bg-white rounded-xl p-4 shadow-sm">
+                <div class="flex items-center justify-between mb-2">
+                    <p class="text-xs text-light font-medium">公共收益</p>
+                    <i class="fa fa-line-chart text-success/70 text-xs"></i>
+                </div>
+                <p class="text-2xl font-bold text-dark number-animate">
+                    ¥ <span id="income-value">58</span>
+                    <span class="text-sm font-medium text-dark/80">万</span>
+                </p>
+                <div class="progress-bar mt-3">
+                    <div class="progress-fill bg-gradient-to-r from-success to-green-400" id="income-progress" style="width: 72%"></div>
+                </div>
+                <p class="text-xs text-light mt-2">
+                    同比增长 <span class="text-success font-medium" id="income-growth">+12.5%</span>
+                </p>
+            </div>
+
+            <!-- 业主满意度 -->
+            <div class="data-card bg-white rounded-xl p-4 shadow-sm">
+                <div class="flex items-center justify-between mb-2">
+                    <p class="text-xs text-light font-medium">业主满意度</p>
+                    <i class="fa fa-smile-o text-warning/70 text-xs"></i>
+                </div>
+                <p class="text-2xl font-bold text-success number-animate">
+                    <span id="satisfaction-value">89</span>
+                    <span class="text-sm font-medium text-success/80">%</span>
+                </p>
+                <div class="progress-bar mt-3">
+                    <div class="progress-fill bg-gradient-to-r from-warning to-yellow-400" id="satisfaction-progress" style="width: 89%"></div>
+                </div>
+                <p class="text-xs text-light mt-2">
+                    较上月 <span class="text-success font-medium" id="satisfaction-change">+3.2%</span>
+                </p>
+            </div>
+
+            <!-- 电梯维护资金 -->
+            <div class="data-card bg-white rounded-xl p-4 shadow-sm">
+                <div class="flex items-center justify-between mb-2">
+                    <p class="text-xs text-light font-medium">电梯维护资金</p>
+                    <i class="fa fa-arrow-up text-purple/70 text-xs"></i>
+                </div>
+                <p class="text-2xl font-bold text-purple number-animate">
+                    ¥ <span id="elevator-value">15.8</span>
+                    <span class="text-sm font-medium text-purple/80">万</span>
+                </p>
+                <div class="progress-bar mt-3">
+                    <div class="progress-fill bg-gradient-to-r from-purple to-purple-400" id="elevator-progress" style="width: 65%"></div>
+                </div>
+                <p class="text-xs text-light mt-2">
+                    使用率 <span class="text-purple font-medium" id="elevator-usage">65%</span>
+                </p>
+            </div>
+        </div>
+
+        <!-- 趋势图表 -->
+        <div class="bg-white rounded-xl p-4 mb-4 shadow-sm">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-base font-bold text-dark">月度数据趋势</h3>
+                <div class="flex gap-2">
+                    <button onclick="switchChart('fee')" class="chart-tab active text-xs px-3 py-1.5 rounded-full bg-primary/10 text-primary font-medium">物业费</button>
+                    <button onclick="switchChart('income')" class="chart-tab text-xs px-3 py-1.5 rounded-full bg-gray-100 text-light font-medium">收益</button>
+                    <button onclick="switchChart('satisfaction')" class="chart-tab text-xs px-3 py-1.5 rounded-full bg-gray-100 text-light font-medium">满意度</button>
+                </div>
+            </div>
+            <div id="trend-chart" style="height: 300px;"></div>
+        </div>
+
+        <!-- 详细数据统计 -->
+        <div class="bg-white rounded-xl p-4 mb-4 shadow-sm">
+            <h3 class="text-base font-bold text-dark mb-4">详细数据统计</h3>
+
+            <div class="space-y-4">
+                <!-- 物业费详情 -->
+                <div>
+                    <p class="text-sm font-medium text-dark mb-2">物业费缴纳情况</p>
+                    <div class="grid grid-cols-3 gap-2">
+                        <div class="bg-success/5 rounded-lg p-2 text-center">
+                            <p class="text-xs text-light mb-1">已缴</p>
+                            <p class="text-sm font-bold text-success" id="fee-paid">¥286万</p>
+                        </div>
+                        <div class="bg-warning/5 rounded-lg p-2 text-center">
+                            <p class="text-xs text-light mb-1">待缴</p>
+                            <p class="text-sm font-bold text-warning" id="fee-unpaid">¥51万</p>
+                        </div>
+                        <div class="bg-primary/5 rounded-lg p-2 text-center">
+                            <p class="text-xs text-light mb-1">总计</p>
+                            <p class="text-sm font-bold text-primary" id="fee-total">¥337万</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 公共收益详情 -->
+                <div>
+                    <div class="flex items-center justify-between mb-2">
+                        <p class="text-sm font-medium text-dark">公共收益来源</p>
+                        <a id="benefit-detail-link" href="#" class="text-xs text-primary flex items-center">
+                            查看明细 <i class="fa fa-angle-right ml-1"></i>
+                        </a>
+                    </div>
+                    <div class="space-y-2">
+                        <div class="flex items-center justify-between p-2 bg-neutral-light rounded-lg">
+                            <span class="text-xs text-dark">广告位出租</span>
+                            <div class="flex items-center gap-2">
+                                <div class="w-20 h-1.5 bg-gray-200 rounded-full overflow-hidden">
+                                    <div class="h-full bg-success rounded-full" style="width: 45%"></div>
+                                </div>
+                                <span class="text-xs font-medium text-dark w-12 text-right">¥26万</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between p-2 bg-neutral-light rounded-lg">
+                            <span class="text-xs text-dark">停车位租金</span>
+                            <div class="flex items-center gap-2">
+                                <div class="w-20 h-1.5 bg-gray-200 rounded-full overflow-hidden">
+                                    <div class="h-full bg-success rounded-full" style="width: 35%"></div>
+                                </div>
+                                <span class="text-xs font-medium text-dark w-12 text-right">¥20万</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between p-2 bg-neutral-light rounded-lg">
+                            <span class="text-xs text-dark">公共设施租赁</span>
+                            <div class="flex items-center gap-2">
+                                <div class="w-20 h-1.5 bg-gray-200 rounded-full overflow-hidden">
+                                    <div class="h-full bg-success rounded-full" style="width: 20%"></div>
+                                </div>
+                                <span class="text-xs font-medium text-dark w-12 text-right">¥12万</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 满意度详情 -->
+                <div>
+                    <p class="text-sm font-medium text-dark mb-2">满意度评分分布</p>
+                    <div id="satisfaction-chart" style="height: 200px;"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 数据分析报告 -->
+        <div class="bg-white rounded-xl p-4 shadow-sm">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-base font-bold text-dark">AI数据分析</h3>
+                <span class="text-xs bg-primary/10 text-primary px-2 py-1 rounded-full">智能分析</span>
+            </div>
+
+            <div class="space-y-3">
+                <div class="bg-success/5 border border-success/20 rounded-lg p-3">
+                    <div class="flex items-start gap-2">
+                        <i class="fa fa-check-circle text-success mt-0.5"></i>
+                        <div class="flex-1">
+                            <p class="text-sm font-medium text-dark mb-1">物业费缴费率提升</p>
+                            <p class="text-xs text-light leading-relaxed">相比上月提升2.3个百分点,主要得益于线上缴费渠道的优化和及时提醒机制。</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-warning/5 border border-warning/20 rounded-lg p-3">
+                    <div class="flex items-start gap-2">
+                        <i class="fa fa-exclamation-triangle text-warning mt-0.5"></i>
+                        <div class="flex-1">
+                            <p class="text-sm font-medium text-dark mb-1">关注电梯维护资金</p>
+                            <p class="text-xs text-light leading-relaxed">电梯维护资金使用率偏高,建议及时补充并做好预算规划。</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                    <div class="flex items-start gap-2">
+                        <i class="fa fa-lightbulb-o text-primary mt-0.5"></i>
+                        <div class="flex-1">
+                            <p class="text-sm font-medium text-dark mb-1">优化建议</p>
+                            <p class="text-xs text-light leading-relaxed">建议继续提升物业服务质量,特别是保洁和安保方面,进一步提高业主满意度。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const BENEFIT_PAGE_PATH = '/frontend/mobile/pages/benefit/index.html';
+        let autoRefreshTimer = null;
+        let isAutoRefresh = true;
+        let updateCounter = 0;
+
+        // 数据变化范围配置
+        const dataConfig = {
+            fee: { base: 2.6, range: 0.05 },
+            feeRate: { base: 85, range: 2 },
+            income: { base: 58, range: 3 },
+            incomeGrowth: { base: 12.5, range: 1.5 },
+            satisfaction: { base: 89, range: 3 },
+            satisfactionChange: { base: 3.2, range: 0.8 },
+            elevator: { base: 15.8, range: 0.5 },
+            elevatorUsage: { base: 65, range: 3 }
+        };
+
+        // 生成随机变化值
+        function getRandomValue(config) {
+            const variation = (Math.random() - 0.5) * config.range;
+            return Number((config.base + variation).toFixed(1));
+        }
+
+        // 更新数据
+        function updateData() {
+            updateCounter++;
+
+            // 更新物业服务费
+            const newFee = getRandomValue(dataConfig.fee);
+            const newFeeRate = Math.round(getRandomValue(dataConfig.feeRate));
+            document.getElementById('fee-value').textContent = newFee;
+            document.getElementById('fee-rate').textContent = newFeeRate + '%';
+            document.getElementById('fee-progress').style.width = newFeeRate + '%';
+
+            // 更新公共收益
+            const newIncome = Math.round(getRandomValue(dataConfig.income));
+            const newIncomeGrowth = getRandomValue(dataConfig.incomeGrowth);
+            document.getElementById('income-value').textContent = newIncome;
+            document.getElementById('income-growth').textContent = '+' + newIncomeGrowth + '%';
+            document.getElementById('income-progress').style.width = (newIncome * 1.2) + '%';
+
+            // 更新业主满意度
+            const newSatisfaction = Math.round(getRandomValue(dataConfig.satisfaction));
+            const newSatisfactionChange = getRandomValue(dataConfig.satisfactionChange);
+            document.getElementById('satisfaction-value').textContent = newSatisfaction;
+            document.getElementById('satisfaction-change').textContent = '+' + newSatisfactionChange + '%';
+            document.getElementById('satisfaction-progress').style.width = newSatisfaction + '%';
+
+            // 更新电梯维护资金
+            const newElevator = getRandomValue(dataConfig.elevator);
+            const newElevatorUsage = Math.round(getRandomValue(dataConfig.elevatorUsage));
+            document.getElementById('elevator-value').textContent = newElevator;
+            document.getElementById('elevator-usage').textContent = newElevatorUsage + '%';
+            document.getElementById('elevator-progress').style.width = newElevatorUsage + '%';
+
+            // 更新详细数据
+            const feePaid = Math.round(newFee * 110 + Math.random() * 10);
+            const feeUnpaid = Math.round((100 - newFeeRate) * 3.4);
+            document.getElementById('fee-paid').textContent = '¥' + feePaid + '万';
+            document.getElementById('fee-unpaid').textContent = '¥' + feeUnpaid + '万';
+            document.getElementById('fee-total').textContent = '¥' + (feePaid + feeUnpaid) + '万';
+
+            // 更新时间
+            document.getElementById('update-time').textContent = '刚刚更新';
+        }
+
+        // 开始自动刷新
+        function startAutoRefresh() {
+            if (autoRefreshTimer) return;
+
+            isAutoRefresh = true;
+            const btn = document.getElementById('auto-refresh-btn');
+            btn.innerHTML = '<i class="fa fa-pause"></i> 暂停';
+            btn.classList.remove('text-primary');
+            btn.classList.add('text-warning');
+
+            autoRefreshTimer = setInterval(() => {
+                updateData();
+            }, 1500); // 每1.5秒更新一次
+        }
+
+        // 停止自动刷新
+        function stopAutoRefresh() {
+            if (autoRefreshTimer) {
+                clearInterval(autoRefreshTimer);
+                autoRefreshTimer = null;
+            }
+
+            isAutoRefresh = false;
+            const btn = document.getElementById('auto-refresh-btn');
+            btn.innerHTML = '<i class="fa fa-refresh"></i> 实时';
+            btn.classList.remove('text-warning');
+            btn.classList.add('text-primary');
+        }
+
+        // 切换自动刷新
+        function toggleAutoRefresh() {
+            if (isAutoRefresh) {
+                stopAutoRefresh();
+            } else {
+                startAutoRefresh();
+            }
+        }
+
+        // 初始化趋势图表
+        function initTrendChart() {
+            const chart = echarts.init(document.getElementById('trend-chart'));
+            const option = {
+                color: ['#165DFF'],
+                tooltip: {
+                    trigger: 'axis',
+                    formatter: '{b}<br/>{a}: {c}'
+                },
+                grid: {
+                    top: 40,
+                    left: 50,
+                    right: 20,
+                    bottom: 30
+                },
+                xAxis: {
+                    type: 'category',
+                    data: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
+                    axisLine: { lineStyle: { color: '#E5E6EB' } },
+                    axisLabel: { color: '#86909C', fontSize: 11 }
+                },
+                yAxis: {
+                    type: 'value',
+                    name: '缴费率(%)',
+                    axisLine: { show: false },
+                    axisTick: { show: false },
+                    splitLine: { lineStyle: { color: '#F5F7FA' } },
+                    axisLabel: { color: '#86909C', fontSize: 11 }
+                },
+                series: [{
+                    name: '缴费率',
+                    type: 'line',
+                    smooth: true,
+                    data: [78, 80, 82, 81, 83, 84, 85, 84, 86, 85, 87, 85],
+                    areaStyle: {
+                        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                            { offset: 0, color: 'rgba(22, 93, 255, 0.2)' },
+                            { offset: 1, color: 'rgba(22, 93, 255, 0.05)' }
+                        ])
+                    },
+                    lineStyle: { width: 3 },
+                    symbolSize: 8
+                }]
+            };
+            chart.setOption(option);
+        }
+
+        // 切换图表
+        function switchChart(type) {
+            document.querySelectorAll('.chart-tab').forEach(tab => {
+                tab.classList.remove('active', 'bg-primary/10', 'text-primary');
+                tab.classList.add('bg-gray-100', 'text-light');
+            });
+            event.target.classList.add('active', 'bg-primary/10', 'text-primary');
+            event.target.classList.remove('bg-gray-100', 'text-light');
+
+            const chart = echarts.getInstanceByDom(document.getElementById('trend-chart'));
+            let option = {};
+
+            if (type === 'fee') {
+                option = {
+                    color: ['#165DFF'],
+                    yAxis: { name: '缴费率(%)' },
+                    series: [{
+                        name: '缴费率',
+                        data: [78, 80, 82, 81, 83, 84, 85, 84, 86, 85, 87, 85],
+                        areaStyle: {
+                            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                                { offset: 0, color: 'rgba(22, 93, 255, 0.2)' },
+                                { offset: 1, color: 'rgba(22, 93, 255, 0.05)' }
+                            ])
+                        }
+                    }]
+                };
+            } else if (type === 'income') {
+                option = {
+                    color: ['#00B96B'],
+                    yAxis: { name: '收益(万元)' },
+                    series: [{
+                        name: '公共收益',
+                        data: [48, 52, 50, 53, 55, 54, 56, 58, 57, 59, 60, 58],
+                        areaStyle: {
+                            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                                { offset: 0, color: 'rgba(0, 185, 107, 0.2)' },
+                                { offset: 1, color: 'rgba(0, 185, 107, 0.05)' }
+                            ])
+                        }
+                    }]
+                };
+            } else if (type === 'satisfaction') {
+                option = {
+                    color: ['#FF7D00'],
+                    yAxis: { name: '满意度(%)' },
+                    series: [{
+                        name: '业主满意度',
+                        data: [82, 83, 84, 85, 86, 85, 87, 88, 87, 89, 90, 89],
+                        areaStyle: {
+                            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                                { offset: 0, color: 'rgba(255, 125, 0, 0.2)' },
+                                { offset: 1, color: 'rgba(255, 125, 0, 0.05)' }
+                            ])
+                        }
+                    }]
+                };
+            }
+
+            chart.setOption(option);
+        }
+
+        // 初始化满意度图表
+        function initSatisfactionChart() {
+            const chart = echarts.init(document.getElementById('satisfaction-chart'));
+            const option = {
+                color: ['#00B96B', '#165DFF', '#FF7D00', '#F53F3F'],
+                tooltip: {
+                    trigger: 'item',
+                    formatter: '{b}: {c}人 ({d}%)'
+                },
+                grid: {
+                    top: 20,
+                    left: 20,
+                    right: 20,
+                    bottom: 20
+                },
+                series: [{
+                    type: 'pie',
+                    radius: ['40%', '70%'],
+                    center: ['50%', '50%'],
+                    data: [
+                        { value: 425, name: '非常满意' },
+                        { value: 312, name: '满意' },
+                        { value: 78, name: '一般' },
+                        { value: 35, name: '不满意' }
+                    ],
+                    label: {
+                        fontSize: 11,
+                        formatter: '{d}%'
+                    },
+                    labelLine: {
+                        length: 8,
+                        length2: 5
+                    },
+                    itemStyle: {
+                        borderRadius: 8,
+                        borderColor: '#fff',
+                        borderWidth: 2
+                    }
+                }]
+            };
+            chart.setOption(option);
+        }
+
+        // 页面加载完成后执行
+        document.addEventListener('DOMContentLoaded', function() {
+            initTrendChart();
+            initSatisfactionChart();
+
+            const benefitLink = document.getElementById('benefit-detail-link');
+            if (benefitLink) {
+                benefitLink.href = `${window.location.origin}${BENEFIT_PAGE_PATH}`;
+            }
+
+            // 自动开始刷新
+            startAutoRefresh();
+        });
+
+        // 页面卸载时停止刷新
+        window.addEventListener('beforeunload', function() {
+            stopAutoRefresh();
+        });
+    </script>
+</body>
+</html>

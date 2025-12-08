@@ -1,0 +1,884 @@
+{
+  "listings": [
+    {
+      "id": 101,
+      "title": "星河国际三期 · 118㎡改善三房",
+      "subTitle": "武进区湖塘街道 · 地铁2号线传媒路站600m | 湖塘实验小学学区",
+      "displayName": "星河国际三期 118㎡ 三居室",
+      "district": "武进区湖塘街道",
+      "address": "常州市武进区湖塘街道中吴大道与长虹路交汇",
+      "rooms": "3室2厅2卫",
+      "area": 118,
+      "floor": "中高层 / 33层",
+      "orientation": "南北通透",
+      "decoration": "全屋精装",
+      "property": "商品房70年",
+      "buildYear": "2016年",
+      "listingDays": 42,
+      "status": "在售",
+      "cover": "https://img2-build.jiwu.com/album/manual/2025/07/09/141142450286.jpg/jiwu$800x600",
+      "gallery": [
+        "https://img2-build.jiwu.com/album/manual/2025/07/09/141142450286.jpg/jiwu$800x600",
+        "https://img2-build.jiwu.com/album/manual/2025/07/09/141142450286.jpg/jiwu$800x600",
+        "https://img2-build.jiwu.com/album/manual/2025/07/09/141142450286.jpg/jiwu$800x600"
+      ],
+      "floorplan": "https://img2-build.jiwu.com/album/manual/2025/07/09/141142450286.jpg/jiwu$800x600",
+      "matchRate": 96,
+      "matchLevel": "S级匹配",
+      "matchTags": ["置换改善优选", "议价 3%-5%", "满两年免个税"],
+      "price": 192,
+      "unitPrice": 16270,
+      "taxTips": "首套契税1%，满两年免个税",
+      "aiInsights": [
+        "AI判定家庭通勤半径范围内，距地铁2号线传媒路站约600m，可步行通勤。",
+        "画像显示家庭可支配收入稳定，组合贷款月供占比27%，资金承压低。",
+        "业主计划三个月内置换四房，接受合适意向金锁定48小时。"
+      ],
+      "factTable": [
+        {"label": "楼层", "value": "中高层 / 33层"},
+        {"label": "朝向", "value": "南北通透"},
+        {"label": "装修", "value": "全屋精装"},
+        {"label": "产权", "value": "商品房70年"},
+        {"label": "挂牌", "value": "42天"},
+        {"label": "梯户比", "value": "2梯4户"}
+      ],
+      "owner": {
+        "name": "李女士",
+        "role": "房主",
+        "status": "当前在线",
+        "credit": "实名认证",
+        "avatar": "https://picsum.photos/80/80?random=201",
+        "trustScore": 92,
+        "bio": "家庭置换升级，优先考虑高首付或全款客户，可接受合理议价。"
+      },
+      "negotiation": {
+        "listingPrice": 192,
+        "aiEstimate": 187,
+        "dealProbability": "70%",
+        "aiAdvice": "建议以185-188万提交意向，并附带定金锁定48小时。",
+        "reminders": [
+          "业主接受公积金+商贷组合，放款周期需控制在30天以内。",
+          "支持先看后签，签约可同步安排贷款与过户资料。"
+        ],
+        "stats": [
+          {"label": "近90天成交", "value": "16800元/㎡"},
+          {"label": "同户型在售", "value": "3套"},
+          {"label": "本周看房", "value": "6组预约"}
+        ]
+      },
+      "loanPlan": {
+        "downPayment": "首付 67.2 万 (35%)",
+        "monthlyPayment": "月供约 8,900 元 / 30年",
+        "bank": "合作银行：建行、招商"
+      },
+      "serviceTimeline": [
+        {"title": "AI验真", "time": "今日 09:20", "status": "完成", "desc": "权属及抵押状态核验完成"},
+        {"title": "税费测算", "time": "今日 10:15", "status": "完成", "desc": "首套购房税费约 2.1 万"},
+        {"title": "看房预约", "time": "今日 15:00", "status": "进行中", "desc": "可预约晚间看房时段"},
+        {"title": "合同准备", "time": "明日 09:00", "status": "待开始", "desc": "准备网签及贷款材料"}
+      ],
+      "quickQuestions": [
+        "想了解最近成交价，帮我评估出价策略",
+        "业主最多能接受多少首付比例？",
+        "组合贷审批大概多久？"
+      ],
+      "contact": {
+        "agent": "AI交易助手 · 常州站",
+        "phone": "400-6655-001",
+        "wechat": "cz-agent001"
+      }
+    },
+    {
+      "id": 102,
+      "title": "世茂香槟湖二期 · 105㎡湖景三房",
+      "subTitle": "新北区太湖东路 · 临湖景观 | 世茂自持物业",
+      "displayName": "世茂香槟湖二期 105㎡ 三居室",
+      "district": "新北区太湖东路",
+      "address": "常州市新北区太湖东路与晋陵北路交汇",
+      "rooms": "3室2厅2卫",
+      "area": 105,
+      "floor": "小高层 / 26层",
+      "orientation": "南向主卧",
+      "decoration": "精装交付",
+      "property": "商品房70年",
+      "buildYear": "2018年",
+      "listingDays": 18,
+      "status": "在售",
+      "cover": "https://p9.itc.cn/q_70/images01/20231012/ce912d35e8164e26819d0c08969e1d5a.png",
+      "gallery": [
+        "https://p9.itc.cn/q_70/images01/20231012/ce912d35e8164e26819d0c08969e1d5a.png",
+        "https://p9.itc.cn/q_70/images01/20231012/ce912d35e8164e26819d0c08969e1d5a.png",
+        "https://p9.itc.cn/q_70/images01/20231012/ce912d35e8164e26819d0c08969e1d5a.png"
+      ],
+      "floorplan": "https://p9.itc.cn/q_70/images01/20231012/ce912d35e8164e26819d0c08969e1d5a.png",
+      "matchRate": 91,
+      "matchLevel": "A级匹配",
+      "matchTags": ["湖景资源", "品牌物业", "近商圈"],
+      "price": 185,
+      "unitPrice": 17600,
+      "taxTips": "可享首套1%契税，满两年减免增值税",
+      "aiInsights": [
+        "AI匹配用户偏好“湖景+生活配套”，项目距万达广场 1.1km。",
+        "楼栋位于二期中轴，无遮挡采光，户型动静分区明显。",
+        "业主购入时间 2019 年，按揭已结清，支持随时过户。"
+      ],
+      "factTable": [
+        {"label": "楼层", "value": "小高层 / 26层"},
+        {"label": "朝向", "value": "主卧朝南"},
+        {"label": "装修", "value": "开发商精装"},
+        {"label": "产权", "value": "商品房70年"},
+        {"label": "挂牌", "value": "18天"},
+        {"label": "梯户比", "value": "2梯3户"}
+      ],
+      "owner": {
+        "name": "张先生",
+        "role": "业主",
+        "status": "1小时前在线",
+        "credit": "实名认证",
+        "avatar": "https://picsum.photos/80/80?random=202",
+        "trustScore": 88,
+        "bio": "工作调动至上海，房源空置，倾向尽快成交。"
+      },
+      "negotiation": {
+        "listingPrice": 185,
+        "aiEstimate": 181,
+        "dealProbability": "64%",
+        "aiAdvice": "首轮可报 180-182 万，并同步明确付款方式。",
+        "reminders": [
+          "业主希望一个月内完成交割，意向客户需提供资金证明。",
+          "支持一次性付款或首付40%以上的按揭方案。"
+        ],
+        "stats": [
+          {"label": "近90天成交", "value": "17300元/㎡"},
+          {"label": "同户型在售", "value": "2套"},
+          {"label": "本周看房", "value": "4组预约"}
+        ]
+      },
+      "loanPlan": {
+        "downPayment": "首付 64.8 万 (35%)",
+        "monthlyPayment": "月供约 8,200 元 / 30年",
+        "bank": "合作银行：工行、邮储"
+      },
+      "serviceTimeline": [
+        {"title": "房源核验", "time": "昨日 17:40", "status": "完成", "desc": "房本、贷款结清证明已上传"},
+        {"title": "智能比价", "time": "今日 09:10", "status": "完成", "desc": "AI估值 181 万"},
+        {"title": "带看排期", "time": "今日 14:00", "status": "进行中", "desc": "周末剩余 2 个时段"},
+        {"title": "交割托管", "time": "待定", "status": "待开始", "desc": "资金托管服务待买方确认"}
+      ],
+      "quickQuestions": [
+        "湖景楼栋噪音情况如何？",
+        "能否锁定一个月内交割？",
+        "若全款可再谈多少？"
+      ],
+      "contact": {
+        "agent": "资深交易经理 · 常州站",
+        "phone": "400-6655-002",
+        "wechat": "cz-agent105"
+      }
+    },
+    {
+      "id": 103,
+      "title": "龙湖春江天悦 · 128㎡改善四房",
+      "subTitle": "钟楼区龙江路 · 临近文化宫商圈 | 龙湖物业",
+      "displayName": "龙湖春江天悦 128㎡ 四居室",
+      "district": "钟楼区龙江路",
+      "address": "常州市钟楼区龙江路与劳动西路交汇",
+      "rooms": "4室2厅2卫",
+      "area": 128,
+      "floor": "中层 / 33层",
+      "orientation": "南北通透",
+      "decoration": "开发商精装",
+      "property": "商品房70年",
+      "buildYear": "2019年",
+      "listingDays": 15,
+      "status": "在售",
+      "cover": "https://img.freepik.com/free-photo/avenue-with-green-trees_1127-350.jpg?semt=ais_se_enriched&w=740&q=80",
+      "gallery": [
+        "https://img.freepik.com/free-photo/avenue-with-green-trees_1127-350.jpg?semt=ais_se_enriched&w=740&q=80",
+        "https://img.freepik.com/free-photo/avenue-with-green-trees_1127-350.jpg?semt=ais_se_enriched&w=740&q=80",
+        "https://img.freepik.com/free-photo/avenue-with-green-trees_1127-350.jpg?semt=ais_se_enriched&w=740&q=80"
+      ],
+      "floorplan": "https://img.freepik.com/free-photo/avenue-with-green-trees_1127-350.jpg?semt=ais_se_enriched&w=740&q=80",
+      "matchRate": 94,
+      "matchLevel": "A级匹配",
+      "matchTags": ["龙湖物业", "次新房", "双阳台"],
+      "price": 236,
+      "unitPrice": 18400,
+      "taxTips": "满二唯一，个税减免，契税1%",
+      "aiInsights": [
+        "同板块成交均价近三月稳定，议价空间 3% 左右。",
+        "双阳台通透格局，动静分区，适合二胎家庭。",
+        "距地铁2号线文化宫站约700m，通勤便利。"
+      ],
+      "factTable": [
+        {"label": "楼层", "value": "中层 / 33层"},
+        {"label": "朝向", "value": "南北通透"},
+        {"label": "装修", "value": "开发商精装"},
+        {"label": "产权", "value": "商品房70年"},
+        {"label": "挂牌", "value": "15天"},
+        {"label": "梯户比", "value": "2梯4户"}
+      ],
+      "owner": {
+        "name": "周先生",
+        "role": "房主",
+        "status": "今日在线",
+        "credit": "实名认证",
+        "avatar": "https://picsum.photos/80/80?random=203",
+        "trustScore": 90,
+        "bio": "工作调动至杭州，诚心出售，接受合理价位。"
+      },
+      "negotiation": {
+        "listingPrice": 236,
+        "aiEstimate": 231,
+        "dealProbability": "68%",
+        "aiAdvice": "建议首轮报价 228-230 万并提供贷款批复。",
+        "reminders": [
+          "业主希望2个月内完成交易，可适度让价换取付款速度。",
+          "接受公积金+商贷，首付比例≥35%。"
+        ],
+        "stats": [
+          {"label": "近90天成交", "value": "17900元/㎡"},
+          {"label": "同户型在售", "value": "4套"},
+          {"label": "本周看房", "value": "5组预约"}
+        ]
+      },
+      "loanPlan": {
+        "downPayment": "首付 82.6 万 (35%)",
+        "monthlyPayment": "月供约 10,100 元 / 30年",
+        "bank": "合作银行：招行、兴业"
+      },
+      "serviceTimeline": [
+        {"title": "房源验真", "time": "今日 09:10", "status": "完成", "desc": "不动产证上传完成"},
+        {"title": "智能估价", "time": "今日 10:30", "status": "完成", "desc": "AI估值 231 万"},
+        {"title": "预约带看", "time": "今日 17:30", "status": "进行中", "desc": "晚间可安排带看"},
+        {"title": "签约托管", "time": "待定", "status": "待开始", "desc": "待意向客户确认"}
+      ],
+      "quickQuestions": [
+        "精装状态如何？可以看原始收房资料吗？",
+        "两个儿童房采光怎样？是否改造过？",
+        "若全款是否可以再谈？"
+      ],
+      "contact": {
+        "agent": "龙湖专属顾问",
+        "phone": "400-6655-003",
+        "wechat": "cz-agent128"
+      }
+    },
+    {
+      "id": 104,
+      "title": "绿地江南里 · 142㎡复式四房",
+      "subTitle": "天宁区劳动东路 · 绿化率45% | 低密洋房",
+      "displayName": "绿地江南里 142㎡ 复式四居",
+      "district": "天宁区劳动东路",
+      "address": "常州市天宁区劳动东路与延陵中路交汇",
+      "rooms": "4室2厅3卫",
+      "area": 142,
+      "floor": "洋房 / 8层",
+      "orientation": "南向面宽",
+      "decoration": "全屋定制",
+      "property": "商品房70年",
+      "buildYear": "2017年",
+      "listingDays": 33,
+      "status": "在售",
+      "cover": "https://photo.16pic.com/00/50/74/16pic_5074076_b.jpg",
+      "gallery": [
+        "https://photo.16pic.com/00/50/74/16pic_5074076_b.jpg",
+        "https://photo.16pic.com/00/50/74/16pic_5074076_b.jpg",
+        "https://photo.16pic.com/00/50/74/16pic_5074076_b.jpg"
+      ],
+      "floorplan": "https://photo.16pic.com/00/50/74/16pic_5074076_b.jpg",
+      "matchRate": 89,
+      "matchLevel": "A级匹配",
+      "matchTags": ["花园洋房", "双车位", "带阁楼"],
+      "price": 298,
+      "unitPrice": 20980,
+      "taxTips": "满二，唯一，契税1%",
+      "aiInsights": [
+        "复式格局带挑高客厅，配备两个车位，改善型需求匹配度高。",
+        "所在楼栋入住率80%，社区成熟，物业口碑良好。",
+        "AI测算与周边竞品相比单价低约5%，性价比突出。"
+      ],
+      "factTable": [
+        {"label": "楼层", "value": "洋房 / 8层"},
+        {"label": "朝向", "value": "南向面宽"},
+        {"label": "装修", "value": "全屋定制"},
+        {"label": "产权", "value": "商品房70年"},
+        {"label": "挂牌", "value": "33天"},
+        {"label": "车位", "value": "2个专属车位"}
+      ],
+      "owner": {
+        "name": "陈女士",
+        "role": "房主",
+        "status": "昨晚在线",
+        "credit": "实名认证",
+        "avatar": "https://picsum.photos/80/80?random=204",
+        "trustScore": 86,
+        "bio": "家庭计划置换别墅，接受合理首付比例，优先诚意客。"
+      },
+      "negotiation": {
+        "listingPrice": 298,
+        "aiEstimate": 292,
+        "dealProbability": "55%",
+        "aiAdvice": "若首付款≥40%，可尝试报价 288-290 万。",
+        "reminders": [
+          "支持一次性或商业贷款，组合贷需提前沟通。",
+          "物业配合度高，可预约周末下午统一带看。"
+        ],
+        "stats": [
+          {"label": "近90天成交", "value": "20500元/㎡"},
+          {"label": "同户型在售", "value": "2套"},
+          {"label": "本周看房", "value": "3组预约"}
+        ]
+      },
+      "loanPlan": {
+        "downPayment": "首付 104.3 万 (35%)",
+        "monthlyPayment": "月供约 12,700 元 / 30年",
+        "bank": "合作银行：建行、农行"
+      },
+      "serviceTimeline": [
+        {"title": "资料核验", "time": "昨日 11:20", "status": "完成", "desc": "产证+不抵押"},
+        {"title": "AI比价", "time": "昨日 12:50", "status": "完成", "desc": "估值 292 万"},
+        {"title": "预约带看", "time": "今日 14:00", "status": "进行中", "desc": "周末排期充足"},
+        {"title": "签约流程", "time": "待定", "status": "待开始", "desc": "待买方确认付款方式"}
+      ],
+      "quickQuestions": [
+        "阁楼高度与采光如何？是否可做书房？",
+        "车位是否随房赠送？",
+        "家具电器能否随房出售？"
+      ],
+      "contact": {
+        "agent": "AI置业顾问",
+        "phone": "400-6655-004",
+        "wechat": "cz-agent142"
+      }
+    },
+    {
+      "id": 105,
+      "title": "雅居乐星河湾 · 185㎡景观大平层",
+      "subTitle": "新北区万达旁 · 成熟商业圈 | 高端改善",
+      "displayName": "雅居乐星河湾 185㎡ 大平层",
+      "district": "新北区通江中路",
+      "address": "常州市新北区通江中路万达广场北侧",
+      "rooms": "4室2厅3卫",
+      "area": 185,
+      "floor": "高层 / 34层",
+      "orientation": "南向270°视野",
+      "decoration": "豪华装修",
+      "property": "商品房70年",
+      "buildYear": "2015年",
+      "listingDays": 27,
+      "status": "在售",
+      "cover": "https://imgs.699pic.com/images/500/545/039.jpg!list1x.v2",
+      "gallery": [
+        "https://imgs.699pic.com/images/500/545/039.jpg!list1x.v2",
+        "https://imgs.699pic.com/images/500/545/039.jpg!list1x.v2",
+        "https://imgs.699pic.com/images/500/545/039.jpg!list1x.v2"
+      ],
+      "floorplan": "https://imgs.699pic.com/images/500/545/039.jpg!list1x.v2",
+      "matchRate": 92,
+      "matchLevel": "S级匹配",
+      "matchTags": ["核心商圈", "大平层", "豪装"],
+      "price": 520,
+      "unitPrice": 28100,
+      "taxTips": "名下两套内，契税1-2%，豪装可评估入价",
+      "aiInsights": [
+        "坐拥大面宽客厅+双套房设计，适合高净值家庭。",
+        "楼下即万达商业，配套成熟，租售比优。",
+        "业主已购新房，计划季度内完成交易，有一定议价空间。"
+      ],
+      "factTable": [
+        {"label": "楼层", "value": "高层 / 34层"},
+        {"label": "朝向", "value": "南向270°视野"},
+        {"label": "装修", "value": "豪华装修"},
+        {"label": "产权", "value": "商品房70年"},
+        {"label": "挂牌", "value": "27天"},
+        {"label": "梯户比", "value": "2梯2户"}
+      ],
+      "owner": {
+        "name": "黄先生",
+        "role": "房主",
+        "status": "今日上午在线",
+        "credit": "实名认证",
+        "avatar": "https://picsum.photos/80/80?random=205",
+        "trustScore": 91,
+        "bio": "家庭升级至别墅，现房空置，接受意向金锁单。"
+      },
+      "negotiation": {
+        "listingPrice": 520,
+        "aiEstimate": 508,
+        "dealProbability": "60%",
+        "aiAdvice": "建议意向报价 500-505 万并携带贷款批复或资金证明。",
+        "reminders": [
+          "豪装成本近80万，业主希望整体打包。",
+          "看房需提前预约，支持夜间看江景。"
+        ],
+        "stats": [
+          {"label": "近90天成交", "value": "27500元/㎡"},
+          {"label": "同户型在售", "value": "2套"},
+          {"label": "本周看房", "value": "4组预约"}
+        ]
+      },
+      "loanPlan": {
+        "downPayment": "首付 182 万 (35%)",
+        "monthlyPayment": "月供约 22,200 元 / 30年",
+        "bank": "合作银行：工行、光大"
+      },
+      "serviceTimeline": [
+        {"title": "豪装检查", "time": "昨日 15:30", "status": "完成", "desc": "全屋保养良好"},
+        {"title": "税费计算", "time": "昨日 16:20", "status": "完成", "desc": "总税费约 5.6 万"},
+        {"title": "AI估值", "time": "今日 09:00", "status": "完成", "desc": "估值 508 万"},
+        {"title": "带看排期", "time": "今日 19:00", "status": "进行中", "desc": "可安排夜景看房"}
+      ],
+      "quickQuestions": [
+        "豪装项目清单能提供吗？",
+        "能否附送软装家具？",
+        "江景噪音控制情况如何？"
+      ],
+      "contact": {
+        "agent": "高端产品顾问",
+        "phone": "400-6655-005",
+        "wechat": "cz-agent185"
+      }
+    },
+    {
+      "id": 106,
+      "title": "万科翡翠都会 · 99㎡地铁小三房",
+      "subTitle": "天宁区茶山街道 · 地铁1号线旁 | 紧邻学校",
+      "displayName": "万科翡翠都会 99㎡ 三居室",
+      "district": "天宁区茶山街道",
+      "address": "常州市天宁区茶山街道茶山路99号",
+      "rooms": "3室2厅1卫",
+      "area": 99,
+      "floor": "中层 / 26层",
+      "orientation": "南北通",
+      "decoration": "开发商精装",
+      "property": "商品房70年",
+      "buildYear": "2020年",
+      "listingDays": 12,
+      "status": "在售",
+      "cover": "https://imgs.699pic.com/images/500/578/747.jpg!list1x.v2",
+      "gallery": [
+        "https://imgs.699pic.com/images/500/578/747.jpg!list1x.v2",
+        "https://imgs.699pic.com/images/500/578/747.jpg!list1x.v2",
+        "https://imgs.699pic.com/images/500/578/747.jpg!list1x.v2"
+      ],
+      "floorplan": "https://imgs.699pic.com/images/500/578/747.jpg!list1x.v2",
+      "matchRate": 90,
+      "matchLevel": "A级匹配",
+      "matchTags": ["地铁口", "学区资源", "刚改首选"],
+      "price": 198,
+      "unitPrice": 20000,
+      "taxTips": "满两年，支持公积金，契税1%",
+      "aiInsights": [
+        "距离地铁1号线茶山站约500m，通勤便利。",
+        "对口茶山实验小学，刚改家庭关注度高。",
+        "业主换房至四房产品，接受合理议价。"
+      ],
+      "factTable": [
+        {"label": "楼层", "value": "中层 / 26层"},
+        {"label": "朝向", "value": "南北通"},
+        {"label": "装修", "value": "开发商精装"},
+        {"label": "产权", "value": "商品房70年"},
+        {"label": "挂牌", "value": "12天"},
+        {"label": "梯户比", "value": "2梯4户"}
+      ],
+      "owner": {
+        "name": "赵女士",
+        "role": "房主",
+        "status": "今日在线",
+        "credit": "实名认证",
+        "avatar": "https://picsum.photos/80/80?random=206",
+        "trustScore": 88,
+        "bio": "家庭新添成员，希望置换四房，价格空间灵活。"
+      },
+      "negotiation": {
+        "listingPrice": 198,
+        "aiEstimate": 194,
+        "dealProbability": "62%",
+        "aiAdvice": "建议报价 190-192 万并说明首付/放款速度。",
+        "reminders": [
+          "支持组合贷，放款周期控制在45天内更易成交。",
+          "可保留部分家电家具，视谈判情况赠送。"
+        ],
+        "stats": [
+          {"label": "近90天成交", "value": "19500元/㎡"},
+          {"label": "同户型在售", "value": "3套"},
+          {"label": "本周看房", "value": "5组预约"}
+        ]
+      },
+      "loanPlan": {
+        "downPayment": "首付 69.3 万 (35%)",
+        "monthlyPayment": "月供约 8,500 元 / 30年",
+        "bank": "合作银行：邮储、交行"
+      },
+      "serviceTimeline": [
+        {"title": "资料提交", "time": "今日 08:50", "status": "完成", "desc": "证件齐全"},
+        {"title": "智能估价", "time": "今日 09:20", "status": "完成", "desc": "估值 194 万"},
+        {"title": "预约带看", "time": "今日 16:00", "status": "进行中", "desc": "可安排两组"},
+        {"title": "交易托管", "time": "待定", "status": "待开始", "desc": "待买方确定"}
+      ],
+      "quickQuestions": [
+        "客厅朝向采光如何？",
+        "是否有固定车位？",
+        "是否能接受30%首付？"
+      ],
+      "contact": {
+        "agent": "学区置业顾问",
+        "phone": "400-6655-006",
+        "wechat": "cz-agent099"
+      }
+    },
+    {
+      "id": 107,
+      "title": "保利香颂 · 115㎡花园三房",
+      "subTitle": "武进区科教城 · 临近环球港 | 央企物业",
+      "displayName": "保利香颂 115㎡ 三居室",
+      "district": "武进区科教城",
+      "address": "常州市武进区延政中路保利香颂",
+      "rooms": "3室2厅2卫",
+      "area": 115,
+      "floor": "低楼层 / 18层",
+      "orientation": "南北通",
+      "decoration": "品质精装",
+      "property": "商品房70年",
+      "buildYear": "2018年",
+      "listingDays": 40,
+      "status": "在售",
+      "cover": "https://p1.itc.cn/q_70/images03/20230208/b166dbd6582c4e4684f918904ef0b9de.jpeg",
+      "gallery": [
+        "https://p1.itc.cn/q_70/images03/20230208/b166dbd6582c4e4684f918904ef0b9de.jpeg",
+        "https://p1.itc.cn/q_70/images03/20230208/b166dbd6582c4e4684f918904ef0b9de.jpeg",
+        "https://p1.itc.cn/q_70/images03/20230208/b166dbd6582c4e4684f918904ef0b9de.jpeg"
+      ],
+      "floorplan": "https://p1.itc.cn/q_70/images03/20230208/b166dbd6582c4e4684f918904ef0b9de.jpeg",
+      "matchRate": 88,
+      "matchLevel": "A级匹配",
+      "matchTags": ["央企物业", "配套成熟", "低楼层"],
+      "price": 210,
+      "unitPrice": 18200,
+      "taxTips": "满二免增值税，契税1%",
+      "aiInsights": [
+        "楼下即公园绿地，低楼层带小院，适合刚改或养老。",
+        "距环球港约800m，商业配套完善。",
+        "保利物业，社区口碑好，二手房保值性强。"
+      ],
+      "factTable": [
+        {"label": "楼层", "value": "低楼层 / 18层"},
+        {"label": "朝向", "value": "南北通"},
+        {"label": "装修", "value": "品质精装"},
+        {"label": "产权", "value": "商品房70年"},
+        {"label": "挂牌", "value": "40天"},
+        {"label": "梯户比", "value": "2梯2户"}
+      ],
+      "owner": {
+        "name": "钱先生",
+        "role": "房主",
+        "status": "2小时前在线",
+        "credit": "实名认证",
+        "avatar": "https://picsum.photos/80/80?random=207",
+        "trustScore": 84,
+        "bio": "因为工作调动搬至南京，诚售。"
+      },
+      "negotiation": {
+        "listingPrice": 210,
+        "aiEstimate": 205,
+        "dealProbability": "58%",
+        "aiAdvice": "报价 202-203 万更易达成，强调放款速度。",
+        "reminders": [
+          "院子面积约12㎡，后期维护成本低。",
+          "可允许一次性付款价，议价空间更大。"
+        ],
+        "stats": [
+          {"label": "近90天成交", "value": "17800元/㎡"},
+          {"label": "同户型在售", "value": "5套"},
+          {"label": "本周看房", "value": "3组预约"}
+        ]
+      },
+      "loanPlan": {
+        "downPayment": "首付 73.5 万 (35%)",
+        "monthlyPayment": "月供约 9,000 元 / 30年",
+        "bank": "合作银行：中行、农行"
+      },
+      "serviceTimeline": [
+        {"title": "房屋拍照", "time": "上周 10:00", "status": "完成", "desc": "全景图已上线"},
+        {"title": "价格评估", "time": "上周 13:00", "status": "完成", "desc": "AI估值 205 万"},
+        {"title": "带看预约", "time": "今日 11:00", "status": "进行中", "desc": "上午可安排2组"},
+        {"title": "合同准备", "time": "待定", "status": "待开始", "desc": "待买方锁单"}
+      ],
+      "quickQuestions": [
+        "院子产权归属情况？",
+        "学校划片是什么？",
+        "能接受的最低首付比例？"
+      ],
+      "contact": {
+        "agent": "武进专属经纪人",
+        "phone": "400-6655-007",
+        "wechat": "cz-agent115"
+      }
+    },
+    {
+      "id": 108,
+      "title": "招商雍景湾 · 135㎡叠墅",
+      "subTitle": "新北区河海片区 · 江景资源 | 叠墅产品",
+      "displayName": "招商雍景湾 135㎡ 叠墅",
+      "district": "新北区河海片区",
+      "address": "常州市新北区河海中路招商雍景湾",
+      "rooms": "4室2厅3卫",
+      "area": 135,
+      "floor": "下叠 / 3层",
+      "orientation": "南向",
+      "decoration": "毛坯",
+      "property": "联排别墅70年",
+      "buildYear": "2021年",
+      "listingDays": 20,
+      "status": "在售",
+      "cover": "https://imgs.699pic.com/images/700/822/850.jpg!list1x.v2",
+      "gallery": [
+        "https://imgs.699pic.com/images/700/822/850.jpg!list1x.v2",
+        "https://imgs.699pic.com/images/700/822/850.jpg!list1x.v2",
+        "https://imgs.699pic.com/images/700/822/850.jpg!list1x.v2"
+      ],
+      "floorplan": "https://imgs.699pic.com/images/700/822/850.jpg!list1x.v2",
+      "matchRate": 87,
+      "matchLevel": "A级匹配",
+      "matchTags": ["下叠花园", "江景资源", "毛坯可定制"],
+      "price": 360,
+      "unitPrice": 26600,
+      "taxTips": "毛坯叠墅，契税3%，可抵扣装修费用",
+      "aiInsights": [
+        "下叠带前后双庭院，可定制私人花园。",
+        "沿河景观资源稀缺，适合改善型家庭。",
+        "招商物业，社区入住率70%，后期配套逐步兑现。"
+      ],
+      "factTable": [
+        {"label": "楼层", "value": "下叠 / 3层"},
+        {"label": "朝向", "value": "南向"},
+        {"label": "装修", "value": "毛坯"},
+        {"label": "产权", "value": "联排别墅70年"},
+        {"label": "挂牌", "value": "20天"},
+        {"label": "院子", "value": "双庭院"}
+      ],
+      "owner": {
+        "name": "宋先生",
+        "role": "房主",
+        "status": "昨晚在线",
+        "credit": "实名认证",
+        "avatar": "https://picsum.photos/80/80?random=208",
+        "trustScore": 82,
+        "bio": "已在上海置业，常州叠墅空置，希望尽快处理。"
+      },
+      "negotiation": {
+        "listingPrice": 360,
+        "aiEstimate": 348,
+        "dealProbability": "52%",
+        "aiAdvice": "报价 340-345 万更易推进，建议提供装修方案。",
+        "reminders": [
+          "毛坯交付，可协助对接设计公司。",
+          "支持一次性付款及按揭，首付≥40%。"
+        ],
+        "stats": [
+          {"label": "近90天成交", "value": "25800元/㎡"},
+          {"label": "同户型在售", "value": "1套"},
+          {"label": "本周看房", "value": "2组预约"}
+        ]
+      },
+      "loanPlan": {
+        "downPayment": "首付 126 万 (35%)",
+        "monthlyPayment": "月供约 15,400 元 / 30年",
+        "bank": "合作银行：招行、浦发"
+      },
+      "serviceTimeline": [
+        {"title": "验房报告", "time": "本周 10:00", "status": "完成", "desc": "毛坯质量良好"},
+        {"title": "价格测算", "time": "本周 11:00", "status": "完成", "desc": "估值 348 万"},
+        {"title": "预约带看", "time": "本周 17:00", "status": "进行中", "desc": "可随时看房"},
+        {"title": "签约托管", "time": "待定", "status": "待开始", "desc": "待客户确认"}
+      ],
+      "quickQuestions": [
+        "院子面积多大？是否可加建花房？",
+        "小区是否允许宠物？",
+        "装修预算大概多少？"
+      ],
+      "contact": {
+        "agent": "叠墅顾问",
+        "phone": "400-6655-008",
+        "wechat": "cz-agent135"
+      }
+    },
+    {
+      "id": 109,
+      "title": "朗诗蔚蓝风车 · 96㎡省心三房",
+      "subTitle": "钟楼区怀德路 · 成熟社区 | 低总价改善",
+      "displayName": "朗诗蔚蓝风车 96㎡ 三居室",
+      "district": "钟楼区怀德路",
+      "address": "常州市钟楼区怀德中路朗诗蔚蓝风车",
+      "rooms": "3室2厅1卫",
+      "area": 96,
+      "floor": "高层 / 27层",
+      "orientation": "南北通",
+      "decoration": "部分升级",
+      "property": "商品房70年",
+      "buildYear": "2013年",
+      "listingDays": 9,
+      "status": "在售",
+      "cover": "https://imgs.699pic.com/images/501/108/506.jpg!list1x.v2",
+      "gallery": [
+        "https://imgs.699pic.com/images/501/108/506.jpg!list1x.v2",
+        "https://imgs.699pic.com/images/501/108/506.jpg!list1x.v2",
+        "https://imgs.699pic.com/images/501/108/506.jpg!list1x.v2"
+      ],
+      "floorplan": "https://imgs.699pic.com/images/501/108/506.jpg!list1x.v2",
+      "matchRate": 86,
+      "matchLevel": "B级匹配",
+      "matchTags": ["低总价", "成熟社区", "代收租"],
+      "price": 165,
+      "unitPrice": 17180,
+      "taxTips": "满五唯一，减免个税",
+      "aiInsights": [
+        "小区租赁回报率稳定，可作为投资或首套过渡。",
+        "双地铁（在建）规划周边，未来增值潜力稳定。",
+        "业主接受全款客户优先，可快速过户。"
+      ],
+      "factTable": [
+        {"label": "楼层", "value": "高层 / 27层"},
+        {"label": "朝向", "value": "南北通"},
+        {"label": "装修", "value": "部分升级"},
+        {"label": "产权", "value": "商品房70年"},
+        {"label": "挂牌", "value": "9天"},
+        {"label": "梯户比", "value": "2梯4户"}
+      ],
+      "owner": {
+        "name": "顾先生",
+        "role": "房主",
+        "status": "今日在线",
+        "credit": "实名认证",
+        "avatar": "https://picsum.photos/80/80?random=209",
+        "trustScore": 80,
+        "bio": "移居外地，房屋一直出租，现整体出售。"
+      },
+      "negotiation": {
+        "listingPrice": 165,
+        "aiEstimate": 162,
+        "dealProbability": "65%",
+        "aiAdvice": "160-162 万报价较合理，附赠租客资源可加分。",
+        "reminders": [
+          "租约即将到期，可自住或续租。",
+          "一次性付款可优先谈判。"
+        ],
+        "stats": [
+          {"label": "近90天成交", "value": "16800元/㎡"},
+          {"label": "同户型在售", "value": "6套"},
+          {"label": "本周看房", "value": "2组预约"}
+        ]
+      },
+      "loanPlan": {
+        "downPayment": "首付 57.8 万 (35%)",
+        "monthlyPayment": "月供约 7,100 元 / 30年",
+        "bank": "合作银行：农行、交行"
+      },
+      "serviceTimeline": [
+        {"title": "租约沟通", "time": "本周 09:30", "status": "完成", "desc": "可配合提前退租"},
+        {"title": "价格核验", "time": "本周 10:00", "status": "完成", "desc": "估值 162 万"},
+        {"title": "带看预约", "time": "今日 15:00", "status": "进行中", "desc": "可夜间看房"},
+        {"title": "合同准备", "time": "待定", "status": "待开始", "desc": "待客户确定"}
+      ],
+      "quickQuestions": [
+        "租客可否继续租住？",
+        "物业费与停车位情况？",
+        "可否接受贷款批复后再签？"
+      ],
+      "contact": {
+        "agent": "投资顾问",
+        "phone": "400-6655-009",
+        "wechat": "cz-agent096"
+      }
+    },
+    {
+      "id": 110,
+      "title": "星河国际一期 · 118㎡景观三房",
+      "subTitle": "武进区花园街 · 星河系成熟社区",
+      "displayName": "星河国际一期 118㎡ 三居室",
+      "district": "武进区花园街",
+      "address": "常州市武进区花园街星河国际",
+      "rooms": "3室2厅2卫",
+      "area": 118,
+      "floor": "中高层 / 32层",
+      "orientation": "南北通",
+      "decoration": "保养良好",
+      "property": "商品房70年",
+      "buildYear": "2014年",
+      "listingDays": 18,
+      "status": "在售",
+      "cover": "https://preview.qiantucdn.com/58pic/71/69/29/28458PICAS9kKbUHy3wjF_origin_PIC2018.jpg!qt_h320_webp",
+      "gallery": [
+        "https://preview.qiantucdn.com/58pic/71/69/29/28458PICAS9kKbUHy3wjF_origin_PIC2018.jpg!qt_h320_webp",
+        "https://preview.qiantucdn.com/58pic/71/69/29/28458PICAS9kKbUHy3wjF_origin_PIC2018.jpg!qt_h320_webp",
+        "https://preview.qiantucdn.com/58pic/71/69/29/28458PICAS9kKbUHy3wjF_origin_PIC2018.jpg!qt_h320_webp"
+      ],
+      "floorplan": "https://preview.qiantucdn.com/58pic/71/69/29/28458PICAS9kKbUHy3wjF_origin_PIC2018.jpg!qt_h320_webp",
+      "matchRate": 90,
+      "matchLevel": "A级匹配",
+      "matchTags": ["成熟社区", "品牌物业", "配套完善"],
+      "price": 205,
+      "unitPrice": 17370,
+      "taxTips": "满五唯一，免个税",
+      "aiInsights": [
+        "星河物业管理成熟，社区配套齐全。",
+        "双卫布局，三开间朝南，通风采光好。",
+        "同户型供应少，预计成交速度快。"
+      ],
+      "factTable": [
+        {"label": "楼层", "value": "中高层 / 32层"},
+        {"label": "朝向", "value": "南北通"},
+        {"label": "装修", "value": "保养良好"},
+        {"label": "产权", "value": "商品房70年"},
+        {"label": "挂牌", "value": "18天"},
+        {"label": "梯户比", "value": "2梯4户"}
+      ],
+      "owner": {
+        "name": "吴女士",
+        "role": "房主",
+        "status": "今日在线",
+        "credit": "实名认证",
+        "avatar": "https://picsum.photos/80/80?random=210",
+        "trustScore": 89,
+        "bio": "孩子学区调整，考虑置换，诚意出售。"
+      },
+      "negotiation": {
+        "listingPrice": 205,
+        "aiEstimate": 201,
+        "dealProbability": "63%",
+        "aiAdvice": "报价 198-200 万并明确放款节奏。",
+        "reminders": [
+          "可配合一次性付款优惠1-2万。",
+          "看房需提前1小时预约。"
+        ],
+        "stats": [
+          {"label": "近90天成交", "value": "17000元/㎡"},
+          {"label": "同户型在售", "value": "2套"},
+          {"label": "本周看房", "value": "4组预约"}
+        ]
+      },
+      "loanPlan": {
+        "downPayment": "首付 71.7 万 (35%)",
+        "monthlyPayment": "月供约 8,700 元 / 30年",
+        "bank": "合作银行：建行、民生"
+      },
+      "serviceTimeline": [
+        {"title": "资料收集", "time": "本周 09:20", "status": "完成", "desc": "证件齐全"},
+        {"title": "AI估值", "time": "本周 09:45", "status": "完成", "desc": "估值 201 万"},
+        {"title": "预约带看", "time": "今日 13:00", "status": "进行中", "desc": "今日可带看"},
+        {"title": "交易托管", "time": "待定", "status": "待开始", "desc": "待客户锁定"}
+      ],
+      "quickQuestions": [
+        "是否有固定车位？",
+        "可否保留家具家电？",
+        "物业费标准是多少？"
+      ],
+      "contact": {
+        "agent": "星河专属顾问",
+        "phone": "400-6655-010",
+        "wechat": "cz-agent118"
+      }
+    }
+  ]
+}

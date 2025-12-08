@@ -6,7 +6,7 @@
     <meta name="referrer" content="no-referrer">
     <title>工作报告详情 - AI业委会</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="../../assets/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet">
     <script>
         tailwind.config = {
             theme: {
@@ -390,13 +390,16 @@
             <div class="flex items-center justify-between mb-4">
                 <h3 class="text-base font-bold text-dark flex items-center gap-2">
                     <i class="fa fa-comments text-primary"></i>
-                    评论讨论 <span class="text-sm text-light font-normal">(15)</span>
+                    评论讨论 <span class="text-sm text-light font-normal" id="comment-count">(15)</span>
                 </h3>
+                <button onclick="sortComments()" class="text-xs text-light hover:text-primary">
+                    <i class="fa fa-sort"></i> 排序
+                </button>
             </div>
 
-            <div class="space-y-3 mb-4">
+            <div class="space-y-3 mb-4" id="comments-list">
                 <!-- 评论1 -->
-                <div class="pb-3 border-b border-border">
+                <div class="pb-3 border-b border-border comment-item" data-comment-id="comment-1">
                     <div class="flex items-start gap-3">
                         <div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
                             <span class="text-sm font-medium text-primary">张</span>
@@ -404,18 +407,29 @@
                         <div class="flex-1">
                             <div class="flex items-center justify-between mb-1">
                                 <span class="text-sm font-medium text-dark">张先生</span>
-                                <span class="text-xs text-light">2小时前</span>
+                                <span class="text-xs text-light comment-time">2小时前</span>
                             </div>
                             <p class="text-sm text-dark mb-2">业委会辛苦了！本季度工作很到位，特别是外墙防水维修解决了大问题。</p>
-                            <button class="text-xs text-light hover:text-primary">
-                                <i class="fa fa-thumbs-o-up"></i> 点赞 (8)
+                            <div class="flex items-center gap-3">
+                                <button class="like-btn text-xs text-light hover:text-primary" onclick="toggleLike(this)">
+                                    <i class="fa fa-thumbs-o-up"></i> <span class="like-count">8</span>
+                                </button>
+                                <button class="text-xs text-light hover:text-primary" onclick="replyComment(this, '张先生', 'comment-1')">
+                                    <i class="fa fa-reply"></i> 回复
+                                </button>
+                            </div>
+                            <!-- 回复列表 -->
+                            <div class="replies-list mt-3 space-y-2 hidden"></div>
+                            <!-- 展开更多回复按钮 -->
+                            <button class="show-more-replies text-xs text-primary mt-2 hidden" onclick="toggleReplies(this)">
+                                <i class="fa fa-angle-down"></i> 展开更多回复
                             </button>
                         </div>
                     </div>
                 </div>
 
                 <!-- 评论2 -->
-                <div class="pb-3 border-b border-border">
+                <div class="pb-3 border-b border-border comment-item" data-comment-id="comment-2">
                     <div class="flex items-start gap-3">
                         <div class="w-8 h-8 rounded-full bg-success/10 flex items-center justify-center flex-shrink-0">
                             <span class="text-sm font-medium text-success">李</span>
@@ -423,22 +437,89 @@
                         <div class="flex-1">
                             <div class="flex items-center justify-between mb-1">
                                 <span class="text-sm font-medium text-dark">李女士</span>
-                                <span class="text-xs text-light">5小时前</span>
+                                <span class="text-xs text-light comment-time">5小时前</span>
                             </div>
                             <p class="text-sm text-dark mb-2">希望下季度能加强停车管理，现在停车真的太难了。</p>
-                            <button class="text-xs text-light hover:text-primary">
-                                <i class="fa fa-thumbs-o-up"></i> 点赞 (12)
+                            <div class="flex items-center gap-3">
+                                <button class="like-btn text-xs text-light hover:text-primary" onclick="toggleLike(this)">
+                                    <i class="fa fa-thumbs-o-up"></i> <span class="like-count">12</span>
+                                </button>
+                                <button class="text-xs text-light hover:text-primary" onclick="replyComment(this, '李女士', 'comment-2')">
+                                    <i class="fa fa-reply"></i> 回复
+                                </button>
+                            </div>
+                            <!-- 回复列表 -->
+                            <div class="replies-list mt-3 space-y-2 hidden"></div>
+                            <!-- 展开更多回复按钮 -->
+                            <button class="show-more-replies text-xs text-primary mt-2 hidden" onclick="toggleReplies(this)">
+                                <i class="fa fa-angle-down"></i> 展开更多回复
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 评论3 -->
+                <div class="pb-3 border-b border-border comment-item" data-comment-id="comment-3">
+                    <div class="flex items-start gap-3">
+                        <div class="w-8 h-8 rounded-full bg-warning/10 flex items-center justify-center flex-shrink-0">
+                            <span class="text-sm font-medium text-warning">王</span>
+                        </div>
+                        <div class="flex-1">
+                            <div class="flex items-center justify-between mb-1">
+                                <span class="text-sm font-medium text-dark">王先生</span>
+                                <span class="text-xs text-light comment-time">1天前</span>
+                            </div>
+                            <p class="text-sm text-dark mb-2">公共收益能否用于改善儿童游乐设施？现在的设施有点老旧了。</p>
+                            <div class="flex items-center gap-3">
+                                <button class="like-btn text-xs text-light hover:text-primary" onclick="toggleLike(this)">
+                                    <i class="fa fa-thumbs-o-up"></i> <span class="like-count">5</span>
+                                </button>
+                                <button class="text-xs text-light hover:text-primary" onclick="replyComment(this, '王先生', 'comment-3')">
+                                    <i class="fa fa-reply"></i> 回复
+                                </button>
+                            </div>
+                            <!-- 回复列表 -->
+                            <div class="replies-list mt-3 space-y-2 hidden"></div>
+                            <!-- 展开更多回复按钮 -->
+                            <button class="show-more-replies text-xs text-primary mt-2 hidden" onclick="toggleReplies(this)">
+                                <i class="fa fa-angle-down"></i> 展开更多回复
                             </button>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="flex gap-2">
-                <input type="text" placeholder="发表您的看法..." class="flex-1 border border-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-primary">
-                <button class="bg-primary text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-primary-dark">
-                    发送
-                </button>
+            <!-- 评论输入框 -->
+            <div id="comment-input-area">
+                <div class="flex gap-2">
+                    <input type="text" id="comment-input" placeholder="发表您的看法..." class="flex-1 border border-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-primary">
+                    <button onclick="sendComment()" class="bg-primary text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-primary-dark">
+                        发送
+                    </button>
+                </div>
+                <p class="text-xs text-light mt-2">
+                    <i class="fa fa-info-circle"></i> 请文明发言，理性讨论
+                </p>
+            </div>
+
+            <!-- 回复输入框（隐藏） -->
+            <div id="reply-input-area" class="hidden mt-3">
+                <div class="bg-neutral-light rounded-lg p-3">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-xs text-dark">
+                            回复 <span id="reply-target" class="text-primary font-medium"></span>
+                        </span>
+                        <button onclick="cancelReply()" class="text-xs text-light hover:text-dark">
+                            <i class="fa fa-times"></i> 取消
+                        </button>
+                    </div>
+                    <div class="flex gap-2">
+                        <input type="text" id="reply-input" placeholder="输入回复内容..." class="flex-1 border border-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-primary">
+                        <button onclick="sendReply()" class="bg-primary text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-primary-dark">
+                            回复
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -529,6 +610,293 @@
                         item.classList.remove('text-light');
                     }
                 });
+            }
+        });
+
+        // 评论功能相关变量
+        let commentCount = 15;
+        let currentSortOrder = 'time'; // 'time' 或 'likes'
+        let currentReplyTarget = null;
+        let currentReplyCommentId = null;
+        let commentIdCounter = 4; // 从4开始,因为已有3个评论
+
+        // 发送评论
+        function sendComment() {
+            const input = document.getElementById('comment-input');
+            const content = input.value.trim();
+
+            if (!content) {
+                alert('请输入评论内容');
+                return;
+            }
+
+            // 创建新评论元素
+            const commentsList = document.getElementById('comments-list');
+            const newComment = document.createElement('div');
+            const newCommentId = 'comment-' + commentIdCounter++;
+            newComment.className = 'pb-3 border-b border-border comment-item';
+            newComment.setAttribute('data-comment-id', newCommentId);
+
+            const colors = ['primary', 'success', 'warning', 'purple'];
+            const randomColor = colors[Math.floor(Math.random() * colors.length)];
+            const userName = '业主' + Math.floor(Math.random() * 1000);
+            const userInitial = userName.charAt(0);
+
+            newComment.innerHTML = `
+                <div class="flex items-start gap-3">
+                    <div class="w-8 h-8 rounded-full bg-${randomColor}/10 flex items-center justify-center flex-shrink-0">
+                        <span class="text-sm font-medium text-${randomColor}">${userInitial}</span>
+                    </div>
+                    <div class="flex-1">
+                        <div class="flex items-center justify-between mb-1">
+                            <span class="text-sm font-medium text-dark">${userName}</span>
+                            <span class="text-xs text-light comment-time">刚刚</span>
+                        </div>
+                        <p class="text-sm text-dark mb-2">${content}</p>
+                        <div class="flex items-center gap-3">
+                            <button class="like-btn text-xs text-light hover:text-primary" onclick="toggleLike(this)">
+                                <i class="fa fa-thumbs-o-up"></i> <span class="like-count">0</span>
+                            </button>
+                            <button class="text-xs text-light hover:text-primary" onclick="replyComment(this, '${userName}', '${newCommentId}')">
+                                <i class="fa fa-reply"></i> 回复
+                            </button>
+                        </div>
+                        <div class="replies-list mt-3 space-y-2 hidden"></div>
+                        <button class="show-more-replies text-xs text-primary mt-2 hidden" onclick="toggleReplies(this)">
+                            <i class="fa fa-angle-down"></i> 展开更多回复
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            // 添加到评论列表顶部
+            commentsList.insertBefore(newComment, commentsList.firstChild);
+
+            // 清空输入框
+            input.value = '';
+
+            // 更新评论数量
+            commentCount++;
+            document.getElementById('comment-count').textContent = `(${commentCount})`;
+
+            // 滚动到新评论
+            newComment.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        // 点赞功能
+        function toggleLike(button) {
+            const icon = button.querySelector('i');
+            const countSpan = button.querySelector('.like-count');
+            let count = parseInt(countSpan.textContent);
+
+            if (icon.classList.contains('fa-thumbs-o-up')) {
+                // 未点赞 -> 点赞
+                icon.classList.remove('fa-thumbs-o-up');
+                icon.classList.add('fa-thumbs-up');
+                button.classList.remove('text-light');
+                button.classList.add('text-primary');
+                count++;
+            } else {
+                // 已点赞 -> 取消点赞
+                icon.classList.remove('fa-thumbs-up');
+                icon.classList.add('fa-thumbs-o-up');
+                button.classList.remove('text-primary');
+                button.classList.add('text-light');
+                count--;
+            }
+
+            countSpan.textContent = count;
+        }
+
+        // 回复评论
+        function replyComment(button, targetName, commentId) {
+            currentReplyTarget = targetName;
+            currentReplyCommentId = commentId;
+
+            // 显示回复输入区域
+            const replyArea = document.getElementById('reply-input-area');
+            const commentArea = document.getElementById('comment-input-area');
+            const replyTarget = document.getElementById('reply-target');
+
+            replyArea.classList.remove('hidden');
+            commentArea.classList.add('hidden');
+            replyTarget.textContent = targetName;
+
+            // 聚焦到回复输入框
+            document.getElementById('reply-input').focus();
+
+            // 滚动到回复输入框
+            replyArea.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        // 取消回复
+        function cancelReply() {
+            const replyArea = document.getElementById('reply-input-area');
+            const commentArea = document.getElementById('comment-input-area');
+
+            replyArea.classList.add('hidden');
+            commentArea.classList.remove('hidden');
+
+            // 清空回复输入框
+            document.getElementById('reply-input').value = '';
+            currentReplyTarget = null;
+        }
+
+        // 发送回复
+        function sendReply() {
+            const input = document.getElementById('reply-input');
+            const content = input.value.trim();
+
+            if (!content) {
+                alert('请输入回复内容');
+                return;
+            }
+
+            // 找到目标评论
+            const targetComment = document.querySelector(`[data-comment-id="${currentReplyCommentId}"]`);
+            if (!targetComment) {
+                alert('目标评论不存在');
+                return;
+            }
+
+            // 获取回复列表容器
+            const repliesList = targetComment.querySelector('.replies-list');
+            const showMoreBtn = targetComment.querySelector('.show-more-replies');
+
+            // 创建新回复元素
+            const colors = ['primary', 'success', 'warning', 'purple'];
+            const randomColor = colors[Math.floor(Math.random() * colors.length)];
+            const userName = '业主' + Math.floor(Math.random() * 1000);
+            const userInitial = userName.charAt(0);
+
+            const newReply = document.createElement('div');
+            newReply.className = 'reply-item pl-3 border-l-2 border-gray-200';
+            newReply.innerHTML = `
+                <div class="flex items-start gap-2">
+                    <div class="w-6 h-6 rounded-full bg-${randomColor}/10 flex items-center justify-center flex-shrink-0">
+                        <span class="text-xs font-medium text-${randomColor}">${userInitial}</span>
+                    </div>
+                    <div class="flex-1">
+                        <div class="flex items-center justify-between mb-1">
+                            <div class="flex items-center gap-2">
+                                <span class="text-xs font-medium text-dark">${userName}</span>
+                                <span class="text-xs text-light">回复</span>
+                                <span class="text-xs text-primary font-medium">@${currentReplyTarget}</span>
+                            </div>
+                            <span class="text-xs text-light">刚刚</span>
+                        </div>
+                        <p class="text-xs text-dark">${content}</p>
+                    </div>
+                </div>
+            `;
+
+            // 添加回复到列表
+            repliesList.appendChild(newReply);
+
+            // 显示回复列表
+            if (repliesList.classList.contains('hidden')) {
+                repliesList.classList.remove('hidden');
+            }
+
+            // 获取当前回复总数
+            const replyCount = repliesList.querySelectorAll('.reply-item').length;
+
+            // 处理展开/收起按钮显示逻辑
+            if (replyCount > 3) {
+                // 超过3条回复,显示"展开更多"按钮
+                showMoreBtn.classList.remove('hidden');
+
+                // 默认只显示前3条
+                const allReplies = repliesList.querySelectorAll('.reply-item');
+                allReplies.forEach((reply, index) => {
+                    if (index >= 3) {
+                        reply.classList.add('hidden');
+                    }
+                });
+
+                // 更新按钮文本
+                const hiddenCount = replyCount - 3;
+                showMoreBtn.innerHTML = `<i class="fa fa-angle-down"></i> 展开更多回复 (${hiddenCount}条)`;
+                showMoreBtn.setAttribute('data-expanded', 'false');
+            } else {
+                // 少于等于3条回复,隐藏按钮
+                showMoreBtn.classList.add('hidden');
+            }
+
+            // 更新评论数量(回复也算评论)
+            commentCount++;
+            document.getElementById('comment-count').textContent = `(${commentCount})`;
+
+            // 取消回复状态
+            cancelReply();
+
+            // 滚动到新回复
+            newReply.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        // 展开/收起回复
+        function toggleReplies(button) {
+            const repliesList = button.previousElementSibling;
+            const allReplies = repliesList.querySelectorAll('.reply-item');
+            const isExpanded = button.getAttribute('data-expanded') === 'true';
+
+            if (isExpanded) {
+                // 收起,只显示前3条
+                allReplies.forEach((reply, index) => {
+                    if (index >= 3) {
+                        reply.classList.add('hidden');
+                    }
+                });
+                const hiddenCount = allReplies.length - 3;
+                button.innerHTML = `<i class="fa fa-angle-down"></i> 展开更多回复 (${hiddenCount}条)`;
+                button.setAttribute('data-expanded', 'false');
+            } else {
+                // 展开,显示所有回复
+                allReplies.forEach(reply => {
+                    reply.classList.remove('hidden');
+                });
+                button.innerHTML = `<i class="fa fa-angle-up"></i> 收起回复`;
+                button.setAttribute('data-expanded', 'true');
+            }
+        }
+
+        // 评论排序
+        function sortComments() {
+            const commentsList = document.getElementById('comments-list');
+            const comments = Array.from(commentsList.querySelectorAll('.comment-item'));
+
+            if (currentSortOrder === 'time') {
+                // 按点赞数排序
+                currentSortOrder = 'likes';
+                comments.sort((a, b) => {
+                    const likesA = parseInt(a.querySelector('.like-count').textContent);
+                    const likesB = parseInt(b.querySelector('.like-count').textContent);
+                    return likesB - likesA;
+                });
+            } else {
+                // 按时间排序(恢复默认顺序)
+                currentSortOrder = 'time';
+                comments.reverse();
+            }
+
+            // 重新添加到列表
+            commentsList.innerHTML = '';
+            comments.forEach(comment => {
+                commentsList.appendChild(comment);
+            });
+        }
+
+        // 回车发送评论
+        document.getElementById('comment-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendComment();
+            }
+        });
+
+        // 回车发送回复
+        document.getElementById('reply-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendReply();
             }
         });
     </script>

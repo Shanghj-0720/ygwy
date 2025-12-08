@@ -6,7 +6,7 @@
     <meta name="referrer" content="no-referrer">
     <title>常州住房AI助手 - AI业委会</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="assets/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet">
     <script>
         // Tailwind 自定义配置
         tailwind.config = {
@@ -52,7 +52,6 @@
                     }
                 }
             }
-        }
     </script>
     <style type="text/tailwindcss">
         @layer utilities {
@@ -182,38 +181,74 @@
                     padding-left: 1rem;
                     padding-right: 1rem;
                 }
-                
+
                 .mobile-text-lg {
                     font-size: 1.125rem;
                 }
-                
+
                 .mobile-text-base {
                     font-size: 0.9375rem;
                 }
-                
+
                 .mobile-text-sm {
                     font-size: 0.8125rem;
                 }
-                
+
                 .mobile-text-xs {
                     font-size: 0.75rem;
                 }
-                
+
                 .mobile-mb-4 {
                     margin-bottom: 1rem;
                 }
-                
+
                 .mobile-mb-3 {
                     margin-bottom: 0.75rem;
                 }
-                
+
                 .mobile-p-4 {
                     padding: 1rem;
                 }
-                
+
                 .mobile-p-3 {
                     padding: 0.75rem;
                 }
+            }
+
+            /* 数字滚动动画 */
+            .number-container {
+                display: inline-block;
+                position: relative;
+                overflow: hidden;
+                vertical-align: middle;
+            }
+
+            .number-value {
+                display: inline-block;
+                transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.5s ease;
+            }
+
+            .number-updating {
+                animation: numberFlip 0.6s ease-in-out;
+            }
+
+            @keyframes numberFlip {
+                0% {
+                    transform: translateY(0) scale(1);
+                    opacity: 1;
+                }
+                50% {
+                    transform: translateY(-20%) scale(0.8);
+                    opacity: 0.3;
+                }
+                100% {
+                    transform: translateY(0) scale(1);
+                    opacity: 1;
+                }
+            }
+
+            .progress-updating {
+                transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
             }
         }
     </style>
@@ -240,7 +275,7 @@
             <!-- 所有功能内容 -->
             <div class="space-y-6 md:space-y-8">
                 <!-- 小区核心数据概览 -->
-                <div class="card-elevated bg-white rounded-xl p-4 md:p-6">
+                <a href="pages/overview/data-overview.html" class="card-elevated bg-white rounded-xl p-4 md:p-6 block">
                     <div class="flex items-center justify-between mb-4 md:mb-6">
                         <h3 class="text-base md:text-lg font-bold text-dark flex items-center gap-2">
                             <div class="w-6 h-6 rounded-full bg-primary/10 text-primary flex items-center justify-center">
@@ -248,7 +283,10 @@
                             </div>
                             小区数据概览
                         </h3>
-                        <span class="text-xs text-primary bg-primary/10 px-2 py-1 rounded-full">实时数据</span>
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs text-primary bg-primary/10 px-2 py-1 rounded-full">实时数据</span>
+                            <i class="fa fa-chevron-right text-light"></i>
+                        </div>
                     </div>
                     
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
@@ -258,53 +296,53 @@
                                 <p class="text-xs text-light font-medium">物业服务费</p>
                                 <i class="fa fa-rmb text-primary/70 text-xs"></i>
                             </div>
-                            <p class="text-lg md:text-xl font-bold text-primary">¥ 2.6<span class="text-sm font-medium text-primary/80">元/平</span></p>
+                            <p class="text-lg md:text-xl font-bold text-primary">¥ <span id="home-fee-value" style="display: inline-block; min-width: 2em;">2.6</span><span class="text-sm font-medium text-primary/80">元/平</span></p>
                             <div class="progress-bar mt-2">
-                                <div class="progress-fill" style="width: 85%"></div>
+                                <div id="home-fee-progress" class="progress-fill transition-all duration-700" style="width: 85%"></div>
                             </div>
-                            <p class="text-xs text-light mt-2">缴费率 <span class="text-success font-medium">85%</span></p>
+                            <p class="text-xs text-light mt-2">缴费率 <span class="text-success font-medium" id="home-fee-rate" style="display: inline-block; min-width: 2.5em;">85%</span></p>
                         </div>
-                        
+
                         <!-- 公共收益 -->
                         <div class="border border-gray-100 rounded-xl p-3 md:p-4 bg-white shadow-sm hover:shadow-md transition-all duration-300">
                             <div class="flex items-center justify-between mb-2">
                                 <p class="text-xs text-light font-medium">公共收益</p>
                                 <i class="fa fa-line-chart text-success/70 text-xs"></i>
                             </div>
-                            <p class="text-lg md:text-xl font-bold text-dark">¥ 58<span class="text-sm font-medium text-dark/80">万</span></p>
+                            <p class="text-lg md:text-xl font-bold text-dark">¥ <span id="home-income-value" style="display: inline-block; min-width: 2em;">58</span><span class="text-sm font-medium text-dark/80">万</span></p>
                             <div class="progress-bar mt-2">
-                                <div class="progress-fill" style="width: 72%; background: linear-gradient(90deg, #00B96B 0%, #00A05A 100%)"></div>
+                                <div id="home-income-progress" class="progress-fill transition-all duration-700" style="width: 72%; background: linear-gradient(90deg, #00B96B 0%, #00A05A 100%)"></div>
                             </div>
-                            <p class="text-xs text-light mt-2">同比增长 <span class="text-success font-medium">+12.5%</span></p>
+                            <p class="text-xs text-light mt-2">同比增长 <span class="text-success font-medium" id="home-income-growth" style="display: inline-block; min-width: 3.5em;">+12.5%</span></p>
                         </div>
-                        
+
                         <!-- 业主满意度 -->
                         <div class="border border-gray-100 rounded-xl p-3 md:p-4 bg-white shadow-sm hover:shadow-md transition-all duration-300">
                             <div class="flex items-center justify-between mb-2">
                                 <p class="text-xs text-light font-medium">业主满意度</p>
                                 <i class="fa fa-smile-o text-warning/70 text-xs"></i>
                             </div>
-                            <p class="text-lg md:text-xl font-bold text-success">89<span class="text-sm font-medium text-success/80">%</span></p>
+                            <p class="text-lg md:text-xl font-bold text-success"><span id="home-satisfaction-value" style="display: inline-block; min-width: 2em;">89</span><span class="text-sm font-medium text-success/80">%</span></p>
                             <div class="progress-bar mt-2">
-                                <div class="progress-fill" style="width: 89%; background: linear-gradient(90deg, #FF7D00 0%, #FFA940 100%)"></div>
+                                <div id="home-satisfaction-progress" class="progress-fill transition-all duration-700" style="width: 89%; background: linear-gradient(90deg, #FF7D00 0%, #FFA940 100%)"></div>
                             </div>
-                            <p class="text-xs text-light mt-2">较上月 <span class="text-success font-medium">+3.2%</span></p>
+                            <p class="text-xs text-light mt-2">较上月 <span class="text-success font-medium" id="home-satisfaction-change" style="display: inline-block; min-width: 3em;">+3.2%</span></p>
                         </div>
-                        
+
                         <!-- 电梯运行维护资金 -->
                         <div class="border border-gray-100 rounded-xl p-3 md:p-4 bg-white shadow-sm hover:shadow-md transition-all duration-300">
                             <div class="flex items-center justify-between mb-2">
                                 <p class="text-xs text-light font-medium">电梯维护资金</p>
                                 <i class="fa fa-arrow-up text-purple/70 text-xs"></i>
                             </div>
-                            <p class="text-lg md:text-xl font-bold text-purple">¥ 15.8<span class="text-sm font-medium text-purple/80">万</span></p>
+                            <p class="text-lg md:text-xl font-bold text-purple">¥ <span id="home-elevator-value" style="display: inline-block; min-width: 2.5em;">15.8</span><span class="text-sm font-medium text-purple/80">万</span></p>
                             <div class="progress-bar mt-2">
-                                <div class="progress-fill" style="width: 65%; background: linear-gradient(90deg, #8B5CF6 0%, #A78BFA 100%)"></div>
+                                <div id="home-elevator-progress" class="progress-fill transition-all duration-700" style="width: 65%; background: linear-gradient(90deg, #8B5CF6 0%, #A78BFA 100%)"></div>
                             </div>
-                            <p class="text-xs text-light mt-2">使用率 <span class="text-purple font-medium">65%</span></p>
+                            <p class="text-xs text-light mt-2">使用率 <span class="text-purple font-medium" id="home-elevator-usage" style="display: inline-block; min-width: 2.5em;">65%</span></p>
                         </div>
                     </div>
-                </div>
+                </a>
                 
                 
                 <!-- 核心功能服务 -->
@@ -316,7 +354,7 @@
                             </div>
                             功能服务
                         </h3>
-                        <span class="text-xs text-primary bg-primary/10 px-2 py-1 rounded-full">6项服务</span>
+                        <span class="text-xs text-primary bg-primary/10 px-2 py-1 rounded-full">8项服务</span>
                     </div>
                     
                     <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 md:gap-4">
@@ -373,10 +411,26 @@
                             <h4 class="text-sm md:text-base font-bold text-dark mb-1.5">意见征集</h4>
                             <p class="text-xs md:text-sm text-light line-clamp-2">汇总业主反馈并智能分析归类</p>
                         </a>
+
+                        <!-- 线上监督 -->
+                        <a href="/frontend/mobile/pages/supervision/index.html" class="border border-gray-100 rounded-xl p-3 md:p-4 bg-white shadow-sm hover:shadow-md hover:border-warning/30 transition-all duration-300 cursor-pointer text-center">
+                            <div class="w-10 h-10 md:w-12 md:h-12 rounded-lg md:rounded-xl icon-container-warning mb-3 mx-auto flex items-center justify-center">
+                                <i class="fa fa-eye text-lg md:text-2xl"></i>
+                            </div>
+                            <h4 class="text-sm md:text-base font-bold text-dark mb-1.5">线上监督</h4>
+                            <p class="text-xs md:text-sm text-light line-clamp-2">实时查看项目进度，在线提交监督意见</p>
+                        </a>
+
+                        <!-- 装修登记 -->
+                        <a href="/frontend/mobile/pages/renovation/index.html" class="border border-gray-100 rounded-xl p-3 md:p-4 bg-white shadow-sm hover:shadow-md hover:border-success/30 transition-all duration-300 cursor-pointer text-center">
+                            <div class="w-10 h-10 md:w-12 md:h-12 rounded-lg md:rounded-xl icon-container-success mb-3 mx-auto flex items-center justify-center">
+                                <i class="fa fa-home text-lg md:text-2xl"></i>
+                            </div>
+                            <h4 class="text-sm md:text-base font-bold text-dark mb-1.5">装修登记</h4>
+                            <p class="text-xs md:text-sm text-light line-clamp-2">在线提交装修申请，实时追踪审批状态</p>
+                        </a>
                     </div>
                 </div>
-                
-              
                 
                 <!-- 工作报告和AI问答 -->
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
@@ -405,7 +459,7 @@
                                 </div>
                             </a>
 
-                            <div class="p-3 md:p-4 rounded-lg border border-border hover:border-primary/30 transition-all duration-300 cursor-pointer opacity-60">
+                            <a href="pages/committee/report-detail.html" class="block p-3 md:p-4 rounded-lg border border-border hover:border-primary/30 transition-all duration-300 cursor-pointer">
                                 <div class="flex items-start justify-between mb-2">
                                     <h4 class="text-sm md:text-base font-bold text-dark line-clamp-1">关于召开2026年第一次业主大会的通知</h4>
                                     <span class="text-xs text-light ml-2 flex-shrink-0">2025-11-28</span>
@@ -415,9 +469,9 @@
                                     <span class="tag tag-primary">业主大会</span>
                                     <span class="tag tag-success">公共收益</span>
                                 </div>
-                            </div>
+                            </a>
 
-                            <div class="p-3 md:p-4 rounded-lg border border-border hover:border-primary/30 transition-all duration-300 cursor-pointer opacity-60">
+                            <a href="pages/committee/report-detail.html" class="block p-3 md:p-4 rounded-lg border border-border hover:border-primary/30 transition-all duration-300 cursor-pointer">
                                 <div class="flex items-start justify-between mb-2">
                                     <h4 class="text-sm md:text-base font-bold text-dark line-clamp-1">小区议事规则修订公示</h4>
                                     <span class="text-xs text-light ml-2 flex-shrink-0">2025-11-20</span>
@@ -427,7 +481,7 @@
                                     <span class="tag tag-primary">议事规则</span>
                                     <span class="tag tag-success">投票优化</span>
                                 </div>
-                            </div>
+                            </a>
                         </div>
                         
                         <button class="mt-4 md:mt-6 w-full py-2.5 md:py-3 rounded-lg border border-border text-dark font-medium hover:bg-neutral hover:border-primary/30 transition-all duration-300 flex items-center justify-center gap-2 text-sm md:text-base">
@@ -630,7 +684,93 @@
                     this.classList.add('border-primary/30', 'bg-primary/5');
                 });
             });
+
+            // 首页小区数据概览 - 数据自动变化
+            const homeDataConfig = {
+                fee: { base: 2.6, range: 0.05 },
+                feeRate: { base: 85, range: 2 },
+                income: { base: 58, range: 3 },
+                incomeGrowth: { base: 12.5, range: 1.5 },
+                satisfaction: { base: 89, range: 3 },
+                satisfactionChange: { base: 3.2, range: 0.8 },
+                elevator: { base: 15.8, range: 0.5 },
+                elevatorUsage: { base: 65, range: 3 }
+            };
+
+            function getHomeRandomValue(config) {
+                const variation = (Math.random() - 0.5) * config.range;
+                return Number((config.base + variation).toFixed(1));
+            }
+
+            function updateHomeData() {
+                // 更新物业服务费
+                const newFee = getHomeRandomValue(homeDataConfig.fee);
+                const newFeeRate = Math.round(getHomeRandomValue(homeDataConfig.feeRate));
+                const oldFee = parseFloat(document.getElementById('home-fee-value').textContent);
+                const oldFeeRate = parseInt(document.getElementById('home-fee-rate').textContent);
+
+                animateNumber('home-fee-value', oldFee, newFee);
+                animateNumber('home-fee-rate', oldFeeRate, newFeeRate, '%');
+                document.getElementById('home-fee-progress').style.width = newFeeRate + '%';
+
+                // 更新公共收益
+                const newIncome = Math.round(getHomeRandomValue(homeDataConfig.income));
+                const newIncomeGrowth = getHomeRandomValue(homeDataConfig.incomeGrowth);
+                const oldIncome = parseInt(document.getElementById('home-income-value').textContent);
+                const oldIncomeGrowth = parseFloat(document.getElementById('home-income-growth').textContent.replace('+', '').replace('%', ''));
+
+                animateNumber('home-income-value', oldIncome, newIncome);
+                animateNumber('home-income-growth', oldIncomeGrowth, newIncomeGrowth, '%', '+');
+                document.getElementById('home-income-progress').style.width = (newIncome * 1.2) + '%';
+
+                // 更新业主满意度
+                const newSatisfaction = Math.round(getHomeRandomValue(homeDataConfig.satisfaction));
+                const newSatisfactionChange = getHomeRandomValue(homeDataConfig.satisfactionChange);
+                const oldSatisfaction = parseInt(document.getElementById('home-satisfaction-value').textContent);
+                const oldSatisfactionChange = parseFloat(document.getElementById('home-satisfaction-change').textContent.replace('+', '').replace('%', ''));
+
+                animateNumber('home-satisfaction-value', oldSatisfaction, newSatisfaction);
+                animateNumber('home-satisfaction-change', oldSatisfactionChange, newSatisfactionChange, '%', '+');
+                document.getElementById('home-satisfaction-progress').style.width = newSatisfaction + '%';
+
+                // 更新电梯维护资金
+                const newElevator = getHomeRandomValue(homeDataConfig.elevator);
+                const newElevatorUsage = Math.round(getHomeRandomValue(homeDataConfig.elevatorUsage));
+                const oldElevator = parseFloat(document.getElementById('home-elevator-value').textContent);
+                const oldElevatorUsage = parseInt(document.getElementById('home-elevator-usage').textContent.replace('%', ''));
+
+                animateNumber('home-elevator-value', oldElevator, newElevator);
+                animateNumber('home-elevator-usage', oldElevatorUsage, newElevatorUsage, '%');
+                document.getElementById('home-elevator-progress').style.width = newElevatorUsage + '%';
+            }
+
+            // 数字翻转动画
+            function animateNumber(elementId, oldValue, newValue, suffix = '', prefix = '') {
+                const element = document.getElementById(elementId);
+
+                // 添加更新动画类
+                element.classList.add('number-updating');
+
+                // 在动画中间点更新数值
+                setTimeout(() => {
+                    let displayValue = newValue;
+                    // 对于小数,保留一位小数
+                    if (newValue % 1 !== 0) {
+                        displayValue = newValue.toFixed(1);
+                    }
+                    element.textContent = prefix + displayValue + suffix;
+                }, 300); // 动画一半时更新
+
+                // 移除动画类
+                setTimeout(() => {
+                    element.classList.remove('number-updating');
+                }, 600);
+            }
+
+            // 每2秒更新一次首页数据
+            setInterval(updateHomeData, 2000);
         });
     </script>
+    
 </body>
 </html>

@@ -1,4 +1,5 @@
 // ==================== 全局变量 ====================
+const COMMITTEE_PAGE_PATH = '/frontend/mobile/pages/ai-assistant/AI业委会-定.html';
 let allRecords = [];
 let filteredRecords = [];
 let currentFilter = 'all';
@@ -309,9 +310,22 @@ function vibrate(duration = 10) {
     }
 }
 
+function getCommitteeUrl() {
+    const fallbackOrigin = window.location.origin;
+    try {
+        if (document.referrer) {
+            const ref = new URL(document.referrer);
+            return ref.origin + COMMITTEE_PAGE_PATH;
+        }
+    } catch (error) {
+        console.warn('解析来源地址失败，使用当前域名返回', error);
+    }
+    return fallbackOrigin + COMMITTEE_PAGE_PATH;
+}
+
 function goBack() {
     vibrate();
-    window.location.href = '../../index.html';
+    window.location.href = getCommitteeUrl();
 }
 
 // ==================== 全局点击触觉反馈 ====================

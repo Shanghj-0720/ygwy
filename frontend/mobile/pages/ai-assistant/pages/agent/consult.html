@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer">
+    <title>在线咨询 - AI中介</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="../../assets/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../assets/css/common.css">
+    <style>
+        body {
+            font-family: 'PingFang SC', 'Helvetica Neue', 'Arial', sans-serif;
+            background: #F5F7FA;
+            padding-bottom: 90px;
+        }
+
+        .page-container {
+            max-width: 640px;
+            margin: 0 auto;
+            padding: 0 16px 24px;
+        }
+
+        .house-preview {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(22, 93, 255, 0.08);
+            overflow: hidden;
+            margin: 70px 0 20px;
+        }
+
+        .preview-cover {
+            width: 100%;
+            height: 170px;
+            object-fit: cover;
+        }
+
+        .preview-body {
+            padding: 16px;
+        }
+
+        .preview-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1D2129;
+            margin-bottom: 4px;
+        }
+
+        .preview-subtitle {
+            font-size: 13px;
+            color: #86909C;
+        }
+
+        .preview-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 12px;
+        }
+
+        .mode-switch {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 8px;
+            margin: 12px 0 20px;
+        }
+
+        .mode-btn {
+            border: 1px solid #E5E6EB;
+            border-radius: 999px;
+            padding: 10px 12px;
+            background: white;
+            font-size: 13px;
+            color: #1D2129;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .mode-btn.active {
+            border-color: #165DFF;
+            background: #EAF1FF;
+            color: #165DFF;
+            font-weight: 600;
+        }
+
+        .form-card {
+            background: white;
+            border-radius: 16px;
+            padding: 18px;
+            box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
+            margin-bottom: 20px;
+        }
+
+        .form-card h3 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1D2129;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .tag-checkbox {
+            display: inline-flex;
+            align-items: center;
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 1px solid #E5E6EB;
+            font-size: 13px;
+            margin: 4px 8px 4px 0;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .tag-checkbox input {
+            display: none;
+        }
+
+        .tag-checkbox.active {
+            border-color: #165DFF;
+            color: #165DFF;
+            background: #EAF1FF;
+            font-weight: 600;
+        }
+
+        .question-box {
+            border: 1px solid rgba(22, 93, 255, 0.15);
+            border-radius: 18px;
+            padding: 14px;
+            background: linear-gradient(135deg, #F7F9FF 0%, #FFFFFF 60%);
+            box-shadow: 0 12px 24px rgba(22, 93, 255, 0.05);
+        }
+
+        .question-label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+            color: #165DFF;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .question-label i {
+            margin-right: 6px;
+        }
+
+        .voice-btn {
+            background: rgba(22, 93, 255, 0.1);
+            color: #165DFF;
+            border: none;
+            border-radius: 999px;
+            padding: 6px 10px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            transition: all 0.2s ease;
+        }
+
+        .voice-btn.recording {
+            background: #165DFF;
+            color: #fff;
+            box-shadow: 0 6px 16px rgba(22, 93, 255, 0.35);
+        }
+
+        .voice-btn:disabled {
+            background: #E5E6EB;
+            color: #A1A7B3;
+        }
+
+        .voice-btn i {
+            margin: 0;
+        }
+
+        .question-textarea {
+            min-height: 140px;
+            border-radius: 14px;
+            background: white;
+            font-size: 15px;
+            line-height: 1.6;
+            border: 1px solid #E0E3E9;
+            width: 100%;
+            padding: 12px;
+            resize: none;
+            box-shadow: inset 0 2px 6px rgba(15, 23, 42, 0.04);
+        }
+
+        .question-textarea:focus {
+            border-color: #165DFF;
+            box-shadow: 0 0 0 3px rgba(22, 93, 255, 0.1);
+        }
+
+        .question-helper {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: #86909C;
+            margin-top: 8px;
+        }
+
+        .question-helper span {
+            color: #165DFF;
+            font-weight: 600;
+        }
+
+        .voice-hint {
+            font-size: 12px;
+            color: #86909C;
+            margin-top: 6px;
+        }
+
+        .voice-hint.active {
+            color: #165DFF;
+        }
+
+        .question-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .question-list button {
+            border: 1px dashed #165DFF;
+            background: #F0F5FF;
+            color: #165DFF;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 13px;
+        }
+
+        .tips-card {
+            background: #F0F5FF;
+            border-left: 4px solid #165DFF;
+            border-radius: 12px;
+            padding: 12px 16px;
+            font-size: 13px;
+            color: #4E5969;
+            line-height: 1.5;
+        }
+
+        .success-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.45);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 200;
+        }
+
+        .success-modal.show {
+            display: flex;
+        }
+
+        .success-content {
+            background: white;
+            border-radius: 16px;
+            padding: 28px 24px;
+            text-align: center;
+            width: 320px;
+            box-shadow: 0 16px 40px rgba(15, 23, 42, 0.25);
+        }
+
+        .success-icon {
+            width: 72px;
+            height: 72px;
+            margin: 0 auto 12px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 32px;
+        }
+
+        .success-modal .success-btn {
+            background: #165DFF;
+        }
+
+        .slot-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 10px;
+        }
+
+        .slot-grid select, .slot-grid input {
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <button class="back-btn" onclick="history.back()">
+        <i class="fa fa-arrow-left"></i>
+    </button>
+
+    <div class="page-container">
+        <div class="house-preview">
+            <img id="previewCover" src="" alt="房源封面" class="preview-cover">
+            <div class="preview-body">
+                <div class="preview-title" id="previewTitle">房源加载中...</div>
+                <div class="preview-subtitle" id="previewSubtitle">-</div>
+                <div class="preview-meta">
+                    <div>
+                        <div class="text-xs text-[#86909C]">挂牌价</div>
+                        <div class="text-xl font-semibold text-[#F53F3F]" id="previewPrice">-</div>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-xs text-[#86909C] flex items-center gap-1 justify-end">
+                            <i class="fa fa-star text-[#165DFF]"></i>匹配度
+                        </div>
+                        <div class="text-xl font-semibold text-[#165DFF]" id="previewScore">-</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-card">
+            <h3><i class="fa fa-handshake-o"></i>选择服务类型</h3>
+            <div class="mode-switch">
+                <button class="mode-btn" data-mode="consult"><i class="fa fa-comments-o"></i>即时咨询</button>
+                <button class="mode-btn" data-mode="appointment"><i class="fa fa-calendar"></i>预约看房</button>
+                <button class="mode-btn" data-mode="deal"><i class="fa fa-legal"></i>谈判支持</button>
+            </div>
+        </div>
+
+        <div class="form-card">
+            <h3><i class="fa fa-id-card-o"></i>联系方式</h3>
+            <div class="form-group">
+                <label class="form-label">姓名<span class="text-[#F53F3F]">*</span></label>
+                <input type="text" class="form-input" id="userName" placeholder="请输入您的姓名" required>
+            </div>
+            <div class="form-group">
+                <label class="form-label">手机号<span class="text-[#F53F3F]">*</span></label>
+                <input type="tel" class="form-input" id="userPhone" placeholder="用于接收回复" pattern="[0-9]{11}" required>
+            </div>
+            <div class="form-group">
+                <label class="form-label">微信号（选填）</label>
+                <input type="text" class="form-input" id="userWechat" placeholder="方便经纪人快速加您微信">
+            </div>
+        </div>
+
+        <div class="form-card">
+            <h3><i class="fa fa-sliders"></i>服务诉求</h3>
+            <div id="serviceTags">
+                <label class="tag-checkbox">
+                    <input type="checkbox" value="价格评估">价格评估
+                </label>
+                <label class="tag-checkbox">
+                    <input type="checkbox" value="贷款方案">贷款方案
+                </label>
+                <label class="tag-checkbox">
+                    <input type="checkbox" value="税费测算">税费测算
+                </label>
+                <label class="tag-checkbox">
+                    <input type="checkbox" value="预约看房">预约看房
+                </label>
+                <label class="tag-checkbox">
+                    <input type="checkbox" value="谈判陪同">谈判陪同
+                </label>
+            </div>
+        </div>
+
+        <div class="form-card" id="questionCard">
+            <h3><i class="fa fa-question-circle"></i>咨询问题</h3>
+            <div class="question-box">
+                <div class="question-label">
+                    <div><i class="fa fa-lightbulb-o"></i>AI建议：描述越具体越好</div>
+                    <button type="button" class="voice-btn" id="voiceInputBtn">
+                        <i class="fa fa-microphone"></i><span id="voiceBtnText">语音输入</span>
+                    </button>
+                </div>
+                <textarea class="question-textarea" id="consultContent" placeholder="例如：希望了解星河国际三期是否支持公积金 + 商贷组合？当前192万是否还有议价空间？" rows="4" maxlength="200"></textarea>
+                <div class="question-helper">
+                    <span>可附上预算、付款方式等关键信息</span>
+                    <div>已输入 <span id="questionCounter">0</span>/200 字</div>
+                </div>
+                <div class="voice-hint" id="voiceStatus"></div>
+            </div>
+            <div class="question-list" id="questionList"></div>
+        </div>
+
+        <div class="form-card" id="appointmentCard" style="display: none;">
+            <h3><i class="fa fa-clock-o"></i>预约时段</h3>
+            <div class="slot-grid">
+                <select class="form-input" id="appointmentDate">
+                    <option value="">选择日期</option>
+                </select>
+                <select class="form-input" id="appointmentTime">
+                    <option value="">选择时间</option>
+                    <option value="09:00-10:00">09:00-10:00</option>
+                    <option value="10:00-11:00">10:00-11:00</option>
+                    <option value="11:00-12:00">11:00-12:00</option>
+                    <option value="14:00-15:00">14:00-15:00</option>
+                    <option value="15:00-16:00">15:00-16:00</option>
+                    <option value="16:00-17:00">16:00-17:00</option>
+                    <option value="18:30-20:00">18:30-20:00</option>
+                </select>
+            </div>
+            <p class="text-xs text-[#86909C] mt-2">晚间看房需提前4小时预约，AI助手将自动安排经纪人陪同。</p>
+        </div>
+
+        <div class="tips-card">
+            <p id="tipsText"><i class="fa fa-info-circle text-[#165DFF] mr-2"></i>提交后，AI交易经理将在30分钟内回电，协助您评估价格和谈判策略。</p>
+        </div>
+    </div>
+
+    <div class="bottom-bar">
+        <button class="btn-primary" style="width: 100%;" onclick="submitForm()">
+            <i class="fa fa-paper-plane mr-2"></i>提交请求
+        </button>
+    </div>
+
+    <div class="success-modal" id="successModal">
+        <div class="success-content">
+            <div class="success-icon" style="background: #165DFF;">
+                <i class="fa fa-check"></i>
+            </div>
+            <div class="success-title" id="successTitle">提交成功</div>
+            <div class="success-text" id="successDesc">AI交易经理会尽快联系您</div>
+            <p class="text-sm text-[#4E5969] leading-relaxed" id="successDetail"></p>
+            <button class="success-btn" onclick="closeSuccessModal()">我知道了</button>
+        </div>
+    </div>
+
+    <script>
+        let currentListing = null;
+        let currentMode = 'consult';
+        let lastSubmissionInfo = null;
+
+        const modeButtons = document.querySelectorAll('.mode-btn');
+        modeButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                setMode(btn.dataset.mode);
+            });
+        });
+
+        document.querySelectorAll('#serviceTags input').forEach(input => {
+            const label = input.closest('.tag-checkbox');
+            const syncLabel = () => label.classList.toggle('active', input.checked);
+            syncLabel();
+            input.addEventListener('change', syncLabel);
+            label.addEventListener('click', (event) => {
+                if (event.target === input) return;
+                event.preventDefault();
+                input.checked = !input.checked;
+                syncLabel();
+            });
+        });
+
+        const questionInput = document.getElementById('consultContent');
+        const questionCounter = document.getElementById('questionCounter');
+        const voiceBtn = document.getElementById('voiceInputBtn');
+        const voiceBtnText = document.getElementById('voiceBtnText');
+        const voiceStatus = document.getElementById('voiceStatus');
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        let recognitionInstance = null;
+        let recording = false;
+
+        function updateQuestionCounter() {
+            const len = questionInput.value.trim().length;
+            questionCounter.textContent = len;
+        }
+
+        questionInput.addEventListener('input', updateQuestionCounter);
+        updateQuestionCounter();
+
+        function setVoiceState(state, hintText = '') {
+            if (!voiceBtn) return;
+            if (state === 'recording') {
+                recording = true;
+                voiceBtn.classList.add('recording');
+                voiceBtnText.textContent = '聆听中';
+                voiceStatus.textContent = hintText || '正在聆听，请说出您的问题';
+                voiceStatus.classList.add('active');
+            } else {
+                recording = false;
+                voiceBtn.classList.remove('recording');
+                voiceBtnText.textContent = '语音输入';
+                if (hintText) {
+                    voiceStatus.textContent = hintText;
+                    voiceStatus.classList.add('active');
+                } else {
+                    voiceStatus.textContent = '';
+                    voiceStatus.classList.remove('active');
+                }
+            }
+        }
+
+        if (voiceBtn) {
+            if (!SpeechRecognition) {
+                voiceBtn.disabled = true;
+                voiceBtnText.textContent = '语音不可用';
+                voiceStatus.textContent = '当前浏览器暂不支持语音输入，可直接手动输入。';
+            } else {
+                recognitionInstance = new SpeechRecognition();
+                recognitionInstance.lang = 'zh-CN';
+                recognitionInstance.interimResults = true;
+                recognitionInstance.maxAlternatives = 1;
+
+                voiceBtn.addEventListener('click', () => {
+                    if (!recognitionInstance) return;
+                    if (recording) {
+                        recognitionInstance.stop();
+                        return;
+                    }
+                    try {
+                        recognitionInstance.start();
+                        setVoiceState('recording');
+                    } catch (err) {
+                        setVoiceState('idle', '无法启动语音，请稍后再试或改为手动输入。');
+                        console.error('speech start failed', err);
+                    }
+                });
+
+                recognitionInstance.addEventListener('result', (event) => {
+                    const lastResult = event.results[event.results.length - 1];
+                    if (lastResult && lastResult.isFinal) {
+                        const transcript = lastResult[0].transcript.trim();
+                        if (transcript) {
+                            questionInput.value = questionInput.value ? `${questionInput.value.trim()} ${transcript}` : transcript;
+                            updateQuestionCounter();
+                            setVoiceState('idle', '已转换为文字，可继续补充。');
+                        }
+                    }
+                });
+
+                recognitionInstance.addEventListener('error', (event) => {
+                    console.error('speech error', event.error);
+                    setVoiceState('idle', '语音识别未成功，可重试或直接输入。');
+                });
+
+                recognitionInstance.addEventListener('end', () => {
+                    if (recording) {
+                        setVoiceState('idle');
+                    }
+                });
+
+                recognitionInstance.addEventListener('audiostart', () => {
+                    setVoiceState('recording');
+                });
+            }
+        }
+
+        function getQueryParam(key) {
+            const params = new URLSearchParams(window.location.search);
+            return params.get(key);
+        }
+
+        async function loadListing() {
+            const listingId = parseInt(getQueryParam('id') || '101', 10);
+            const urlMode = getQueryParam('type');
+            const presetQuestion = getQueryParam('question');
+            try {
+                const response = await fetch('../../assets/data/agent-listings.json');
+                const data = await response.json();
+                currentListing = data.listings.find(item => item.id === listingId);
+                if (!currentListing) {
+                    alert('房源不存在');
+                    history.back();
+                    return;
+                }
+                renderPreview();
+                renderQuestions(presetQuestion);
+                if (urlMode) {
+                    setMode(urlMode);
+                } else {
+                    setMode('consult');
+                }
+                generateDateOptions();
+            } catch (error) {
+                console.error('加载房源失败', error);
+                alert('加载失败，请稍后重试');
+            }
+        }
+
+        function renderPreview() {
+            document.getElementById('previewCover').src = currentListing.cover;
+            document.getElementById('previewTitle').textContent = currentListing.displayName;
+            document.getElementById('previewSubtitle').textContent = `${currentListing.district} · ${currentListing.rooms} · ${currentListing.area}㎡`;
+            document.getElementById('previewPrice').textContent = currentListing.price + ' 万';
+            document.getElementById('previewScore').textContent = currentListing.matchRate + '%';
+        }
+
+        function renderQuestions(presetQuestion = '') {
+            const questionList = document.getElementById('questionList');
+            questionList.innerHTML = '';
+            currentListing.quickQuestions.forEach(question => {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.textContent = question;
+                btn.addEventListener('click', () => {
+                    document.getElementById('consultContent').value = question;
+                    updateQuestionCounter();
+                });
+                questionList.appendChild(btn);
+            });
+            if (presetQuestion) {
+                document.getElementById('consultContent').value = presetQuestion;
+                updateQuestionCounter();
+            }
+        }
+
+        function setMode(mode) {
+            currentMode = mode;
+            modeButtons.forEach(btn => btn.classList.toggle('active', btn.dataset.mode === mode));
+            const questionCard = document.getElementById('questionCard');
+            const appointmentCard = document.getElementById('appointmentCard');
+            const consultInput = document.getElementById('consultContent');
+            const tipsText = document.getElementById('tipsText');
+
+            if (mode === 'appointment') {
+                questionCard.style.display = 'none';
+                appointmentCard.style.display = 'block';
+                consultInput.removeAttribute('required');
+                tipsText.innerHTML = '<i class="fa fa-info-circle text-[#165DFF] mr-2"></i>预约提交后，AI助手将在15分钟内确认时间，并推送电子带看凭证。';
+            } else {
+                questionCard.style.display = 'block';
+                appointmentCard.style.display = 'none';
+                consultInput.setAttribute('required', 'required');
+                consultInput.placeholder = mode === 'deal'
+                    ? '例如：能否协助和业主沟通185万总价并提供税费方案？'
+                    : '例如：想了解业主最低可接受价格和贷款组合？';
+                tipsText.innerHTML = '<i class="fa fa-info-circle text-[#165DFF] mr-2"></i>提交后，AI交易经理将在30分钟内回电，提供报价策略与流程指引。';
+            }
+        }
+
+        function generateDateOptions() {
+            const select = document.getElementById('appointmentDate');
+            const today = new Date();
+            const week = ['周日','周一','周二','周三','周四','周五','周六'];
+            for (let i = 0; i < 7; i++) {
+                const date = new Date(today);
+                date.setDate(today.getDate() + i);
+                const label = `${date.getMonth() + 1}月${date.getDate()}日 ${week[date.getDay()]}`;
+                const value = date.toISOString().split('T')[0];
+                const option = document.createElement('option');
+                option.value = value;
+                option.textContent = i === 0 ? '今天 ' + label : (i === 1 ? '明天 ' + label : label);
+                select.appendChild(option);
+            }
+        }
+
+        function getSelectedTags() {
+            return Array.from(document.querySelectorAll('#serviceTags input:checked')).map(input => input.value);
+        }
+
+        function validatePhone(phone) {
+            return /^1[3-9]\d{9}$/.test(phone);
+        }
+
+        function submitForm() {
+            const name = document.getElementById('userName').value.trim();
+            const phone = document.getElementById('userPhone').value.trim();
+            const wechat = document.getElementById('userWechat').value.trim();
+            const consultContent = document.getElementById('consultContent').value.trim();
+            const tags = getSelectedTags();
+
+            if (!name) {
+                alert('请填写姓名');
+                return;
+            }
+            if (!validatePhone(phone)) {
+                alert('请输入正确的手机号');
+                return;
+            }
+
+            const payload = {
+                listingId: currentListing.id,
+                listingName: currentListing.displayName,
+                mode: currentMode,
+                name,
+                phone,
+                wechat,
+                tags
+            };
+
+            if (currentMode === 'appointment') {
+                const date = document.getElementById('appointmentDate').value;
+                const time = document.getElementById('appointmentTime').value;
+                if (!date) {
+                    alert('请选择预约日期');
+                    return;
+                }
+                if (!time) {
+                    alert('请选择预约时间');
+                    return;
+                }
+                payload.appointmentDate = date;
+                payload.appointmentTime = time;
+            } else {
+                if (!consultContent) {
+                    alert('请填写咨询内容');
+                    return;
+                }
+                payload.question = consultContent;
+            }
+
+            lastSubmissionInfo = {
+                mode: currentMode,
+                listingName: currentListing.displayName,
+                appointmentDate: payload.appointmentDate,
+                appointmentTime: payload.appointmentTime,
+                tags
+            };
+
+            console.log('提交咨询', payload);
+            showSuccessModal();
+        }
+
+        function showSuccessModal() {
+            const modal = document.getElementById('successModal');
+            const title = document.getElementById('successTitle');
+            const desc = document.getElementById('successDesc');
+            const detail = document.getElementById('successDetail');
+            const listingName = lastSubmissionInfo?.listingName || '该房源';
+            let detailText = '';
+            if (currentMode === 'appointment') {
+                title.textContent = '预约已提交';
+                desc.textContent = 'AI助手已锁定您的看房需求';
+                const slot = lastSubmissionInfo?.appointmentDate && lastSubmissionInfo?.appointmentTime
+                    ? `${lastSubmissionInfo.appointmentDate} ${lastSubmissionInfo.appointmentTime}`
+                    : '预约时段';
+                detailText = `我们将与「${listingName}」的房主确认 ${slot} 的带看安排，请保持电话畅通。`;
+            } else if (currentMode === 'deal') {
+                title.textContent = '谈判请求已提交';
+                desc.textContent = '谈判顾问即将介入';
+                const tagText = lastSubmissionInfo?.tags?.length ? `重点关注 ${lastSubmissionInfo.tags.join('、')}` : '我们会结合您的诉求';
+                detailText = `${tagText}，并为「${listingName}」准备出价策略，稍后将与您确认细节。`;
+            } else {
+                title.textContent = '咨询已提交';
+                desc.textContent = 'AI交易经理会尽快联系您';
+                detailText = `已同步您对「${listingName}」的咨询内容，我们将在30分钟内通过电话或微信答复。`;
+            }
+            detail.textContent = detailText;
+            modal.classList.add('show');
+        }
+
+        function closeSuccessModal() {
+            document.getElementById('successModal').classList.remove('show');
+            setTimeout(() => history.back(), 200);
+        }
+
+        window.addEventListener('load', loadListing);
+    </script>
+</body>
+</html>

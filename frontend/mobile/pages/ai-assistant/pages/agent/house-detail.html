@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer">
+    <title>房源卡片详情 - AI中介</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="../../assets/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../assets/css/common.css">
+    <style>
+        body {
+            font-family: 'PingFang SC', 'Helvetica Neue', 'Arial', sans-serif;
+            background: #F5F7FA;
+            padding-bottom: 90px;
+        }
+
+        .hero-card {
+            position: relative;
+            margin: 0 16px 16px;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 12px 30px rgba(22, 93, 255, 0.15);
+            background: #1D2129;
+            color: white;
+        }
+
+        .hero-card img {
+            width: 100%;
+            height: 210px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .hero-info {
+            padding: 16px;
+            background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(7, 18, 53, 0.9) 60%);
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+        }
+
+        .match-pill {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 10px;
+            border-radius: 999px;
+            background: rgba(22, 93, 255, 0.15);
+            color: #fff;
+            font-size: 12px;
+            gap: 6px;
+        }
+
+        .section-card {
+            background: white;
+            margin: 0 16px 12px;
+            padding: 16px;
+            border-radius: 14px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1D2129;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .section-title i {
+            color: #165DFF;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 12px;
+        }
+
+        .info-cell {
+            padding: 12px;
+            border-radius: 10px;
+            background: #F7F8FA;
+        }
+
+        .info-label {
+            font-size: 12px;
+            color: #86909C;
+            margin-bottom: 4px;
+        }
+
+        .info-value {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1D2129;
+        }
+
+        .insight-card {
+            padding: 12px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #F0F5FF 0%, #FFFFFF 100%);
+            border: 1px solid rgba(22, 93, 255, 0.15);
+            margin-bottom: 10px;
+        }
+
+        .insight-card:last-child {
+            margin-bottom: 0;
+        }
+
+        .insight-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #165DFF;
+            margin-bottom: 4px;
+        }
+
+        .timeline {
+            margin-top: 12px;
+            border-left: 2px solid #E5E6EB;
+            padding-left: 12px;
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 16px;
+        }
+
+        .timeline-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .timeline-dot {
+            position: absolute;
+            left: -20px;
+            top: 4px;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #165DFF;
+            box-shadow: 0 0 0 4px rgba(22, 93, 255, 0.15);
+        }
+
+        .timeline-item[data-status="完成"] .timeline-dot {
+            background: #00B96B;
+            box-shadow: 0 0 0 4px rgba(0, 185, 107, 0.2);
+        }
+
+        .timeline-item[data-status="待开始"] .timeline-dot {
+            background: #B1B5BE;
+            box-shadow: none;
+        }
+
+        .timeline-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1D2129;
+        }
+
+        .timeline-meta {
+            font-size: 12px;
+            color: #86909C;
+            margin: 2px 0 4px;
+        }
+
+        .timeline-desc {
+            font-size: 13px;
+            color: #4E5969;
+            line-height: 1.4;
+        }
+
+        .owner-card {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .owner-card img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: 3px solid #E5E6EB;
+            object-fit: cover;
+        }
+
+        .tag-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .tag-chip {
+            padding: 4px 10px;
+            border-radius: 999px;
+            background: rgba(22, 93, 255, 0.08);
+            color: #165DFF;
+            font-size: 12px;
+        }
+
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .stat-card {
+            padding: 12px;
+            border-radius: 10px;
+            text-align: center;
+            background: #F7F8FA;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #86909C;
+        }
+
+        .stat-value {
+            font-size: 14px;
+            font-weight: 700;
+            color: #1D2129;
+            margin-top: 4px;
+        }
+
+        .reminder-list {
+            padding-left: 18px;
+            margin: 0;
+            color: #4E5969;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .question-chip {
+            display: inline-flex;
+            align-items: center;
+            padding: 8px 12px;
+            border: 1px solid #E5E6EB;
+            border-radius: 8px;
+            font-size: 13px;
+            margin: 4px 4px 0 0;
+            cursor: pointer;
+        }
+
+        .question-chip i {
+            margin-right: 6px;
+            color: #165DFF;
+        }
+
+        .quick-bar {
+            display: flex;
+            gap: 8px;
+            align-items: stretch;
+            flex-wrap: wrap;
+        }
+
+        .quick-bar > div {
+            flex: 1;
+            min-width: 130px;
+            padding: 12px;
+            border-radius: 10px;
+            background: #F7F8FA;
+        }
+    </style>
+</head>
+<body>
+    <button class="back-btn" onclick="history.back()">
+        <i class="fa fa-arrow-left"></i>
+    </button>
+
+    <section class="hero-card">
+        <img id="heroImage" src="" alt="房源封面">
+        <div class="hero-info">
+            <div class="match-pill mb-2">
+                <i class="fa fa-star"></i>
+                <span id="matchLevel">匹配度</span>
+                <span id="matchScore" class="text-white font-semibold"></span>
+            </div>
+            <h1 class="text-xl font-bold mb-1" id="listingTitle">加载中...</h1>
+            <p class="text-sm text-white/80" id="listingSubtitle"></p>
+        </div>
+    </section>
+
+    <section class="section-card">
+        <div class="section-title">
+            <i class="fa fa-jpy"></i> 价格与税费
+        </div>
+        <div class="quick-bar mb-4">
+            <div>
+                <div class="info-label">挂牌价</div>
+                <div class="text-2xl font-bold text-[#F53F3F]" id="listingPrice">-</div>
+            </div>
+            <div>
+                <div class="info-label">参考单价</div>
+                <div class="text-xl font-semibold text-[#1D2129]" id="unitPrice">-</div>
+            </div>
+            <div>
+                <div class="info-label">AI建议出价</div>
+                <div class="text-base font-semibold text-[#165DFF]" id="aiAdvice">-</div>
+            </div>
+        </div>
+        <div class="text-sm text-[#4E5969]" id="taxTips"></div>
+    </section>
+
+    <section class="section-card">
+        <div class="section-title">
+            <i class="fa fa-list-alt"></i> 房源关键参数
+        </div>
+        <div class="info-grid" id="factTable"></div>
+    </section>
+
+    <section class="section-card">
+        <div class="section-title">
+            <i class="fa fa-lightbulb-o"></i> AI交易洞察
+        </div>
+        <div id="insightList"></div>
+    </section>
+
+    <section class="section-card">
+        <div class="section-title">
+            <i class="fa fa-line-chart"></i> AI谈判助手
+        </div>
+        <div class="stat-grid" id="statGrid"></div>
+        <div class="info-grid mb-3">
+            <div class="info-cell">
+                <div class="info-label">AI估值</div>
+                <div class="info-value" id="aiEstimate">-</div>
+            </div>
+            <div class="info-cell">
+                <div class="info-label">成交概率</div>
+                <div class="info-value" id="dealProbability">-</div>
+            </div>
+        </div>
+        <ul class="reminder-list" id="reminderList"></ul>
+    </section>
+
+    <section class="section-card">
+        <div class="section-title">
+            <i class="fa fa-user-circle"></i> 房主画像
+        </div>
+        <div class="owner-card">
+            <img id="ownerAvatar" src="" alt="房主头像">
+            <div>
+                <div class="font-semibold text-base" id="ownerName"></div>
+                <div class="text-sm text-[#165DFF]" id="ownerRole"></div>
+                <div class="text-xs text-[#86909C]" id="ownerStatus"></div>
+            </div>
+        </div>
+        <div class="tag-list mt-3" id="ownerTags"></div>
+        <p class="text-sm text-[#4E5969] mt-3" id="ownerBio"></p>
+    </section>
+
+    <section class="section-card">
+        <div class="section-title">
+            <i class="fa fa-road"></i> 服务进度
+        </div>
+        <div class="timeline" id="timeline"></div>
+    </section>
+
+    <section class="section-card">
+        <div class="section-title">
+            <i class="fa fa-commenting"></i> 快速咨询模板
+        </div>
+        <div id="quickQuestions"></div>
+    </section>
+
+    <section class="section-card">
+        <div class="section-title">
+            <i class="fa fa-phone"></i> 联系方式
+        </div>
+        <div class="info-grid">
+            <div class="info-cell">
+                <div class="info-label">交易经理</div>
+                <div class="info-value" id="contactAgent">-</div>
+            </div>
+            <div class="info-cell">
+                <div class="info-label">服务热线</div>
+                <div class="info-value" id="contactPhone">-</div>
+            </div>
+            <div class="info-cell">
+                <div class="info-label">微信号</div>
+                <div class="info-value" id="contactWechat">-</div>
+            </div>
+        </div>
+    </section>
+
+    <div class="bottom-bar">
+        <button class="btn-secondary" onclick="openConsult('consult')">
+            <i class="fa fa-comments-o mr-2"></i>在线咨询
+        </button>
+        <button class="btn-primary" onclick="openConsult('appointment')">
+            <i class="fa fa-calendar mr-2"></i>预约看房
+        </button>
+    </div>
+
+    <script>
+        let currentListing = null;
+
+        function getQueryParam(param) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param);
+        }
+
+        async function loadListing() {
+            const listingId = parseInt(getQueryParam('id') || '101', 10);
+            try {
+                const response = await fetch('../../assets/data/agent-listings.json');
+                const data = await response.json();
+                currentListing = data.listings.find(item => item.id === listingId);
+                if (!currentListing) {
+                    alert('未找到对应的房源');
+                    history.back();
+                    return;
+                }
+                renderListing();
+            } catch (error) {
+                console.error('加载房源失败', error);
+                alert('加载失败，请稍后重试');
+            }
+        }
+
+        function renderListing() {
+            const listing = currentListing;
+            document.getElementById('heroImage').src = listing.cover;
+            document.getElementById('matchLevel').textContent = listing.matchLevel;
+            document.getElementById('matchScore').textContent = listing.matchRate + '%';
+            document.getElementById('listingTitle').textContent = listing.title;
+            document.getElementById('listingSubtitle').textContent = listing.subTitle;
+
+            document.getElementById('listingPrice').textContent = listing.price + ' 万';
+            document.getElementById('unitPrice').textContent = listing.unitPrice + ' 元/㎡';
+            document.getElementById('aiAdvice').textContent = listing.negotiation.aiAdvice;
+            document.getElementById('taxTips').textContent = listing.taxTips;
+
+            document.getElementById('factTable').innerHTML = listing.factTable.map(item => `
+                <div class="info-cell">
+                    <div class="info-label">${item.label}</div>
+                    <div class="info-value">${item.value}</div>
+                </div>
+            `).join('');
+
+            document.getElementById('insightList').innerHTML = listing.aiInsights.map(text => `
+                <div class="insight-card">
+                    <div class="insight-title"><i class="fa fa-shield"></i> 核心洞察</div>
+                    <div class="text-sm text-[#4E5969]">${text}</div>
+                </div>
+            `).join('');
+
+            document.getElementById('statGrid').innerHTML = listing.negotiation.stats.map(stat => `
+                <div class="stat-card">
+                    <div class="stat-label">${stat.label}</div>
+                    <div class="stat-value">${stat.value}</div>
+                </div>
+            `).join('');
+
+            document.getElementById('aiEstimate').textContent = listing.negotiation.aiEstimate + ' 万';
+            document.getElementById('dealProbability').textContent = listing.negotiation.dealProbability;
+            document.getElementById('reminderList').innerHTML = listing.negotiation.reminders.map(item => `
+                <li>${item}</li>
+            `).join('');
+
+            document.getElementById('ownerAvatar').src = listing.owner.avatar;
+            document.getElementById('ownerName').textContent = listing.owner.name;
+            document.getElementById('ownerRole').textContent = `${listing.owner.role} · ${listing.owner.credit}`;
+            document.getElementById('ownerStatus').textContent = `${listing.owner.status} · 诚信值 ${listing.owner.trustScore}`;
+            document.getElementById('ownerBio').textContent = listing.owner.bio;
+            document.getElementById('ownerTags').innerHTML = listing.matchTags.map(tag => `
+                <span class="tag-chip">${tag}</span>
+            `).join('');
+
+            document.getElementById('timeline').innerHTML = listing.serviceTimeline.map(item => `
+                <div class="timeline-item" data-status="${item.status}">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-title">${item.title}</div>
+                    <div class="timeline-meta">${item.time} · ${item.status}</div>
+                    <div class="timeline-desc">${item.desc}</div>
+                </div>
+            `).join('');
+
+            document.getElementById('quickQuestions').innerHTML = listing.quickQuestions.map(q => `
+                <div class="question-chip" onclick="openConsult('consult', ${JSON.stringify(q)})">
+                    <i class="fa fa-magic"></i>${q}
+                </div>
+            `).join('');
+
+            document.getElementById('contactAgent').textContent = listing.contact.agent;
+            document.getElementById('contactPhone').textContent = listing.contact.phone;
+            document.getElementById('contactWechat').textContent = listing.contact.wechat;
+        }
+
+        function openConsult(type = 'consult', presetQuestion = '') {
+            if (!currentListing) return;
+            const params = new URLSearchParams({
+                id: currentListing.id,
+                type
+            });
+            if (presetQuestion) {
+                params.set('question', presetQuestion);
+            }
+            window.location.href = `consult.html?${params.toString()}`;
+        }
+
+        window.addEventListener('load', loadListing);
+    </script>
+</body>
+</html>

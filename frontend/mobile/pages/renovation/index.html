@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>装修登记 - AI业委会</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
+</head>
+<body class="bg-gray-50 text-gray-900 font-sans">
+    <div class="max-w-xl mx-auto p-4 space-y-4">
+        <header class="flex items-center justify-between">
+            <div class="text-sm text-blue-600 flex items-center gap-1">
+                <span class="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></span>
+                在线装修登记
+            </div>
+            <button onclick="window.top && window.top.closeIframeModal && window.top.closeIframeModal();" class="text-xs text-gray-500 hover:text-gray-900 flex items-center gap-1">
+                <i class="fa fa-close"></i> 关闭
+            </button>
+        </header>
+
+        <section class="bg-white rounded-2xl shadow p-4 space-y-3">
+            <h1 class="text-lg font-semibold">提交装修申请</h1>
+            <p class="text-sm text-gray-500">填写以下信息即可提交装修审批，业委会将实时反馈进度。</p>
+            <form id="renovation-form" class="space-y-3">
+                <div>
+                    <label class="text-xs text-gray-500">业主姓名</label>
+                    <input required class="mt-1 w-full rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring focus:ring-blue-200" placeholder="请输入姓名" name="owner">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="text-xs text-gray-500">房号</label>
+                        <input required class="mt-1 w-full rounded-xl border border-gray-200 px-3 py-2 text-sm focus:ring focus:ring-blue-200" placeholder="如：5幢1202" name="room">
+                    </div>
+                    <div>
+                        <label class="text-xs text-gray-500">联系电话</label>
+                        <input required type="tel" pattern="1[3-9]\d{9}" class="mt-1 w-full rounded-xl border border-gray-200 px-3 py-2 text-sm focus:ring focus:ring-blue-200" placeholder="11位手机号" name="phone">
+                    </div>
+                </div>
+                <div>
+                    <label class="text-xs text-gray-500">装修类型</label>
+                    <select class="mt-1 w-full rounded-xl border border-gray-200 px-3 py-2 text-sm focus:ring focus:ring-blue-200" name="type">
+                        <option value="全屋硬装">全屋硬装</option>
+                        <option value="局部改造">局部改造</option>
+                        <option value="软装升级">软装升级</option>
+                    </select>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="text-xs text-gray-500">计划开始</label>
+                        <input type="date" required class="mt-1 w-full rounded-xl border border-gray-200 px-3 py-2 text-sm focus:ring focus:ring-blue-200" name="start">
+                    </div>
+                    <div>
+                        <label class="text-xs text-gray-500">计划结束</label>
+                        <input type="date" required class="mt-1 w-full rounded-xl border border-gray-200 px-3 py-2 text-sm focus:ring focus:ring-blue-200" name="end">
+                    </div>
+                </div>
+                <div>
+                    <label class="text-xs text-gray-500">施工单位及负责人</label>
+                    <input class="mt-1 w-full rounded-xl border border-gray-200 px-3 py-2 text-sm focus:ring focus:ring-blue-200" placeholder="请输入公司及联系人" name="contractor">
+                </div>
+                <div>
+                    <label class="text-xs text-gray-500">特殊需求说明</label>
+                    <textarea class="mt-1 w-full rounded-2xl border border-gray-200 px-3 py-2 text-sm focus:ring focus:ring-blue-200 min-h-[90px]" placeholder="例如：夜间施工申请、封闭电梯等" name="notes"></textarea>
+                </div>
+                <button class="w-full bg-blue-600 text-white rounded-2xl py-2.5 text-sm font-medium hover:bg-blue-700 transition" type="submit">提交登记</button>
+            </form>
+        </section>
+
+        <section id="result-card" class="hidden bg-white rounded-2xl shadow p-4 text-sm space-y-2">
+            <p class="text-green-600 font-semibold">提交成功，已生成装修备案号：</p>
+            <p id="record-id" class="text-base font-mono text-gray-900"></p>
+            <p class="text-gray-500">审批结果将推送至手机与AI业委会助手，如需修改请联系业委会。</p>
+            <button class="text-blue-600 text-xs underline" onclick="document.getElementById('result-card').classList.add('hidden'); document.getElementById('renovation-form').classList.remove('hidden');">继续提交</button>
+        </section>
+    </div>
+
+    <script>
+        document.getElementById('renovation-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const recordId = 'ZX-' + Math.random().toString(36).substring(2, 8).toUpperCase();
+            document.getElementById('record-id').textContent = recordId;
+            this.classList.add('hidden');
+            document.getElementById('result-card').classList.remove('hidden');
+        });
+    </script>
+</body>
+</html>
