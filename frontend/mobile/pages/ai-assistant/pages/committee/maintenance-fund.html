@@ -1,0 +1,1067 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer">
+    <title>维修基金使用 - AI业委会</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#165DFF',
+                        'primary-light': '#4080FF',
+                        'primary-dark': '#0F4CD3',
+                        secondary: '#2D5CF6',
+                        accent: '#00B96B',
+                        neutral: '#F5F7FA',
+                        'neutral-light': '#FAFBFC',
+                        dark: '#1D2129',
+                        light: '#86909C',
+                        border: '#E5E6EB',
+                        success: '#00B96B',
+                        warning: '#FF7D00',
+                        purple: '#8B5CF6',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .timeline-item {
+            position: relative;
+            padding-left: 2rem;
+            padding-bottom: 1.5rem;
+        }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: 0.4375rem;
+            top: 2rem;
+            bottom: 0;
+            width: 2px;
+            background: #E5E6EB;
+        }
+        .timeline-item:last-child::before {
+            display: none;
+        }
+        .timeline-dot {
+            position: absolute;
+            left: 0;
+            top: 0.25rem;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            border: 3px solid #165DFF;
+            background: white;
+        }
+        .timeline-dot.success {
+            border-color: #00B96B;
+        }
+        .timeline-dot.warning {
+            border-color: #FF7D00;
+        }
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body class="bg-neutral-light">
+    <!-- 头部 -->
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="flex items-center justify-between px-4 py-3">
+            <button onclick="history.back()" class="w-8 h-8 flex items-center justify-center">
+                <i class="fa fa-arrow-left text-dark text-lg"></i>
+            </button>
+            <h1 class="text-lg font-bold text-dark">维修基金使用</h1>
+            <div class="w-8"></div>
+        </div>
+    </header>
+
+    <!-- 主内容 -->
+    <main class="container mx-auto px-4 py-4 pb-20">
+        <!-- 资金概览 -->
+        <div class="bg-gradient-to-br from-primary to-primary-dark rounded-xl p-4 mb-4 text-white">
+            <div class="flex items-center justify-between mb-4">
+                <div>
+                    <p class="text-sm opacity-90 mb-1">维修基金余额</p>
+                    <p class="text-3xl font-bold">¥ 158.6<span class="text-lg font-medium ml-1">万</span></p>
+                </div>
+                <div class="w-16 h-16 bg-white/10 rounded-full flex items-center justify-center">
+                    <i class="fa fa-database text-3xl"></i>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-3 gap-3 pt-3 border-t border-white/20">
+                <div>
+                    <p class="text-xs opacity-75 mb-1">累计收入</p>
+                    <p class="text-base font-bold">¥ 210万</p>
+                </div>
+                <div>
+                    <p class="text-xs opacity-75 mb-1">累计支出</p>
+                    <p class="text-base font-bold">¥ 51.4万</p>
+                </div>
+                <div>
+                    <p class="text-xs opacity-75 mb-1">使用率</p>
+                    <p class="text-base font-bold">24.5%</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 快捷功能 -->
+        <div class="grid grid-cols-3 gap-3 mb-4">
+            <button onclick="showApplyForm()" class="bg-white rounded-xl p-3 text-center shadow-sm hover:shadow-md transition-all">
+                <div class="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center mx-auto mb-2">
+                    <i class="fa fa-file-text text-primary text-lg"></i>
+                </div>
+                <p class="text-xs text-dark font-medium">申请使用</p>
+            </button>
+            <button onclick="showStatistics()" class="bg-white rounded-xl p-3 text-center shadow-sm hover:shadow-md transition-all">
+                <div class="w-10 h-10 bg-warning/10 rounded-lg flex items-center justify-center mx-auto mb-2">
+                    <i class="fa fa-bar-chart text-warning text-lg"></i>
+                </div>
+                <p class="text-xs text-dark font-medium">统计分析</p>
+            </button>
+            <button onclick="showReceiptList()" class="bg-white rounded-xl p-3 text-center shadow-sm hover:shadow-md transition-all">
+                <div class="w-10 h-10 bg-purple/10 rounded-lg flex items-center justify-center mx-auto mb-2">
+                    <i class="fa fa-download text-purple text-lg"></i>
+                </div>
+                <p class="text-xs text-dark font-medium">下载票据</p>
+            </button>
+        </div>
+
+        <!-- 筛选标签 -->
+        <div class="bg-white rounded-xl p-3 mb-4">
+            <div class="flex items-center gap-2 overflow-x-auto">
+                <button onclick="filterRecords('all')" class="filter-tag flex-shrink-0 px-3 py-1.5 bg-primary text-white rounded-full text-xs font-medium">
+                    全部
+                </button>
+                <button onclick="filterRecords('pending')" class="filter-tag flex-shrink-0 px-3 py-1.5 bg-gray-100 text-light rounded-full text-xs font-medium hover:bg-gray-200">
+                    待审批
+                </button>
+                <button onclick="filterRecords('approved')" class="filter-tag flex-shrink-0 px-3 py-1.5 bg-gray-100 text-light rounded-full text-xs font-medium hover:bg-gray-200">
+                    已批准
+                </button>
+                <button onclick="filterRecords('completed')" class="filter-tag flex-shrink-0 px-3 py-1.5 bg-gray-100 text-light rounded-full text-xs font-medium hover:bg-gray-200">
+                    已完成
+                </button>
+                <button onclick="filterRecords('rejected')" class="filter-tag flex-shrink-0 px-3 py-1.5 bg-gray-100 text-light rounded-full text-xs font-medium hover:bg-gray-200">
+                    已驳回
+                </button>
+            </div>
+        </div>
+
+        <!-- 使用记录列表 -->
+        <div id="records-list" class="space-y-3">
+            <!-- 记录1 - 审批中 -->
+            <div class="bg-white rounded-xl p-4 shadow-sm record-item" data-status="pending" onclick="showDetail(1)">
+                <div class="flex items-start justify-between mb-3">
+                    <div class="flex-1">
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="status-badge bg-warning/10 text-warning">
+                                <i class="fa fa-clock-o"></i> 审批中
+                            </span>
+                            <span class="text-xs text-light">2025-12-05</span>
+                        </div>
+                        <h3 class="text-base font-bold text-dark mb-1">3号楼电梯更换项目</h3>
+                        <p class="text-xs text-light">申请人：业委会</p>
+                    </div>
+                    <i class="fa fa-chevron-right text-light"></i>
+                </div>
+
+                <div class="flex items-center justify-between p-2.5 bg-neutral-light rounded-lg">
+                    <span class="text-sm text-dark">申请金额</span>
+                    <span class="text-lg font-bold text-primary">¥ 12.8万</span>
+                </div>
+
+                <div class="mt-3 pt-3 border-t border-border flex items-center justify-between text-xs">
+                    <div class="flex items-center gap-4">
+                        <div class="flex items-center gap-1">
+                            <i class="fa fa-user text-light"></i>
+                            <span class="text-light">当前审批：财务部</span>
+                        </div>
+                    </div>
+                    <button onclick="event.stopPropagation(); showProgress(1)" class="text-primary hover:text-primary-dark">
+                        查看进度 <i class="fa fa-angle-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 记录2 - 已批准 -->
+            <div class="bg-white rounded-xl p-4 shadow-sm record-item" data-status="approved" onclick="showDetail(2)">
+                <div class="flex items-start justify-between mb-3">
+                    <div class="flex-1">
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="status-badge bg-success/10 text-success">
+                                <i class="fa fa-check"></i> 已批准
+                            </span>
+                            <span class="text-xs text-light">2025-11-28</span>
+                        </div>
+                        <h3 class="text-base font-bold text-dark mb-1">小区外墙防水维修</h3>
+                        <p class="text-xs text-light">申请人：物业公司</p>
+                    </div>
+                    <i class="fa fa-chevron-right text-light"></i>
+                </div>
+
+                <div class="flex items-center justify-between p-2.5 bg-neutral-light rounded-lg">
+                    <span class="text-sm text-dark">批准金额</span>
+                    <span class="text-lg font-bold text-success">¥ 8.5万</span>
+                </div>
+
+                <div class="mt-3 pt-3 border-t border-border flex items-center justify-between text-xs">
+                    <div class="flex items-center gap-1 text-success">
+                        <i class="fa fa-check-circle"></i>
+                        <span>已通过业主大会表决</span>
+                    </div>
+                    <span class="text-light">施工中</span>
+                </div>
+            </div>
+
+            <!-- 记录3 - 已完成 -->
+            <div class="bg-white rounded-xl p-4 shadow-sm record-item" data-status="completed" onclick="showDetail(3)">
+                <div class="flex items-start justify-between mb-3">
+                    <div class="flex-1">
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="status-badge bg-gray-100 text-light">
+                                <i class="fa fa-check-circle-o"></i> 已完成
+                            </span>
+                            <span class="text-xs text-light">2025-10-15</span>
+                        </div>
+                        <h3 class="text-base font-bold text-dark mb-1">消防设施维护保养</h3>
+                        <p class="text-xs text-light">申请人：物业公司</p>
+                    </div>
+                    <i class="fa fa-chevron-right text-light"></i>
+                </div>
+
+                <div class="flex items-center justify-between p-2.5 bg-neutral-light rounded-lg">
+                    <span class="text-sm text-dark">实际支出</span>
+                    <span class="text-lg font-bold text-dark">¥ 4.2万</span>
+                </div>
+
+                <div class="mt-3 pt-3 border-t border-border flex items-center justify-between text-xs">
+                    <div class="flex items-center gap-1 text-light">
+                        <i class="fa fa-calendar-check-o"></i>
+                        <span>2025-10-25 完工</span>
+                    </div>
+                    <button onclick="event.stopPropagation(); viewReceipt(3)" class="text-primary hover:text-primary-dark">
+                        查看票据 <i class="fa fa-file-text-o"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 记录4 - 已完成 -->
+            <div class="bg-white rounded-xl p-4 shadow-sm record-item" data-status="completed" onclick="showDetail(4)">
+                <div class="flex items-start justify-between mb-3">
+                    <div class="flex-1">
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="status-badge bg-gray-100 text-light">
+                                <i class="fa fa-check-circle-o"></i> 已完成
+                            </span>
+                            <span class="text-xs text-light">2025-09-10</span>
+                        </div>
+                        <h3 class="text-base font-bold text-dark mb-1">公共区域照明升级</h3>
+                        <p class="text-xs text-light">申请人：业委会</p>
+                    </div>
+                    <i class="fa fa-chevron-right text-light"></i>
+                </div>
+
+                <div class="flex items-center justify-between p-2.5 bg-neutral-light rounded-lg">
+                    <span class="text-sm text-dark">实际支出</span>
+                    <span class="text-lg font-bold text-dark">¥ 6.8万</span>
+                </div>
+
+                <div class="mt-3 pt-3 border-t border-border flex items-center justify-between text-xs">
+                    <div class="flex items-center gap-1 text-light">
+                        <i class="fa fa-calendar-check-o"></i>
+                        <span>2025-09-28 完工</span>
+                    </div>
+                    <button onclick="event.stopPropagation(); viewReceipt(4)" class="text-primary hover:text-primary-dark">
+                        查看票据 <i class="fa fa-file-text-o"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 记录5 - 已驳回 -->
+            <div class="bg-white rounded-xl p-4 shadow-sm record-item" data-status="rejected" onclick="showDetail(5)">
+                <div class="flex items-start justify-between mb-3">
+                    <div class="flex-1">
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="status-badge bg-red-50 text-red-600">
+                                <i class="fa fa-times-circle"></i> 已驳回
+                            </span>
+                            <span class="text-xs text-light">2025-08-20</span>
+                        </div>
+                        <h3 class="text-base font-bold text-dark mb-1">景观改造工程</h3>
+                        <p class="text-xs text-light">申请人：物业公司</p>
+                    </div>
+                    <i class="fa fa-chevron-right text-light"></i>
+                </div>
+
+                <div class="flex items-center justify-between p-2.5 bg-neutral-light rounded-lg">
+                    <span class="text-sm text-dark">申请金额</span>
+                    <span class="text-lg font-bold text-red-600">¥ 15.0万</span>
+                </div>
+
+                <div class="mt-3 pt-3 border-t border-border flex items-center gap-1 text-xs text-red-600">
+                    <i class="fa fa-info-circle"></i>
+                    <span>驳回原因：不符合维修基金使用范围</span>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 申请表单页面 -->
+    <div id="apply-form" class="fixed inset-0 bg-white z-50 hidden overflow-y-auto">
+        <header class="bg-white shadow-sm sticky top-0 z-10">
+            <div class="flex items-center justify-between px-4 py-3">
+                <button onclick="closeApplyForm()" class="w-8 h-8 flex items-center justify-center">
+                    <i class="fa fa-arrow-left text-dark text-lg"></i>
+                </button>
+                <h1 class="text-lg font-bold text-dark">申请维修基金</h1>
+                <div class="w-8"></div>
+            </div>
+        </header>
+
+        <div class="p-4">
+            <div class="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-4">
+                <div class="flex items-start gap-2">
+                    <i class="fa fa-info-circle text-primary mt-0.5"></i>
+                    <div class="flex-1">
+                        <p class="text-xs text-dark font-medium mb-1">申请须知</p>
+                        <p class="text-xs text-dark leading-relaxed">
+                            维修基金仅用于物业共用部位、共用设施设备保修期满后的维修和更新、改造，不得挪作他用。
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-dark mb-2">项目名称 <span class="text-red-500">*</span></label>
+                    <input type="text" placeholder="请输入项目名称" class="w-full border border-border rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-dark mb-2">项目类型 <span class="text-red-500">*</span></label>
+                    <select class="w-full border border-border rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10">
+                        <option>请选择项目类型</option>
+                        <option>电梯维修/更换</option>
+                        <option>外墙维修</option>
+                        <option>屋面防水</option>
+                        <option>消防设施</option>
+                        <option>供水设施</option>
+                        <option>供电设施</option>
+                        <option>其他</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-dark mb-2">申请金额 <span class="text-red-500">*</span></label>
+                    <div class="relative">
+                        <span class="absolute left-3 top-2.5 text-sm text-light">¥</span>
+                        <input type="number" placeholder="0.00" class="w-full border border-border rounded-lg pl-8 pr-3 py-2.5 text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10">
+                        <span class="absolute right-3 top-2.5 text-sm text-light">万元</span>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-dark mb-2">项目说明 <span class="text-red-500">*</span></label>
+                    <textarea rows="5" placeholder="请详细说明项目背景、必要性、维修内容等..." class="w-full border border-border rounded-lg px-3 py-2.5 text-sm resize-none focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10"></textarea>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-dark mb-2">预算明细</label>
+                    <div class="border border-border rounded-lg overflow-hidden">
+                        <div class="bg-neutral-light px-3 py-2 flex items-center justify-between text-xs font-medium text-dark">
+                            <span>费用项目</span>
+                            <span>金额(万元)</span>
+                        </div>
+                        <div class="divide-y divide-border">
+                            <div class="px-3 py-2 flex items-center gap-2">
+                                <input type="text" placeholder="项目名称" class="flex-1 text-sm border-0 focus:outline-none">
+                                <input type="number" placeholder="0.00" class="w-24 text-sm text-right border-0 focus:outline-none">
+                            </div>
+                            <div class="px-3 py-2 flex items-center gap-2">
+                                <input type="text" placeholder="项目名称" class="flex-1 text-sm border-0 focus:outline-none">
+                                <input type="number" placeholder="0.00" class="w-24 text-sm text-right border-0 focus:outline-none">
+                            </div>
+                        </div>
+                        <button class="w-full py-2 text-sm text-primary hover:bg-primary/5">
+                            <i class="fa fa-plus"></i> 添加明细
+                        </button>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-dark mb-2">上传附件</label>
+                    <div class="border-2 border-dashed border-border rounded-lg p-6 text-center">
+                        <i class="fa fa-upload text-3xl text-light mb-2"></i>
+                        <p class="text-sm text-dark mb-1">点击上传或拖拽文件到此处</p>
+                        <p class="text-xs text-light">支持PDF、图片、Word文档，单个文件不超过10MB</p>
+                    </div>
+                </div>
+
+                <div class="flex gap-3 pt-4">
+                    <button onclick="closeApplyForm()" class="flex-1 border border-border text-dark py-3 rounded-lg font-medium">
+                        取消
+                    </button>
+                    <button onclick="submitApplication()" class="flex-1 bg-primary text-white py-3 rounded-lg font-medium">
+                        提交申请
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 详情弹窗 -->
+    <div id="detail-modal" class="fixed inset-0 bg-black/50 z-50 hidden">
+        <div class="absolute inset-x-0 bottom-0 bg-white rounded-t-2xl max-h-[85vh] overflow-y-auto">
+            <div class="sticky top-0 bg-white border-b border-border p-4 flex items-center justify-between">
+                <h3 class="text-lg font-bold text-dark">使用详情</h3>
+                <button onclick="closeDetail()" class="w-8 h-8 flex items-center justify-center text-light hover:text-dark">
+                    <i class="fa fa-times text-xl"></i>
+                </button>
+            </div>
+
+            <div class="p-4" id="detail-content">
+                <!-- 动态内容 -->
+            </div>
+        </div>
+    </div>
+
+    <!-- 统计分析页面 -->
+    <div id="statistics-page" class="fixed inset-0 bg-neutral-light z-50 hidden overflow-y-auto">
+        <header class="bg-white shadow-sm sticky top-0 z-10">
+            <div class="flex items-center justify-between px-4 py-3">
+                <button onclick="closeStatistics()" class="w-8 h-8 flex items-center justify-center">
+                    <i class="fa fa-arrow-left text-dark text-lg"></i>
+                </button>
+                <h1 class="text-lg font-bold text-dark">统计分析</h1>
+                <div class="w-8"></div>
+            </div>
+        </header>
+
+        <div class="p-4">
+            <!-- 年度趋势 -->
+            <div class="bg-white rounded-xl p-4 mb-4">
+                <h3 class="text-base font-bold text-dark mb-3">年度使用趋势</h3>
+                <div id="trend-chart" style="height: 250px;"></div>
+            </div>
+
+            <!-- 支出分类 -->
+            <div class="bg-white rounded-xl p-4 mb-4">
+                <h3 class="text-base font-bold text-dark mb-3">支出分类占比</h3>
+                <div id="category-chart" style="height: 320px;"></div>
+            </div>
+
+            <!-- 月度对比 -->
+            <div class="bg-white rounded-xl p-4 mb-4">
+                <h3 class="text-base font-bold text-dark mb-3">月度收支对比</h3>
+                <div id="monthly-chart" style="height: 250px;"></div>
+            </div>
+
+            <!-- 数据总结 -->
+            <div class="bg-white rounded-xl p-4">
+                <h3 class="text-base font-bold text-dark mb-3">数据摘要</h3>
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="border border-border rounded-lg p-3 text-center">
+                        <p class="text-xs text-light mb-1">本年度支出</p>
+                        <p class="text-xl font-bold text-primary">¥ 28.6万</p>
+                    </div>
+                    <div class="border border-border rounded-lg p-3 text-center">
+                        <p class="text-xs text-light mb-1">项目总数</p>
+                        <p class="text-xl font-bold text-success">15个</p>
+                    </div>
+                    <div class="border border-border rounded-lg p-3 text-center">
+                        <p class="text-xs text-light mb-1">平均审批周期</p>
+                        <p class="text-xl font-bold text-warning">7.2天</p>
+                    </div>
+                    <div class="border border-border rounded-lg p-3 text-center">
+                        <p class="text-xs text-light mb-1">通过率</p>
+                        <p class="text-xl font-bold text-purple">86.7%</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 票据下载页面 -->
+    <div id="receipt-page" class="fixed inset-0 bg-neutral-light z-50 hidden overflow-y-auto">
+        <header class="bg-white shadow-sm sticky top-0 z-10">
+            <div class="flex items-center justify-between px-4 py-3">
+                <button onclick="closeReceiptList()" class="w-8 h-8 flex items-center justify-center">
+                    <i class="fa fa-arrow-left text-dark text-lg"></i>
+                </button>
+                <h1 class="text-lg font-bold text-dark">电子票据</h1>
+                <button onclick="downloadAllReceipts()" class="text-primary text-sm font-medium">
+                    <i class="fa fa-download"></i> 全部下载
+                </button>
+            </div>
+        </header>
+
+        <div class="p-4">
+            <div class="space-y-3">
+                <!-- 票据1 -->
+                <div class="bg-white rounded-xl p-4 shadow-sm">
+                    <div class="flex items-start gap-3">
+                        <div class="w-16 h-20 bg-red-50 border border-red-200 rounded-lg flex items-center justify-center flex-shrink-0">
+                            <i class="fa fa-file-pdf-o text-red-500 text-2xl"></i>
+                        </div>
+                        <div class="flex-1">
+                            <h4 class="text-sm font-bold text-dark mb-1">消防设施维护发票</h4>
+                            <p class="text-xs text-light mb-2">项目：消防设施维护保养</p>
+                            <div class="flex items-center justify-between">
+                                <div class="text-xs text-light">
+                                    <p>金额：¥4.2万</p>
+                                    <p>日期：2025-10-25</p>
+                                </div>
+                                <button onclick="downloadReceipt(1)" class="px-3 py-1.5 bg-primary text-white text-xs rounded-lg">
+                                    <i class="fa fa-download"></i> 下载
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 票据2 -->
+                <div class="bg-white rounded-xl p-4 shadow-sm">
+                    <div class="flex items-start gap-3">
+                        <div class="w-16 h-20 bg-red-50 border border-red-200 rounded-lg flex items-center justify-center flex-shrink-0">
+                            <i class="fa fa-file-pdf-o text-red-500 text-2xl"></i>
+                        </div>
+                        <div class="flex-1">
+                            <h4 class="text-sm font-bold text-dark mb-1">照明升级工程发票</h4>
+                            <p class="text-xs text-light mb-2">项目：公共区域照明升级</p>
+                            <div class="flex items-center justify-between">
+                                <div class="text-xs text-light">
+                                    <p>金额：¥6.8万</p>
+                                    <p>日期：2025-09-28</p>
+                                </div>
+                                <button onclick="downloadReceipt(2)" class="px-3 py-1.5 bg-primary text-white text-xs rounded-lg">
+                                    <i class="fa fa-download"></i> 下载
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 票据3 -->
+                <div class="bg-white rounded-xl p-4 shadow-sm">
+                    <div class="flex items-start gap-3">
+                        <div class="w-16 h-20 bg-green-50 border border-green-200 rounded-lg flex items-center justify-center flex-shrink-0">
+                            <i class="fa fa-file-image-o text-green-500 text-2xl"></i>
+                        </div>
+                        <div class="flex-1">
+                            <h4 class="text-sm font-bold text-dark mb-1">电梯检测报告</h4>
+                            <p class="text-xs text-light mb-2">项目：3号楼电梯更换项目</p>
+                            <div class="flex items-center justify-between">
+                                <div class="text-xs text-light">
+                                    <p>文件类型：PDF扫描件</p>
+                                    <p>日期：2025-12-04</p>
+                                </div>
+                                <button onclick="downloadReceipt(3)" class="px-3 py-1.5 bg-primary text-white text-xs rounded-lg">
+                                    <i class="fa fa-download"></i> 查看
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 票据4 -->
+                <div class="bg-white rounded-xl p-4 shadow-sm">
+                    <div class="flex items-start gap-3">
+                        <div class="w-16 h-20 bg-blue-50 border border-blue-200 rounded-lg flex items-center justify-center flex-shrink-0">
+                            <i class="fa fa-file-word-o text-blue-500 text-2xl"></i>
+                        </div>
+                        <div class="flex-1">
+                            <h4 class="text-sm font-bold text-dark mb-1">外墙维修合同</h4>
+                            <p class="text-xs text-light mb-2">项目：小区外墙防水维修</p>
+                            <div class="flex items-center justify-between">
+                                <div class="text-xs text-light">
+                                    <p>文件类型：Word文档</p>
+                                    <p>日期：2025-11-28</p>
+                                </div>
+                                <button onclick="downloadReceipt(4)" class="px-3 py-1.5 bg-primary text-white text-xs rounded-lg">
+                                    <i class="fa fa-download"></i> 下载
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 详情数据
+        const detailData = {
+            1: {
+                title: '3号楼电梯更换项目',
+                applicant: '业委会',
+                applyDate: '2025-12-05',
+                amount: '12.8',
+                status: 'pending',
+                description: '3号楼2部电梯已使用超过15年，存在严重老化问题，需要进行整体更换。根据专业检测报告，电梯存在以下安全隐患：\n1. 钢丝绳磨损严重\n2. 制动系统失效\n3. 控制系统故障频发\n为保障业主安全，建议立即更换。',
+                budget: [
+                    { name: '电梯设备采购', amount: '9.6' },
+                    { name: '安装施工费用', amount: '2.4' },
+                    { name: '检测验收费用', amount: '0.5' },
+                    { name: '其他费用', amount: '0.3' }
+                ],
+                timeline: [
+                    { title: '业委会提交申请', status: 'completed', time: '2025-12-05 09:30' },
+                    { title: '物业公司初审', status: 'completed', time: '2025-12-05 14:20' },
+                    { title: '财务部审核', status: 'processing', time: '预计 2025-12-08 完成' },
+                    { title: '业主大会表决', status: 'pending', time: '需超过2/3业主同意' },
+                    { title: '资金拨付', status: 'pending', time: '' }
+                ],
+                attachments: [
+                    { name: '电梯安全检测报告.pdf', size: '2.3 MB', type: 'pdf' },
+                    { name: '现场照片.jpg', size: '1.8 MB', type: 'image' }
+                ]
+            },
+            2: {
+                title: '小区外墙防水维修',
+                applicant: '物业公司',
+                applyDate: '2025-11-28',
+                amount: '8.5',
+                status: 'approved',
+                description: '小区1-5号楼外墙出现多处渗漏，影响业主正常居住。经专业检测，外墙防水层老化失效，需进行全面防水维修。',
+                budget: [
+                    { name: '防水材料', amount: '4.2' },
+                    { name: '施工人工', amount: '3.5' },
+                    { name: '安全防护', amount: '0.6' },
+                    { name: '其他费用', amount: '0.2' }
+                ],
+                timeline: [
+                    { title: '物业公司提交申请', status: 'completed', time: '2025-11-28 10:15' },
+                    { title: '财务部审核', status: 'completed', time: '2025-11-29 15:30' },
+                    { title: '业主大会表决', status: 'completed', time: '2025-12-01 通过(75.3%)' },
+                    { title: '资金拨付', status: 'completed', time: '2025-12-03 已拨付' },
+                    { title: '施工进行中', status: 'processing', time: '预计12月底完工' }
+                ],
+                attachments: [
+                    { name: '防水检测报告.pdf', size: '3.1 MB', type: 'pdf' },
+                    { name: '施工方案.pdf', size: '1.5 MB', type: 'pdf' }
+                ]
+            },
+            3: {
+                title: '消防设施维护保养',
+                applicant: '物业公司',
+                applyDate: '2025-10-15',
+                amount: '4.2',
+                status: 'completed',
+                description: '根据消防法规定，需每年对消防设施进行维护保养，包括消防栓、烟感器、灭火器等设备的检测和维护。',
+                budget: [
+                    { name: '设备检测', amount: '1.8' },
+                    { name: '设备维修', amount: '1.5' },
+                    { name: '更换配件', amount: '0.7' },
+                    { name: '其他费用', amount: '0.2' }
+                ],
+                timeline: [
+                    { title: '物业公司提交申请', status: 'completed', time: '2025-10-15 11:20' },
+                    { title: '财务部审核', status: 'completed', time: '2025-10-16 14:00' },
+                    { title: '业主大会表决', status: 'completed', time: '2025-10-18 通过(82.1%)' },
+                    { title: '资金拨付', status: 'completed', time: '2025-10-20 已拨付' },
+                    { title: '项目完成', status: 'completed', time: '2025-10-25 已完工验收' }
+                ],
+                attachments: [
+                    { name: '维护保养发票.pdf', size: '0.8 MB', type: 'pdf' },
+                    { name: '验收报告.pdf', size: '1.2 MB', type: 'pdf' }
+                ]
+            }
+        };
+
+        function showDetail(id) {
+            const data = detailData[id];
+            if (!data) return;
+
+            let statusText = '';
+            let statusClass = '';
+            switch (data.status) {
+                case 'pending':
+                    statusText = '审批中';
+                    statusClass = 'bg-warning/10 text-warning';
+                    break;
+                case 'approved':
+                    statusText = '已批准';
+                    statusClass = 'bg-success/10 text-success';
+                    break;
+                case 'completed':
+                    statusText = '已完成';
+                    statusClass = 'bg-gray-100 text-light';
+                    break;
+            }
+
+            const content = `
+                <!-- 基本信息 -->
+                <div class="bg-neutral-light rounded-xl p-4 mb-4">
+                    <div class="flex items-center justify-between mb-3">
+                        <h4 class="text-base font-bold text-dark">${data.title}</h4>
+                        <span class="status-badge ${statusClass}">
+                            ${data.status === 'pending' ? '<i class="fa fa-clock-o"></i>' : data.status === 'approved' ? '<i class="fa fa-check"></i>' : '<i class="fa fa-check-circle-o"></i>'}
+                            ${statusText}
+                        </span>
+                    </div>
+                    <div class="space-y-2 text-sm">
+                        <div class="flex justify-between">
+                            <span class="text-light">申请时间</span>
+                            <span class="text-dark font-medium">${data.applyDate}</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-light">申请人</span>
+                            <span class="text-dark font-medium">${data.applicant}</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-light">申请金额</span>
+                            <span class="text-primary font-bold text-base">¥ ${data.amount}万</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 申请说明 -->
+                <div class="mb-4">
+                    <h4 class="text-sm font-bold text-dark mb-2">申请说明</h4>
+                    <div class="bg-neutral-light rounded-lg p-3 text-xs text-dark leading-relaxed whitespace-pre-line">
+${data.description}
+                    </div>
+                </div>
+
+                <!-- 预算明细 -->
+                <div class="mb-4">
+                    <h4 class="text-sm font-bold text-dark mb-2">预算明细</h4>
+                    <div class="bg-white border border-border rounded-lg overflow-hidden">
+                        <div class="divide-y divide-border text-sm">
+                            ${data.budget.map(item => `
+                                <div class="flex justify-between p-3 hover:bg-neutral-light">
+                                    <span class="text-dark">${item.name}</span>
+                                    <span class="font-medium text-dark">¥ ${item.amount}万</span>
+                                </div>
+                            `).join('')}
+                            <div class="flex justify-between p-3 bg-primary/5">
+                                <span class="text-dark font-bold">合计</span>
+                                <span class="font-bold text-primary">¥ ${data.amount}万</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 审批进度 -->
+                <div class="mb-4">
+                    <h4 class="text-sm font-bold text-dark mb-3">审批进度</h4>
+                    <div class="timeline">
+                        ${data.timeline.map((item, index) => {
+                            let dotClass = 'timeline-dot';
+                            let itemClass = 'bg-neutral-light rounded-lg p-3';
+                            let badgeText = '待审批';
+                            let badgeClass = 'text-xs text-light';
+
+                            if (item.status === 'completed') {
+                                dotClass += ' success';
+                                badgeText = item.title.includes('完成') || item.title.includes('完工') ? '已完成' : (item.title.includes('表决') ? `已通过` : '已完成');
+                                badgeClass = 'text-xs text-success';
+                            } else if (item.status === 'processing') {
+                                itemClass = 'bg-warning/5 border border-warning/20 rounded-lg p-3';
+                                badgeText = item.title.includes('施工') ? '进行中' : '审核中';
+                                badgeClass = 'text-xs text-warning';
+                            } else {
+                                dotClass = 'timeline-dot';
+                                dotClass = dotClass.replace('timeline-dot', 'timeline-dot') + '" style="border-color: #E5E6EB;';
+                                itemClass += ' opacity-50';
+                            }
+
+                            return `
+                                <div class="timeline-item">
+                                    <div class="${dotClass}"></div>
+                                    <div class="${itemClass}">
+                                        <div class="flex justify-between items-start mb-1">
+                                            <span class="text-sm font-medium text-dark">${item.title}</span>
+                                            <span class="${badgeClass}">${badgeText}</span>
+                                        </div>
+                                        <p class="text-xs text-light">${item.time}</p>
+                                    </div>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                </div>
+
+                <!-- 附件 -->
+                <div class="mb-4">
+                    <h4 class="text-sm font-bold text-dark mb-2">相关附件</h4>
+                    <div class="space-y-2">
+                        ${data.attachments.map(file => `
+                            <div class="flex items-center justify-between p-3 bg-neutral-light rounded-lg">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-10 h-10 bg-${file.type === 'pdf' ? 'primary' : 'success'}/10 rounded-lg flex items-center justify-center">
+                                        <i class="fa fa-file-${file.type === 'pdf' ? 'pdf' : 'image'}-o text-${file.type === 'pdf' ? 'primary' : 'success'}"></i>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm font-medium text-dark">${file.name}</p>
+                                        <p class="text-xs text-light">${file.size}</p>
+                                    </div>
+                                </div>
+                                <button onclick="downloadFile('${file.name}')" class="text-primary hover:text-primary-dark">
+                                    <i class="fa fa-download"></i>
+                                </button>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('detail-content').innerHTML = content;
+            document.getElementById('detail-modal').classList.remove('hidden');
+        }
+
+        function closeDetail() {
+            document.getElementById('detail-modal').classList.add('hidden');
+        }
+
+        function showApplyForm() {
+            document.getElementById('apply-form').classList.remove('hidden');
+        }
+
+        function closeApplyForm() {
+            document.getElementById('apply-form').classList.add('hidden');
+        }
+
+        function submitApplication() {
+            const loading = document.createElement('div');
+            loading.className = 'fixed inset-0 bg-black/50 flex items-center justify-center z-50';
+            loading.innerHTML = `
+                <div class="bg-white rounded-xl p-6 m-4 text-center">
+                    <div class="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+                    <p class="text-dark font-medium">正在提交申请...</p>
+                </div>
+            `;
+            document.body.appendChild(loading);
+
+            setTimeout(() => {
+                loading.remove();
+                closeApplyForm();
+
+                const success = document.createElement('div');
+                success.className = 'fixed inset-0 bg-black/50 flex items-center justify-center z-50';
+                success.innerHTML = `
+                    <div class="bg-white rounded-xl p-6 m-4 text-center max-w-sm">
+                        <div class="w-16 h-16 bg-success/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fa fa-check text-success text-3xl"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-dark mb-2">提交成功</h3>
+                        <p class="text-sm text-light mb-4">您的申请已提交，业委会将在3个工作日内审核</p>
+                        <button onclick="this.closest('.fixed').remove()" class="w-full bg-primary text-white py-2.5 rounded-lg">
+                            确定
+                        </button>
+                    </div>
+                `;
+                document.body.appendChild(success);
+            }, 1500);
+        }
+
+        function filterRecords(type) {
+            document.querySelectorAll('.filter-tag').forEach(tag => {
+                tag.classList.remove('bg-primary', 'text-white');
+                tag.classList.add('bg-gray-100', 'text-light');
+            });
+            event.target.classList.remove('bg-gray-100', 'text-light');
+            event.target.classList.add('bg-primary', 'text-white');
+
+            const records = document.querySelectorAll('.record-item');
+            records.forEach(record => {
+                if (type === 'all' || record.dataset.status === type) {
+                    record.style.display = 'block';
+                } else {
+                    record.style.display = 'none';
+                }
+            });
+        }
+
+        function showProgress(id) {
+            showDetail(id);
+        }
+
+        function viewReceipt(id) {
+            showDetail(id);
+        }
+
+        function downloadFile(filename) {
+            alert(`下载文件: ${filename}`);
+        }
+
+        function showRecordsList() {
+            // 已经在主页面,不需要额外操作
+            alert('您已在使用记录页面');
+        }
+
+        function showStatistics() {
+            document.getElementById('statistics-page').classList.remove('hidden');
+            initCharts();
+        }
+
+        function closeStatistics() {
+            document.getElementById('statistics-page').classList.add('hidden');
+        }
+
+        function showReceiptList() {
+            document.getElementById('receipt-page').classList.remove('hidden');
+        }
+
+        function closeReceiptList() {
+            document.getElementById('receipt-page').classList.add('hidden');
+        }
+
+        function downloadReceipt(id) {
+            alert(`下载票据: ${id}`);
+        }
+
+        function downloadAllReceipts() {
+            alert('批量下载所有票据');
+        }
+
+        function initCharts() {
+            // 年度趋势图
+            const trendChart = echarts.init(document.getElementById('trend-chart'));
+            trendChart.setOption({
+                color: ['#165DFF', '#00B96B'],
+                tooltip: {
+                    trigger: 'axis'
+                },
+                legend: {
+                    data: ['收入', '支出'],
+                    bottom: 0
+                },
+                grid: {
+                    top: 40,
+                    left: 50,
+                    right: 20,
+                    bottom: 40
+                },
+                xAxis: {
+                    type: 'category',
+                    data: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月']
+                },
+                yAxis: {
+                    type: 'value',
+                    name: '金额(万元)'
+                },
+                series: [
+                    {
+                        name: '收入',
+                        type: 'line',
+                        smooth: true,
+                        data: [18.5, 19.2, 18.8, 19.5, 20.1, 19.8, 20.3, 19.6, 20.5, 21.2, 20.8, 21.5]
+                    },
+                    {
+                        name: '支出',
+                        type: 'line',
+                        smooth: true,
+                        data: [0, 4.2, 0, 6.8, 0, 3.5, 0, 5.2, 0, 4.7, 8.5, 0]
+                    }
+                ]
+            });
+
+            // 支出分类饼图
+            const categoryChart = echarts.init(document.getElementById('category-chart'));
+            categoryChart.setOption({
+                color: ['#165DFF', '#00B96B', '#FF7D00', '#8B5CF6', '#F53F3F'],
+                tooltip: {
+                    trigger: 'item',
+                    formatter: '{b}: ¥{c}万 ({d}%)'
+                },
+                legend: {
+                    orient: 'horizontal',
+                    bottom: 5,
+                    itemGap: 10,
+                    textStyle: {
+                        fontSize: 12
+                    }
+                },
+                series: [
+                    {
+                        type: 'pie',
+                        radius: ['35%', '65%'],
+                        center: ['50%', '42%'],
+                        avoidLabelOverlap: true,
+                        itemStyle: {
+                            borderRadius: 8,
+                            borderColor: '#fff',
+                            borderWidth: 2
+                        },
+                        label: {
+                            show: true,
+                            fontSize: 11,
+                            formatter: '{d}%',
+                            color: '#1D2129'
+                        },
+                        labelLine: {
+                            show: true,
+                            length: 10,
+                            length2: 8
+                        },
+                        data: [
+                            { value: 12.8, name: '电梯维修' },
+                            { value: 8.5, name: '外墙维修' },
+                            { value: 6.8, name: '照明设施' },
+                            { value: 4.2, name: '消防设施' },
+                            { value: 3.5, name: '其他' }
+                        ]
+                    }
+                ]
+            });
+
+            // 月度收支对比柱状图
+            const monthlyChart = echarts.init(document.getElementById('monthly-chart'));
+            monthlyChart.setOption({
+                color: ['#165DFF', '#00B96B'],
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: {
+                        type: 'shadow'
+                    }
+                },
+                legend: {
+                    data: ['收入', '支出'],
+                    bottom: 0
+                },
+                grid: {
+                    top: 40,
+                    left: 50,
+                    right: 20,
+                    bottom: 40
+                },
+                xAxis: {
+                    type: 'category',
+                    data: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月']
+                },
+                yAxis: {
+                    type: 'value',
+                    name: '金额(万元)'
+                },
+                series: [
+                    {
+                        name: '收入',
+                        type: 'bar',
+                        data: [18.5, 19.2, 18.8, 19.5, 20.1, 19.8, 20.3, 19.6, 20.5, 21.2, 20.8, 21.5]
+                    },
+                    {
+                        name: '支出',
+                        type: 'bar',
+                        data: [0, 4.2, 0, 6.8, 0, 3.5, 0, 5.2, 0, 4.7, 8.5, 0]
+                    }
+                ]
+            });
+        }
+    </script>
+</body>
+</html>

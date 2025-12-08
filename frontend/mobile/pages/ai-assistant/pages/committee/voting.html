@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer">
+    <title>业主投票 - AI业委会</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#165DFF',
+                        'primary-light': '#4080FF',
+                        'primary-dark': '#0F4CD3',
+                        secondary: '#2D5CF6',
+                        accent: '#00B96B',
+                        neutral: '#F5F7FA',
+                        'neutral-light': '#FAFBFC',
+                        dark: '#1D2129',
+                        light: '#86909C',
+                        border: '#E5E6EB',
+                        success: '#00B96B',
+                        warning: '#FF7D00',
+                        purple: '#8B5CF6',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .tab-item {
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+        .tab-item.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: #165DFF;
+            border-radius: 3px 3px 0 0;
+        }
+        .vote-option {
+            transition: all 0.3s ease;
+        }
+        .vote-option.selected {
+            border-color: #165DFF;
+            background: rgba(22, 93, 255, 0.05);
+        }
+        .progress-bar-vote {
+            height: 24px;
+            border-radius: 12px;
+            background: #E5E6EB;
+            position: relative;
+            overflow: hidden;
+        }
+        .progress-fill-vote {
+            height: 100%;
+            border-radius: 12px;
+            background: linear-gradient(90deg, #165DFF 0%, #4080FF 100%);
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            padding: 0 12px;
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body class="bg-neutral-light">
+    <!-- 头部 -->
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="flex items-center justify-between px-4 py-3">
+            <button onclick="history.back()" class="w-8 h-8 flex items-center justify-center">
+                <i class="fa fa-arrow-left text-dark text-lg"></i>
+            </button>
+            <h1 class="text-lg font-bold text-dark">业主投票</h1>
+            <div class="w-8"></div>
+        </div>
+    </header>
+
+    <!-- 标签页 -->
+    <div class="bg-white border-b border-border sticky top-[52px] z-40">
+        <div class="flex px-4">
+            <button class="tab-item active flex-1 py-3 text-center text-sm font-medium text-primary" onclick="switchTab('ongoing')">
+                进行中 <span class="inline-block w-5 h-5 bg-primary/10 text-primary rounded-full text-xs leading-5 ml-1">3</span>
+            </button>
+            <button class="tab-item flex-1 py-3 text-center text-sm font-medium text-light" onclick="switchTab('completed')">
+                已结束 <span class="inline-block w-5 h-5 bg-gray-100 text-light rounded-full text-xs leading-5 ml-1">12</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- 主内容 -->
+    <main class="container mx-auto px-4 py-4 pb-20">
+        <!-- 进行中的投票 -->
+        <div id="ongoing-votes" class="space-y-4">
+            <!-- 投票卡片1 - 未投票 -->
+            <div class="bg-white rounded-xl p-4 shadow-sm">
+                <div class="flex items-start justify-between mb-3">
+                    <div class="flex-1">
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="text-xs bg-primary/10 text-primary px-2 py-0.5 rounded-full font-medium">进行中</span>
+                            <span class="text-xs bg-warning/10 text-warning px-2 py-0.5 rounded-full font-medium">待投票</span>
+                        </div>
+                        <h3 class="text-base font-bold text-dark mb-1">物业服务费调整方案表决</h3>
+                        <p class="text-xs text-light">发起人：业委会 | 2025-12-01 发起</p>
+                    </div>
+                </div>
+
+                <div class="bg-neutral-light rounded-lg p-3 mb-3">
+                    <p class="text-sm text-dark mb-2">议题说明：</p>
+                    <p class="text-xs text-light leading-relaxed">
+                        根据物业服务成本上涨及服务质量提升需求，建议将物业服务费由现行2.6元/平方米调整至2.8元/平方米。调整后的费用将用于...
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3 mb-3 text-xs">
+                    <div class="flex items-center gap-2">
+                        <i class="fa fa-clock-o text-light"></i>
+                        <span class="text-light">截止时间：2025-12-15</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <i class="fa fa-users text-light"></i>
+                        <span class="text-light">参与：326/856 户</span>
+                    </div>
+                </div>
+
+                <div class="progress-bar-vote mb-3">
+                    <div class="progress-fill-vote" style="width: 38%;">
+                        38% 参与率
+                    </div>
+                </div>
+
+                <button onclick="showVoteDetail(1)" class="w-full bg-primary text-white py-2.5 rounded-lg font-medium hover:bg-primary-dark transition-all">
+                    立即投票
+                </button>
+            </div>
+
+            <!-- 投票卡片2 - 已投票 -->
+            <div class="bg-white rounded-xl p-4 shadow-sm">
+                <div class="flex items-start justify-between mb-3">
+                    <div class="flex-1">
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="text-xs bg-primary/10 text-primary px-2 py-0.5 rounded-full font-medium">进行中</span>
+                            <span class="text-xs bg-success/10 text-success px-2 py-0.5 rounded-full font-medium">
+                                <i class="fa fa-check"></i> 已投票
+                            </span>
+                        </div>
+                        <h3 class="text-base font-bold text-dark mb-1">小区公共收益分配方案</h3>
+                        <p class="text-xs text-light">发起人：业委会 | 2025-11-28 发起</p>
+                    </div>
+                </div>
+
+                <div class="bg-success/5 border border-success/20 rounded-lg p-3 mb-3">
+                    <div class="flex items-center gap-2 mb-1">
+                        <i class="fa fa-check-circle text-success"></i>
+                        <span class="text-sm font-medium text-dark">您已投票：赞成</span>
+                    </div>
+                    <p class="text-xs text-light">投票时间：2025-12-02 10:30</p>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3 mb-3 text-xs">
+                    <div class="flex items-center gap-2">
+                        <i class="fa fa-clock-o text-light"></i>
+                        <span class="text-light">截止时间：2025-12-20</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <i class="fa fa-users text-light"></i>
+                        <span class="text-light">参与：542/856 户</span>
+                    </div>
+                </div>
+
+                <div class="progress-bar-vote mb-3">
+                    <div class="progress-fill-vote" style="width: 63%;">
+                        63% 参与率
+                    </div>
+                </div>
+
+                <button onclick="showVoteResult(2)" class="w-full border border-border text-dark py-2.5 rounded-lg font-medium hover:bg-neutral transition-all">
+                    查看结果
+                </button>
+            </div>
+
+            <!-- 投票卡片3 -->
+            <div class="bg-white rounded-xl p-4 shadow-sm">
+                <div class="flex items-start justify-between mb-3">
+                    <div class="flex-1">
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="text-xs bg-primary/10 text-primary px-2 py-0.5 rounded-full font-medium">进行中</span>
+                            <span class="text-xs bg-warning/10 text-warning px-2 py-0.5 rounded-full font-medium">待投票</span>
+                        </div>
+                        <h3 class="text-base font-bold text-dark mb-1">电梯更换维修基金使用申请</h3>
+                        <p class="text-xs text-light">发起人：业委会 | 2025-11-25 发起</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3 mb-3 text-xs">
+                    <div class="flex items-center gap-2">
+                        <i class="fa fa-clock-o text-light"></i>
+                        <span class="text-light">截止时间：2025-12-10</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <i class="fa fa-users text-light"></i>
+                        <span class="text-light">参与：698/856 户</span>
+                    </div>
+                </div>
+
+                <div class="progress-bar-vote mb-3">
+                    <div class="progress-fill-vote" style="width: 82%; background: linear-gradient(90deg, #00B96B 0%, #00A05A 100%);">
+                        82% 参与率
+                    </div>
+                </div>
+
+                <button onclick="showVoteDetail(3)" class="w-full bg-primary text-white py-2.5 rounded-lg font-medium hover:bg-primary-dark transition-all">
+                    立即投票
+                </button>
+            </div>
+        </div>
+
+        <!-- 已结束的投票 -->
+        <div id="completed-votes" class="space-y-4 hidden">
+            <div class="bg-white rounded-xl p-4 shadow-sm">
+                <div class="flex items-start justify-between mb-3">
+                    <div class="flex-1">
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="text-xs bg-gray-100 text-light px-2 py-0.5 rounded-full font-medium">已结束</span>
+                            <span class="text-xs bg-success/10 text-success px-2 py-0.5 rounded-full font-medium">通过</span>
+                        </div>
+                        <h3 class="text-base font-bold text-dark mb-1">2025年业委会换届选举</h3>
+                        <p class="text-xs text-light">发起人：业委会 | 2025-10-15 发起</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3 mb-3 text-xs">
+                    <div class="flex items-center gap-2">
+                        <i class="fa fa-check-circle text-success"></i>
+                        <span class="text-light">2025-11-15 结束</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <i class="fa fa-users text-light"></i>
+                        <span class="text-light">参与：756/856 户</span>
+                    </div>
+                </div>
+
+                <div class="bg-success/5 rounded-lg p-3 mb-3">
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="text-sm text-dark">赞成</span>
+                        <span class="text-sm font-bold text-success">678票 (89.7%)</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-sm text-dark">反对</span>
+                        <span class="text-sm font-bold text-light">78票 (10.3%)</span>
+                    </div>
+                </div>
+
+                <button onclick="showVoteResult(4)" class="w-full border border-border text-dark py-2.5 rounded-lg font-medium hover:bg-neutral transition-all">
+                    查看详情
+                </button>
+            </div>
+
+            <div class="bg-white rounded-xl p-4 shadow-sm">
+                <div class="flex items-start justify-between mb-3">
+                    <div class="flex-1">
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="text-xs bg-gray-100 text-light px-2 py-0.5 rounded-full font-medium">已结束</span>
+                            <span class="text-xs bg-red-100 text-red-600 px-2 py-0.5 rounded-full font-medium">未通过</span>
+                        </div>
+                        <h3 class="text-base font-bold text-dark mb-1">小区停车位收费标准调整</h3>
+                        <p class="text-xs text-light">发起人：物业公司 | 2025-09-20 发起</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3 mb-3 text-xs">
+                    <div class="flex items-center gap-2">
+                        <i class="fa fa-check-circle text-light"></i>
+                        <span class="text-light">2025-10-20 结束</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <i class="fa fa-users text-light"></i>
+                        <span class="text-light">参与：612/856 户</span>
+                    </div>
+                </div>
+
+                <div class="bg-red-50 rounded-lg p-3 mb-3">
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="text-sm text-dark">赞成</span>
+                        <span class="text-sm font-bold text-light">245票 (40.0%)</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-sm text-dark">反对</span>
+                        <span class="text-sm font-bold text-red-600">367票 (60.0%)</span>
+                    </div>
+                </div>
+
+                <button onclick="showVoteResult(5)" class="w-full border border-border text-dark py-2.5 rounded-lg font-medium hover:bg-neutral transition-all">
+                    查看详情
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <!-- 投票详情弹窗 -->
+    <div id="vote-modal" class="fixed inset-0 bg-black/50 z-50 hidden items-center justify-center p-4">
+        <div class="bg-white rounded-xl max-w-md w-full max-h-[80vh] overflow-y-auto">
+            <div class="sticky top-0 bg-white border-b border-border p-4 flex items-center justify-between">
+                <h3 class="text-lg font-bold text-dark">投票详情</h3>
+                <button onclick="closeVoteModal()" class="w-8 h-8 flex items-center justify-center text-light hover:text-dark">
+                    <i class="fa fa-times text-xl"></i>
+                </button>
+            </div>
+
+            <div class="p-4">
+                <div class="mb-4">
+                    <h4 class="text-base font-bold text-dark mb-2">物业服务费调整方案表决</h4>
+                    <p class="text-xs text-light mb-3">发起时间：2025-12-01 | 截止时间：2025-12-15</p>
+
+                    <div class="bg-neutral-light rounded-lg p-3 mb-4">
+                        <p class="text-sm text-dark font-medium mb-2">议题说明：</p>
+                        <p class="text-xs text-light leading-relaxed">
+                            根据物业服务成本上涨及服务质量提升需求，建议将物业服务费由现行2.6元/平方米调整至2.8元/平方米。调整后的费用将用于：
+                            <br>1. 增加安保人员配置
+                            <br>2. 提升绿化养护频次
+                            <br>3. 改善公共区域清洁
+                        </p>
+                    </div>
+
+                    <div class="bg-amber-50 border border-amber-200 rounded-lg p-3 mb-4">
+                        <div class="flex items-start gap-2">
+                            <i class="fa fa-info-circle text-warning mt-0.5"></i>
+                            <div class="flex-1">
+                                <p class="text-xs text-dark font-medium mb-1">投票规则</p>
+                                <ul class="text-xs text-dark space-y-0.5 list-disc list-inside">
+                                    <li>按房产面积计算投票权重</li>
+                                    <li>需超过2/3业主同意方可通过</li>
+                                    <li>投票后不可修改</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <p class="text-sm font-medium text-dark mb-3">请选择您的投票意向：</p>
+
+                    <div class="space-y-3 mb-4">
+                        <label class="vote-option block border-2 border-border rounded-lg p-3 cursor-pointer">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-3">
+                                    <input type="radio" name="vote-choice" value="agree" class="w-5 h-5">
+                                    <div>
+                                        <p class="text-sm font-medium text-dark">赞成</p>
+                                        <p class="text-xs text-light">同意该方案</p>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <p class="text-xs text-light">当前</p>
+                                    <p class="text-sm font-bold text-success">245票</p>
+                                </div>
+                            </div>
+                        </label>
+
+                        <label class="vote-option block border-2 border-border rounded-lg p-3 cursor-pointer">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-3">
+                                    <input type="radio" name="vote-choice" value="against" class="w-5 h-5">
+                                    <div>
+                                        <p class="text-sm font-medium text-dark">反对</p>
+                                        <p class="text-xs text-light">不同意该方案</p>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <p class="text-xs text-light">当前</p>
+                                    <p class="text-sm font-bold text-red-600">81票</p>
+                                </div>
+                            </div>
+                        </label>
+
+                        <label class="vote-option block border-2 border-border rounded-lg p-3 cursor-pointer">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-3">
+                                    <input type="radio" name="vote-choice" value="abstain" class="w-5 h-5">
+                                    <div>
+                                        <p class="text-sm font-medium text-dark">弃权</p>
+                                        <p class="text-xs text-light">不参与表决</p>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <p class="text-xs text-light">当前</p>
+                                    <p class="text-sm font-bold text-light">0票</p>
+                                </div>
+                            </div>
+                        </label>
+                    </div>
+
+                    <button onclick="submitVote()" class="w-full bg-primary text-white py-3 rounded-lg font-medium hover:bg-primary-dark transition-all">
+                        提交投票
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 投票结果弹窗 -->
+    <div id="result-modal" class="fixed inset-0 bg-black/50 z-50 hidden">
+        <div class="absolute inset-x-0 bottom-0 bg-white rounded-t-2xl max-h-[85vh] overflow-y-auto">
+            <div class="sticky top-0 bg-white border-b border-border p-4 flex items-center justify-between z-10">
+                <h3 class="text-lg font-bold text-dark">投票结果</h3>
+                <button onclick="closeResultModal()" class="w-8 h-8 flex items-center justify-center text-light hover:text-dark">
+                    <i class="fa fa-times text-xl"></i>
+                </button>
+            </div>
+
+            <div class="p-4" id="result-content">
+                <!-- 动态内容将在这里填充 -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-item').forEach(item => {
+                item.classList.remove('active', 'text-primary');
+                item.classList.add('text-light');
+            });
+            event.target.classList.add('active', 'text-primary');
+            event.target.classList.remove('text-light');
+
+            if (tab === 'ongoing') {
+                document.getElementById('ongoing-votes').classList.remove('hidden');
+                document.getElementById('completed-votes').classList.add('hidden');
+            } else {
+                document.getElementById('ongoing-votes').classList.add('hidden');
+                document.getElementById('completed-votes').classList.remove('hidden');
+            }
+        }
+
+        function showVoteDetail(id) {
+            document.getElementById('vote-modal').classList.remove('hidden');
+            document.getElementById('vote-modal').classList.add('flex');
+        }
+
+        function closeVoteModal() {
+            document.getElementById('vote-modal').classList.add('hidden');
+            document.getElementById('vote-modal').classList.remove('flex');
+        }
+
+        function submitVote() {
+            const selected = document.querySelector('input[name="vote-choice"]:checked');
+            if (!selected) {
+                alert('请选择投票选项');
+                return;
+            }
+
+            const loading = document.createElement('div');
+            loading.className = 'fixed inset-0 bg-black/50 flex items-center justify-center z-50';
+            loading.innerHTML = `
+                <div class="bg-white rounded-xl p-6 m-4 text-center">
+                    <div class="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+                    <p class="text-dark font-medium">正在提交投票...</p>
+                </div>
+            `;
+            document.body.appendChild(loading);
+
+            setTimeout(() => {
+                loading.remove();
+                closeVoteModal();
+
+                const success = document.createElement('div');
+                success.className = 'fixed inset-0 bg-black/50 flex items-center justify-center z-50';
+                success.innerHTML = `
+                    <div class="bg-white rounded-xl p-6 m-4 text-center max-w-sm">
+                        <div class="w-16 h-16 bg-success/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fa fa-check text-success text-3xl"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-dark mb-2">投票成功</h3>
+                        <p class="text-sm text-light mb-4">您的投票已成功提交</p>
+                        <button onclick="location.reload()" class="w-full bg-primary text-white py-2.5 rounded-lg font-medium">
+                            确定
+                        </button>
+                    </div>
+                `;
+                document.body.appendChild(success);
+            }, 1500);
+        }
+
+        function showVoteResult(id) {
+            // 根据不同ID显示不同的投票结果
+            const voteData = {
+                2: {
+                    title: '小区公共收益分配方案',
+                    startDate: '2025-11-28',
+                    endDate: '2025-12-20',
+                    status: '进行中',
+                    statusClass: 'primary',
+                    description: '本次投票旨在决定2025年度小区公共收益的分配方案。公共收益主要来源于广告位出租、停车位收入、快递柜租赁等，总计约58万元。',
+                    totalVotes: 542,
+                    totalOwners: 856,
+                    results: [
+                        { option: '赞成', votes: 412, percent: 76, color: 'success' },
+                        { option: '反对', votes: 98, percent: 18, color: 'red-600' },
+                        { option: '弃权', votes: 32, percent: 6, color: 'gray-500' }
+                    ]
+                },
+                4: {
+                    title: '2025年业委会换届选举',
+                    startDate: '2025-10-15',
+                    endDate: '2025-11-15',
+                    status: '已通过',
+                    statusClass: 'success',
+                    description: '根据《物业管理条例》和小区议事规则，业委会任期已满，需进行换届选举。本次选举产生新一届业委会成员7名。',
+                    totalVotes: 756,
+                    totalOwners: 856,
+                    results: [
+                        { option: '赞成', votes: 678, percent: 89.7, color: 'success' },
+                        { option: '反对', votes: 78, percent: 10.3, color: 'red-600' }
+                    ]
+                },
+                5: {
+                    title: '小区停车位收费标准调整',
+                    startDate: '2025-09-20',
+                    endDate: '2025-10-20',
+                    status: '未通过',
+                    statusClass: 'red-600',
+                    description: '物业公司提议将地面停车位收费标准由现行200元/月调整至300元/月，地下车位由350元/月调整至450元/月。',
+                    totalVotes: 612,
+                    totalOwners: 856,
+                    results: [
+                        { option: '赞成', votes: 245, percent: 40.0, color: 'gray-500' },
+                        { option: '反对', votes: 367, percent: 60.0, color: 'red-600' }
+                    ]
+                }
+            };
+
+            const data = voteData[id] || voteData[2];
+            const participationRate = ((data.totalVotes / data.totalOwners) * 100).toFixed(1);
+
+            const resultHTML = `
+                <!-- 投票信息 -->
+                <div class="bg-white rounded-xl p-4 mb-4 border border-border">
+                    <div class="flex items-center gap-2 mb-3">
+                        <span class="text-xs bg-${data.statusClass}/10 text-${data.statusClass} px-2 py-1 rounded-full font-medium">${data.status}</span>
+                        <span class="text-xs text-light">投票结束</span>
+                    </div>
+                    <h3 class="text-base font-bold text-dark mb-2">${data.title}</h3>
+                    <div class="grid grid-cols-2 gap-2 text-xs text-light">
+                        <div><i class="fa fa-calendar"></i> 发起：${data.startDate}</div>
+                        <div><i class="fa fa-check-circle"></i> 结束：${data.endDate}</div>
+                    </div>
+                </div>
+
+                <!-- 投票说明 -->
+                <div class="bg-neutral-light rounded-lg p-3 mb-4">
+                    <p class="text-sm font-medium text-dark mb-2">投票说明</p>
+                    <p class="text-xs text-light leading-relaxed">${data.description}</p>
+                </div>
+
+                <!-- 参与统计 -->
+                <div class="bg-white rounded-xl p-4 mb-4 border border-border">
+                    <p class="text-sm font-medium text-dark mb-3">参与情况</p>
+                    <div class="grid grid-cols-3 gap-3 text-center">
+                        <div class="bg-primary/5 rounded-lg p-3">
+                            <p class="text-xs text-light mb-1">总户数</p>
+                            <p class="text-lg font-bold text-dark">${data.totalOwners}</p>
+                        </div>
+                        <div class="bg-success/5 rounded-lg p-3">
+                            <p class="text-xs text-light mb-1">参与户数</p>
+                            <p class="text-lg font-bold text-success">${data.totalVotes}</p>
+                        </div>
+                        <div class="bg-warning/5 rounded-lg p-3">
+                            <p class="text-xs text-light mb-1">参与率</p>
+                            <p class="text-lg font-bold text-warning">${participationRate}%</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 投票结果 -->
+                <div class="bg-white rounded-xl p-4 mb-4 border border-border">
+                    <p class="text-sm font-medium text-dark mb-4">投票结果</p>
+                    <div class="space-y-4">
+                        ${data.results.map(result => `
+                            <div>
+                                <div class="flex justify-between items-center mb-2">
+                                    <span class="text-sm font-medium text-dark">${result.option}</span>
+                                    <span class="text-sm font-bold text-${result.color}">${result.votes}票 (${result.percent}%)</span>
+                                </div>
+                                <div class="progress-bar-vote">
+                                    <div class="progress-fill-vote" style="width: ${result.percent}%; background: linear-gradient(90deg, var(--tw-${result.color === 'success' ? 'green' : result.color === 'red-600' ? 'red' : 'gray'}-500) 0%, var(--tw-${result.color === 'success' ? 'green' : result.color === 'red-600' ? 'red' : 'gray'}-400) 100%);">
+                                        ${result.percent}%
+                                    </div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+
+                <!-- 投票规则 -->
+                <div class="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                    <div class="flex items-start gap-2">
+                        <i class="fa fa-info-circle text-primary mt-0.5"></i>
+                        <div class="flex-1">
+                            <p class="text-xs text-dark font-medium mb-1">投票规则</p>
+                            <ul class="text-xs text-dark space-y-0.5 list-disc list-inside">
+                                <li>按房产面积计算投票权重</li>
+                                <li>需超过2/3业主同意方可通过</li>
+                                <li>投票结果已公示并归档</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('result-content').innerHTML = resultHTML;
+            document.getElementById('result-modal').classList.remove('hidden');
+        }
+
+        function closeResultModal() {
+            document.getElementById('result-modal').classList.add('hidden');
+        }
+
+        // 投票选项选中效果
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.vote-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    document.querySelectorAll('.vote-option').forEach(opt => {
+                        opt.classList.remove('selected');
+                    });
+                    this.classList.add('selected');
+                });
+            });
+        });
+    </script>
+</body>
+</html>

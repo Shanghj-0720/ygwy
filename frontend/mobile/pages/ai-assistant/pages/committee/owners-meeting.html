@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer">
+    <title>召集业主大会 - AI业委会</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#165DFF',
+                        'primary-light': '#4080FF',
+                        'primary-dark': '#0F4CD3',
+                        secondary: '#2D5CF6',
+                        accent: '#00B96B',
+                        neutral: '#F5F7FA',
+                        'neutral-light': '#FAFBFC',
+                        dark: '#1D2129',
+                        light: '#86909C',
+                        border: '#E5E6EB',
+                        success: '#00B96B',
+                        warning: '#FF7D00',
+                        purple: '#8B5CF6',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .step-indicator {
+            position: relative;
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+        }
+        .step-item {
+            flex: 1;
+            text-align: center;
+            position: relative;
+        }
+        .step-item::before {
+            content: '';
+            position: absolute;
+            top: 16px;
+            left: 50%;
+            right: -50%;
+            height: 2px;
+            background: #E5E6EB;
+            z-index: 0;
+        }
+        .step-item:last-child::before {
+            display: none;
+        }
+        .step-circle {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #E5E6EB;
+            color: #86909C;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            z-index: 1;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        .step-item.active .step-circle {
+            background: #165DFF;
+            color: white;
+        }
+        .step-item.completed .step-circle {
+            background: #00B96B;
+            color: white;
+        }
+        .step-item.active::before,
+        .step-item.completed::before {
+            background: #00B96B;
+        }
+        .form-section {
+            display: none;
+        }
+        .form-section.active {
+            display: block;
+        }
+    </style>
+</head>
+<body class="bg-neutral-light">
+    <!-- 头部 -->
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="flex items-center justify-between px-4 py-3">
+            <button onclick="history.back()" class="w-8 h-8 flex items-center justify-center">
+                <i class="fa fa-arrow-left text-dark text-lg"></i>
+            </button>
+            <h1 class="text-lg font-bold text-dark">召集业主大会</h1>
+            <div class="w-8"></div>
+        </div>
+    </header>
+
+    <!-- 主内容 -->
+    <main class="container mx-auto px-4 py-4 pb-20">
+        <!-- 进度指示器 -->
+        <div class="bg-white rounded-xl p-4 mb-4">
+            <div class="step-indicator">
+                <div class="step-item active" data-step="1">
+                    <div class="step-circle">1</div>
+                    <p class="text-xs mt-2 text-dark font-medium">基本信息</p>
+                </div>
+                <div class="step-item" data-step="2">
+                    <div class="step-circle">2</div>
+                    <p class="text-xs mt-2 text-light">议题设置</p>
+                </div>
+                <div class="step-item" data-step="3">
+                    <div class="step-circle">3</div>
+                    <p class="text-xs mt-2 text-light">通知业主</p>
+                </div>
+                <div class="step-item" data-step="4">
+                    <div class="step-circle">4</div>
+                    <p class="text-xs mt-2 text-light">确认发起</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 表单容器 -->
+        <div id="form-container">
+            <!-- 第一步：基本信息 -->
+            <div class="form-section active" data-section="1">
+                <div class="bg-white rounded-xl p-4 mb-4">
+                    <h3 class="text-base font-bold text-dark mb-4 flex items-center gap-2">
+                        <i class="fa fa-info-circle text-primary"></i>
+                        会议基本信息
+                    </h3>
+
+                    <div class="space-y-4">
+                        <!-- 会议类型 -->
+                        <div>
+                            <label class="block text-sm font-medium text-dark mb-2">会议类型 <span class="text-red-500">*</span></label>
+                            <select id="meeting-type" class="w-full border border-border rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10">
+                                <option value="">请选择会议类型</option>
+                                <option value="regular">定期业主大会</option>
+                                <option value="temporary">临时业主大会</option>
+                                <option value="committee">业委会会议</option>
+                            </select>
+                        </div>
+
+                        <!-- 会议主题 -->
+                        <div>
+                            <label class="block text-sm font-medium text-dark mb-2">会议主题 <span class="text-red-500">*</span></label>
+                            <input type="text" id="meeting-title" placeholder="请输入会议主题" class="w-full border border-border rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10">
+                        </div>
+
+                        <!-- 会议时间 -->
+                        <div>
+                            <label class="block text-sm font-medium text-dark mb-2">会议时间 <span class="text-red-500">*</span></label>
+                            <div class="grid grid-cols-2 gap-3">
+                                <div>
+                                    <input type="date" id="meeting-date" class="w-full border border-border rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10">
+                                </div>
+                                <div>
+                                    <input type="time" id="meeting-time-picker" class="w-full border border-border rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10">
+                                </div>
+                            </div>
+                            <p class="text-xs text-light mt-1">提示：需提前15天通知业主</p>
+                        </div>
+
+                        <!-- 会议地点 -->
+                        <div>
+                            <label class="block text-sm font-medium text-dark mb-2">会议地点 <span class="text-red-500">*</span></label>
+                            <input type="text" id="meeting-location" placeholder="如：小区会议室、线上会议" class="w-full border border-border rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10">
+                        </div>
+
+                        <!-- 会议形式 -->
+                        <div>
+                            <label class="block text-sm font-medium text-dark mb-2">会议形式</label>
+                            <div class="grid grid-cols-2 gap-3">
+                                <label class="border border-border rounded-lg p-3 cursor-pointer hover:border-primary transition-all">
+                                    <input type="radio" name="meeting-format" value="offline" checked class="mr-2">
+                                    <span class="text-sm">线下会议</span>
+                                </label>
+                                <label class="border border-border rounded-lg p-3 cursor-pointer hover:border-primary transition-all">
+                                    <input type="radio" name="meeting-format" value="online" class="mr-2">
+                                    <span class="text-sm">线上会议</span>
+                                </label>
+                                <label class="border border-border rounded-lg p-3 cursor-pointer hover:border-primary transition-all col-span-2">
+                                    <input type="radio" name="meeting-format" value="hybrid" class="mr-2">
+                                    <span class="text-sm">线上+线下混合</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <button onclick="nextStep()" class="w-full bg-primary text-white py-3 rounded-lg font-medium hover:bg-primary-dark transition-all">
+                    下一步
+                </button>
+            </div>
+
+            <!-- 第二步：议题设置 -->
+            <div class="form-section" data-section="2">
+                <div class="bg-white rounded-xl p-4 mb-4">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-base font-bold text-dark flex items-center gap-2">
+                            <i class="fa fa-list-ul text-primary"></i>
+                            会议议题
+                        </h3>
+                        <button onclick="addAgenda()" class="text-sm text-primary hover:text-primary-dark">
+                            <i class="fa fa-plus-circle"></i> 添加议题
+                        </button>
+                    </div>
+
+                    <div id="agenda-list" class="space-y-3">
+                        <!-- 议题项模板 -->
+                        <div class="agenda-item border border-border rounded-lg p-3">
+                            <div class="flex items-start justify-between mb-2">
+                                <input type="text" placeholder="议题标题" class="flex-1 border-0 border-b border-border px-0 py-1 text-sm font-medium focus:outline-none focus:border-primary">
+                                <button onclick="removeAgenda(this)" class="ml-2 text-light hover:text-red-500">
+                                    <i class="fa fa-trash"></i>
+                                </button>
+                            </div>
+                            <textarea placeholder="议题说明（选填）" rows="2" class="w-full border border-border rounded px-2 py-1.5 text-xs resize-none focus:outline-none focus:border-primary"></textarea>
+
+                            <div class="mt-2 flex items-center gap-2">
+                                <label class="flex items-center text-xs text-dark">
+                                    <input type="checkbox" class="mr-1.5">
+                                    需要投票
+                                </label>
+                                <label class="flex items-center text-xs text-dark">
+                                    <input type="checkbox" class="mr-1.5">
+                                    重点议题
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- AI建议 -->
+                <div class="bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl p-4 mb-4">
+                    <div class="flex items-start gap-3">
+                        <div class="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center flex-shrink-0">
+                            <i class="fa fa-lightbulb-o"></i>
+                        </div>
+                        <div class="flex-1">
+                            <h4 class="text-sm font-bold text-dark mb-1">AI智能建议</h4>
+                            <p class="text-xs text-light mb-2">根据您选择的会议类型，建议包含以下常见议题：</p>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="text-xs bg-white px-2 py-1 rounded border border-primary/20 text-primary cursor-pointer hover:bg-primary/10" onclick="suggestAgenda('物业服务费调整方案')">物业服务费调整</span>
+                                <span class="text-xs bg-white px-2 py-1 rounded border border-primary/20 text-primary cursor-pointer hover:bg-primary/10" onclick="suggestAgenda('公共收益分配方案')">公共收益分配</span>
+                                <span class="text-xs bg-white px-2 py-1 rounded border border-primary/20 text-primary cursor-pointer hover:bg-primary/10" onclick="suggestAgenda('维修基金使用审批')">维修基金使用</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex gap-3">
+                    <button onclick="prevStep()" class="flex-1 border border-border text-dark py-3 rounded-lg font-medium hover:bg-neutral transition-all">
+                        上一步
+                    </button>
+                    <button onclick="nextStep()" class="flex-1 bg-primary text-white py-3 rounded-lg font-medium hover:bg-primary-dark transition-all">
+                        下一步
+                    </button>
+                </div>
+            </div>
+
+            <!-- 第三步：通知业主 -->
+            <div class="form-section" data-section="3">
+                <div class="bg-white rounded-xl p-4 mb-4">
+                    <h3 class="text-base font-bold text-dark mb-4 flex items-center gap-2">
+                        <i class="fa fa-bell text-primary"></i>
+                        通知方式
+                    </h3>
+
+                    <div class="space-y-3">
+                        <label class="flex items-center justify-between p-3 border border-border rounded-lg cursor-pointer hover:border-primary transition-all">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
+                                    <i class="fa fa-wechat text-primary text-lg"></i>
+                                </div>
+                                <div>
+                                    <p class="text-sm font-medium text-dark">微信通知</p>
+                                    <p class="text-xs text-light">通过微信服务号推送</p>
+                                </div>
+                            </div>
+                            <input type="checkbox" checked class="w-5 h-5">
+                        </label>
+
+                        <label class="flex items-center justify-between p-3 border border-border rounded-lg cursor-pointer hover:border-primary transition-all">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-lg bg-success/10 flex items-center justify-center">
+                                    <i class="fa fa-commenting text-success text-lg"></i>
+                                </div>
+                                <div>
+                                    <p class="text-sm font-medium text-dark">短信通知</p>
+                                    <p class="text-xs text-light">发送短信至业主手机</p>
+                                </div>
+                            </div>
+                            <input type="checkbox" checked class="w-5 h-5">
+                        </label>
+
+                        <label class="flex items-center justify-between p-3 border border-border rounded-lg cursor-pointer hover:border-primary transition-all">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-lg bg-warning/10 flex items-center justify-center">
+                                    <i class="fa fa-bullhorn text-warning text-lg"></i>
+                                </div>
+                                <div>
+                                    <p class="text-sm font-medium text-dark">公告栏公示</p>
+                                    <p class="text-xs text-light">在小区公告栏张贴通知</p>
+                                </div>
+                            </div>
+                            <input type="checkbox" class="w-5 h-5">
+                        </label>
+                    </div>
+                </div>
+
+                <!-- 通知预览 -->
+                <div class="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-4 mb-4">
+                    <p class="text-xs text-light mb-2">通知内容预览</p>
+                    <div class="bg-white rounded-lg p-3 border border-primary/20">
+                        <p class="text-sm font-bold text-dark mb-2">业主大会召集通知</p>
+                        <p class="text-xs text-dark leading-relaxed">
+                            尊敬的业主您好！兹定于 <span class="text-primary font-medium">2025年12月25日 14:00</span> 在小区会议室召开业主大会，请您准时参加。会议将讨论物业服务费调整等重要事项。
+                        </p>
+                        <p class="text-xs text-light mt-2">常州住房AI助手</p>
+                    </div>
+                </div>
+
+                <div class="flex gap-3">
+                    <button onclick="prevStep()" class="flex-1 border border-border text-dark py-3 rounded-lg font-medium hover:bg-neutral transition-all">
+                        上一步
+                    </button>
+                    <button onclick="nextStep()" class="flex-1 bg-primary text-white py-3 rounded-lg font-medium hover:bg-primary-dark transition-all">
+                        下一步
+                    </button>
+                </div>
+            </div>
+
+            <!-- 第四步：确认发起 -->
+            <div class="form-section" data-section="4">
+                <div class="bg-white rounded-xl p-4 mb-4">
+                    <h3 class="text-base font-bold text-dark mb-4 flex items-center gap-2">
+                        <i class="fa fa-check-circle text-success"></i>
+                        会议信息确认
+                    </h3>
+
+                    <div class="space-y-3">
+                        <div class="flex justify-between py-2 border-b border-border">
+                            <span class="text-sm text-light">会议类型</span>
+                            <span class="text-sm font-medium text-dark" id="confirm-type">定期业主大会</span>
+                        </div>
+                        <div class="flex justify-between py-2 border-b border-border">
+                            <span class="text-sm text-light">会议主题</span>
+                            <span class="text-sm font-medium text-dark" id="confirm-title">2025年度工作总结</span>
+                        </div>
+                        <div class="flex justify-between py-2 border-b border-border">
+                            <span class="text-sm text-light">会议时间</span>
+                            <span class="text-sm font-medium text-dark" id="confirm-time">2025-12-25 14:00</span>
+                        </div>
+                        <div class="flex justify-between py-2 border-b border-border">
+                            <span class="text-sm text-light">会议地点</span>
+                            <span class="text-sm font-medium text-dark" id="confirm-location">小区会议室</span>
+                        </div>
+                        <div class="flex justify-between py-2 border-b border-border">
+                            <span class="text-sm text-light">议题数量</span>
+                            <span class="text-sm font-medium text-dark" id="confirm-agenda">3 项</span>
+                        </div>
+                        <div class="flex justify-between py-2">
+                            <span class="text-sm text-light">通知方式</span>
+                            <span class="text-sm font-medium text-dark">微信 + 短信</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 重要提示 -->
+                <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-4">
+                    <div class="flex items-start gap-2">
+                        <i class="fa fa-exclamation-triangle text-warning text-lg flex-shrink-0 mt-0.5"></i>
+                        <div>
+                            <p class="text-sm font-bold text-dark mb-1">重要提示</p>
+                            <ul class="text-xs text-dark space-y-1 list-disc list-inside">
+                                <li>会议发起后将立即通知全体业主</li>
+                                <li>建议提前15天发起，确保业主有充足准备时间</li>
+                                <li>会议发起后可在"会议管理"中查看参会情况</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex gap-3">
+                    <button onclick="prevStep()" class="flex-1 border border-border text-dark py-3 rounded-lg font-medium hover:bg-neutral transition-all">
+                        上一步
+                    </button>
+                    <button onclick="submitMeeting()" class="flex-1 bg-success text-white py-3 rounded-lg font-medium hover:bg-success/90 transition-all">
+                        <i class="fa fa-check mr-1"></i> 确认发起
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        let currentStep = 1;
+
+        function nextStep() {
+            if (validateStep(currentStep)) {
+                if (currentStep < 4) {
+                    currentStep++;
+                    updateStepDisplay();
+                }
+            }
+        }
+
+        function prevStep() {
+            if (currentStep > 1) {
+                currentStep--;
+                updateStepDisplay();
+            }
+        }
+
+        function updateStepDisplay() {
+            // 更新步骤指示器
+            document.querySelectorAll('.step-item').forEach((item, index) => {
+                const stepNum = index + 1;
+                item.classList.remove('active', 'completed');
+                const label = item.querySelector('p');
+
+                if (stepNum < currentStep) {
+                    item.classList.add('completed');
+                    label.classList.remove('text-light');
+                    label.classList.add('text-success');
+                } else if (stepNum === currentStep) {
+                    item.classList.add('active');
+                    label.classList.remove('text-light');
+                    label.classList.add('text-dark');
+                } else {
+                    label.classList.remove('text-dark', 'text-success');
+                    label.classList.add('text-light');
+                }
+            });
+
+            // 更新表单显示
+            document.querySelectorAll('.form-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.querySelector(`[data-section="${currentStep}"]`).classList.add('active');
+
+            // 如果是最后一步，填充确认信息
+            if (currentStep === 4) {
+                updateConfirmation();
+            }
+
+            // 滚动到顶部
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function validateStep(step) {
+            if (step === 1) {
+                const type = document.getElementById('meeting-type').value;
+                const title = document.getElementById('meeting-title').value;
+                const date = document.getElementById('meeting-date').value;
+                const time = document.getElementById('meeting-time-picker').value;
+                const location = document.getElementById('meeting-location').value;
+
+                if (!type || !title || !date || !time || !location) {
+                    alert('请填写所有必填项');
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        function addAgenda() {
+            const template = document.querySelector('.agenda-item').cloneNode(true);
+            template.querySelectorAll('input, textarea').forEach(input => input.value = '');
+            document.getElementById('agenda-list').appendChild(template);
+        }
+
+        function removeAgenda(btn) {
+            const items = document.querySelectorAll('.agenda-item');
+            if (items.length > 1) {
+                btn.closest('.agenda-item').remove();
+            } else {
+                alert('至少保留一个议题');
+            }
+        }
+
+        function suggestAgenda(title) {
+            const agendaList = document.getElementById('agenda-list');
+            const newItem = document.querySelector('.agenda-item').cloneNode(true);
+            newItem.querySelector('input[type="text"]').value = title;
+            agendaList.appendChild(newItem);
+        }
+
+        function updateConfirmation() {
+            const typeSelect = document.getElementById('meeting-type');
+            document.getElementById('confirm-type').textContent =
+                typeSelect.options[typeSelect.selectedIndex].text;
+            document.getElementById('confirm-title').textContent =
+                document.getElementById('meeting-title').value;
+
+            const date = document.getElementById('meeting-date').value;
+            const time = document.getElementById('meeting-time-picker').value;
+            document.getElementById('confirm-time').textContent = date + ' ' + time;
+
+            document.getElementById('confirm-location').textContent =
+                document.getElementById('meeting-location').value;
+            document.getElementById('confirm-agenda').textContent =
+                document.querySelectorAll('.agenda-item').length + ' 项';
+        }
+
+        function submitMeeting() {
+            // 模拟提交
+            const loading = document.createElement('div');
+            loading.className = 'fixed inset-0 bg-black/50 flex items-center justify-center z-50';
+            loading.innerHTML = `
+                <div class="bg-white rounded-xl p-6 m-4 text-center">
+                    <div class="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+                    <p class="text-dark font-medium">正在发起会议...</p>
+                </div>
+            `;
+            document.body.appendChild(loading);
+
+            setTimeout(() => {
+                loading.remove();
+                const success = document.createElement('div');
+                success.className = 'fixed inset-0 bg-black/50 flex items-center justify-center z-50';
+                success.innerHTML = `
+                    <div class="bg-white rounded-xl p-6 m-4 text-center max-w-sm">
+                        <div class="w-16 h-16 bg-success/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fa fa-check text-success text-3xl"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-dark mb-2">发起成功</h3>
+                        <p class="text-sm text-light mb-4">会议通知已发送给全体业主</p>
+                        <button onclick="location.href='../../AI业委会-定.html'" class="w-full bg-primary text-white py-2.5 rounded-lg font-medium">
+                            返回首页
+                        </button>
+                    </div>
+                `;
+                document.body.appendChild(success);
+            }, 2000);
+        }
+    </script>
+</body>
+</html>
