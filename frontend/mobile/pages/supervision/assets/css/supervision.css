@@ -90,6 +90,22 @@ body {
     border: 1px solid #e0e7ff;
 }
 
+.role-toggle {
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border: 1px solid #e0e7ff;
+    background: #eef2ff;
+    color: var(--primary);
+    outline: none;
+}
+
+.role-toggle:active {
+    transform: scale(0.97);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
+}
+
 .page {
     padding: 14px 16px 32px;
     display: flex;

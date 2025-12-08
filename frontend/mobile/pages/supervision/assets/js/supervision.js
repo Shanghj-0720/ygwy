@@ -142,10 +142,14 @@ function getRoleFromUrl() {
     return { ...ROLE_MAP[account] || ROLE_MAP['1'], account };
 }
 
-function setRoleBadge(label) {
+function setRoleBadge(label, nextLabel, account) {
     const badge = document.getElementById('roleBadge');
     if (badge) {
         badge.textContent = `${label}视图`;
+        const hint = nextLabel ? `切换到${nextLabel}视图` : '切换视图';
+        badge.title = hint;
+        badge.setAttribute('aria-label', hint);
+        badge.dataset.account = account;
     }
 }
 
@@ -156,15 +160,55 @@ function applyRoleVisibility(roleKey) {
     });
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    const roleInfo = getRoleFromUrl();
-    state.role = roleInfo.key;
-    setRoleBadge(roleInfo.label);
-    applyRoleVisibility(state.role);
+function updateQuestionnaireLink(account) {
     const qLink = document.getElementById('questionnaireLink');
     if (qLink) {
-        qLink.href = `questionnaire.html?account=${roleInfo.account}`;
+        qLink.href = `questionnaire.html?account=${account}`;
     }
+}
+
+function updateUrlAccount(account) {
+    const url = new URL(window.location.href);
+    url.searchParams.set('account', account);
+    window.history.replaceState({}, '', url.toString());
+}
+
+function applyRole(roleInfo) {
+    const nextAccount = roleInfo.account === '1' ? '2' : '1';
+    const nextRoleLabel = (ROLE_MAP[nextAccount] || ROLE_MAP['1']).label;
+    state.role = roleInfo.key;
+    setRoleBadge(roleInfo.label, nextRoleLabel, roleInfo.account);
+    applyRoleVisibility(roleInfo.key);
+    updateQuestionnaireLink(roleInfo.account);
+    updateUrlAccount(roleInfo.account);
+}
+
+function toggleRole() {
+    const badge = document.getElementById('roleBadge');
+    const currentAccount = badge?.dataset.account || '1';
+    const account = currentAccount === '1' ? '2' : '1';
+    const roleInfo = { ...ROLE_MAP[account] || ROLE_MAP['1'], account };
+    applyRole(roleInfo);
+}
+
+function bindRoleSwitch(initialAccount) {
+    const badge = document.getElementById('roleBadge');
+    if (!badge) return;
+
+    badge.dataset.account = initialAccount;
+    badge.addEventListener('click', toggleRole);
+    badge.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            toggleRole();
+        }
+    });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const roleInfo = getRoleFromUrl();
+    applyRole(roleInfo);
+    bindRoleSwitch(roleInfo.account);
 
     document.getElementById('currentMonth').textContent = state.month;
     renderOverview();
