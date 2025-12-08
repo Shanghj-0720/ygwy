@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer">
+    <title>常州住房AI助手 - 一站式房产服务</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        // Tailwind 自定义配置
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#165DFF', // 常州蓝主色调
+                        secondary: '#FF7D00', // 辅助色（常州橙）
+                        neutral: '#F5F7FA', // 中性背景色
+                        dark: '#1D2129', // 文字深色
+                        light: '#86909C', // 文字浅色
+                        success: '#00B42A', // 匹配成功色
+                        warning: '#FF7D00', // 匹配警告色
+                    },
+                    fontFamily: {
+                        sans: ['PingFang SC', 'Helvetica Neue', 'Arial', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto { content-visibility: auto; }
+            .scrollbar-hide {
+                -ms-overflow-style: none;
+                scrollbar-width: none;
+            }
+            .scrollbar-hide::-webkit-scrollbar { display: none; }
+            .card-shadow { box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.08); }
+            /* AI思考步骤动画 */
+            .thinking-step {
+                border-left: 2px solid #E5E6EB;
+                padding-left: 12px;
+                margin-left: 4px;
+                position: relative;
+                opacity: 0;
+                transform: translateX(-10px);
+                transition: all 0.5s ease;
+            }
+            .thinking-step.active {
+                opacity: 1;
+                transform: translateX(0);
+                border-left-color: #165DFF;
+            }
+            .thinking-step::before {
+                content: '';
+                position: absolute;
+                left: -5px;
+                top: 6px;
+                width: 8px;
+                height: 8px;
+                border-radius: 50%;
+                background: #E5E6EB;
+                transition: background 0.3s ease;
+            }
+            .thinking-step.active::before {
+                background: #165DFF;
+                box-shadow: 0 0 0 2px rgba(22, 93, 255, 0.2);
+            }
+            
+            .thinking-loading {
+                display: inline-block;
+                width: 12px;
+                height: 12px;
+                border: 2px solid #165DFF;
+                border-radius: 50%;
+                border-top-color: transparent;
+                animation: spin 1s linear infinite;
+            }
+            @keyframes spin {
+                to { transform: rotate(360deg); }
+            }
+            .match-tag {
+                @apply px-2 py-0.5 rounded-full text-xs flex items-center;
+            }
+            .contact-menu {
+                transform-origin: top right;
+                transform: scale(0);
+                transition: transform 0.2s ease;
+            }
+            .contact-menu.active {
+                transform: scale(1);
+            }
+        }
+    </style>
+</head>
+<body class="font-sans bg-neutral text-dark antialiased">
+    <main class="container mx-auto px-4 py-4">
+
+        <section id="module-agent" class="space-y-4">
+            <section class="bg-white rounded-lg card-shadow p-4 mb-4">
+                <h2 class="text-base font-medium mb-3 flex items-center">
+                    <i class="fa fa-id-card-o text-primary mr-2"></i>
+                    AI房产中介 · 一站式交易服务
+                </h2>
+                
+                <div class="border border-primary/20 bg-primary/5 rounded-lg p-4 mb-4">
+                    <h3 class="text-sm font-medium mb-3 flex items-center justify-between">
+                        <div class="flex items-center">
+                            <i class="fa fa-connectdevelop text-primary mr-2"></i>
+                            供需智能匹配引擎
+                        </div>
+                        <span class="text-xs text-primary bg-primary/10 px-2 py-0.5 rounded-full">隐私保护模式开启</span>
+                    </h3>
+                    
+                    <div class="bg-white rounded-lg border border-gray-200 p-3 mb-4">
+                        <div class="flex justify-between items-center mb-2">
+                            <h4 class="text-sm font-medium flex items-center">
+                                <div class="thinking-loading mr-2"></div>
+                                AI深度推理过程
+                            </h4>
+                            <button id="toggle-matching-process" class="text-xs text-primary flex items-center">
+                                <i class="fa fa-chevron-down mr-1"></i>展开详情
+                            </button>
+                        </div>
+                        
+                        <div id="matching-process-content" class="hidden space-y-4 text-xs pt-2">
+                            
+                            <div class="thinking-step" data-step="1">
+                                <p class="font-medium text-dark mb-1">Step 1：购房资格与用户画像重构</p>
+                                <div class="text-light pl-1 space-y-1">
+                                    <p>• 户籍/社保基数/公积金基数/房屋套次 匹配分析：</p>
+                                    <p>• 家庭生命周期阶段分析：匹配改善型居住需求</p>
+                                    <p>• 职住通勤半径测算：基于高频活动区域划定最优生活圈</p>
+                                </div>
+                            </div>
+
+                            <div class="thinking-step" data-step="2">
+                                <p class="font-medium text-dark mb-1">Step 2：需求挖掘与行为建模</p>
+                                <div class="text-light pl-1 space-y-1">
+                                    <p>• 搜索行为分析：高频关注“采光”、“学区”、“物业服务”关键词</p>
+                                    <p>• 停留时长权重：对“精装”、“次新房”类房源详情页停留时间较长</p>
+                                    <p>• 负面剔除：自动过滤临街、顶底楼层及历史关注度低的房源类型</p>
+                                </div>
+                            </div>
+                            
+                            <div class="thinking-step" data-step="3">
+                                <p class="font-medium text-dark mb-1">Step 3：资金承压模型与性价比评估</p>
+                                <div class="text-light pl-1 space-y-1">
+                                    <p>• 支付能力测算：公积金+商贷组合额度 > 目标房源均价，资金链健康</p>
+                                    <p>• 区域价值锚点：对比同板块近6个月成交均价，剔除溢价率>15%的房源</p>
+                                </div>
+                            </div>
+                            
+                            <div class="thinking-step" data-step="4">
+                                <p class="font-medium text-dark mb-1">Step 4：卖方心理画像与博弈分析</p>
+                                <div class="text-light pl-1 space-y-1">
+                                    <p>• 售房意愿评级：筛选“诚意出售”且挂牌期合理的房源</p>
+                                    <p>• 价格弹性预测：基于卖方调价历史，计算潜在议价空间</p>
+                                </div>
+                            </div>
+
+                             <div class="thinking-step" data-step="5">
+                                <p class="font-medium text-dark mb-1">Step 5：供需衔接可行性模拟</p>
+                                <div class="text-light pl-1 space-y-1">
+                                    <p>• 最终决策：从全库32,5800套房源中，优选Top 10高匹配度房源</p>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white rounded-lg border border-gray-200 p-3 mb-4">
+                        <div class="flex justify-between items-center mb-2">
+                            <h4 class="text-sm font-medium">计算完成：Top 10 推荐</h4>
+                            <div class="text-xs text-light"></div>
+                        </div>
+                        <div class="grid grid-cols-3 gap-2 text-center text-xs">
+                            <div class="p-2 bg-success/10 rounded border border-success/20">
+                                <p class="text-success font-bold text-sm">3套</p>
+                                <p class="text-light scale-90">S级 极度匹配</p>
+                            </div>
+                            <div class="p-2 bg-primary/10 rounded border border-primary/20">
+                                <p class="text-primary font-bold text-sm">5套</p>
+                                <p class="text-light scale-90">A级 高度匹配</p>
+                            </div>
+                            <div class="p-2 bg-secondary/10 rounded border border-secondary/20">
+                                <p class="text-secondary font-bold text-sm">2套</p>
+                                <p class="text-light scale-90">B级 潜力匹配</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-3">
+                        <div class="bg-white rounded-lg border border-gray-200 p-3 hover:border-primary transition">
+                            <div class="flex justify-between items-start mb-2">
+                                <h4 class="font-medium text-sm">星河国际三期 118㎡ 三居室</h4>
+                                <span class="match-tag bg-success/10 text-success font-medium">
+                                    <i class="fa fa-star mr-1"></i>AI匹配度 96%
+                                </span>
+                            </div>
+                            
+                            <div class="text-xs text-light mb-3 flex flex-wrap gap-2">
+                                <span><i class="fa fa-map-marker mr-1"></i>武进区湖塘街道</span>
+                                <span><i class="fa fa-rmb mr-1"></i>挂牌价：192万</span>
+                                <span><i class="fa fa-calendar mr-1"></i>房龄：8年</span>
+                                <span><i class="fa fa-building mr-1"></i>中高层</span>
+                                <span><i class="fa fa-paint-brush mr-1"></i>精装修</span>
+                            </div>
+                            
+                            <div class="mb-3 bg-neutral rounded p-2">
+                                <p class="text-xs font-medium mb-1 text-dark">💡 AI推荐理由：</p>
+                                <div class="flex flex-wrap gap-1">
+                                    <span class="px-1.5 py-0.5 bg-white border border-gray-200 text-dark text-xs rounded">区位价值优选</span>
+                                    <span class="px-1.5 py-0.5 bg-white border border-gray-200 text-dark text-xs rounded">户型适配度高</span>
+                                    <span class="px-1.5 py-0.5 bg-white border border-gray-200 text-dark text-xs rounded">资产保值优选</span>
+                                </div>
+                            </div>
+                            
+                            <div class="flex justify-between items-center border-t border-gray-100 pt-2">
+                                <div class="flex items-center">
+                                    <div class="relative group">
+                                        <div class="relative">
+                                            <img src="https://picsum.photos/40/40?random=101" alt="房主头像" class="w-8 h-8 rounded-full border-2 border-white shadow-sm cursor-pointer hover:border-primary transition">
+                                            <span class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-success border-2 border-white rounded-full"></span>
+                                        </div>
+                                        <div class="contact-menu absolute left-0 bottom-full mb-2 w-36 bg-white rounded-lg shadow-xl border border-gray-200 p-2 z-10">
+                                            <div class="flex justify-between text-xs">
+                                                <button class="flex flex-col items-center p-1 hover:bg-neutral rounded text-dark">
+                                                    <i class="fa fa-commenting-o text-primary mb-1 text-sm"></i>
+                                                    <span>私聊</span>
+                                                </button>
+                                                <button class="flex flex-col items-center p-1 hover:bg-neutral rounded text-dark">
+                                                    <i class="fa fa-phone text-success mb-1 text-sm"></i>
+                                                    <span>通话</span>
+                                                </button>
+                                                <button class="flex flex-col items-center p-1 hover:bg-neutral rounded text-dark">
+                                                    <i class="fa fa-video-camera text-secondary mb-1 text-sm"></i>
+                                                    <span>视频</span>
+                                                </button>
+                                            </div>
+                                            <div class="text-[10px] text-center text-light mt-1 border-t pt-1">实名认证房主</div>
+                                        </div>
+                                    </div>
+                                    <div class="ml-2 flex flex-col">
+                                        <span class="text-xs font-medium text-dark">李女士 <span class="text-[10px] bg-primary/10 text-primary px-1 rounded ml-1">房主</span></span>
+                                        <span class="text-[10px] text-light">当前在线</span>
+                                    </div>
+                                </div>
+                                <button class="px-3 py-1.5 bg-primary text-white text-xs rounded-full hover:bg-blue-600 transition shadow-sm">
+                                    在线咨询
+                                </button>
+								
+                            </div>
+                        </div>
+                        
+                        <div class="bg-white rounded-lg border border-gray-200 p-3 hover:border-primary transition">
+                            <div class="flex justify-between items-start mb-2">
+                                <h4 class="font-medium text-sm">世茂香槟湖二期 105㎡ 三居室</h4>
+                                <span class="match-tag bg-primary/10 text-primary font-medium">
+                                    <i class="fa fa-star-half-o mr-1"></i>AI匹配度 91%
+                                </span>
+                            </div>
+                            
+                            <div class="text-xs text-light mb-3 flex flex-wrap gap-2">
+                                <span><i class="fa fa-map-marker mr-1"></i>新北区太湖东路</span>
+                                <span><i class="fa fa-rmb mr-1"></i>挂牌价：185万</span>
+                                <span><i class="fa fa-calendar mr-1"></i>房龄：7年</span>
+                                <span><i class="fa fa-paint-brush mr-1"></i>精装修</span>
+                            </div>
+                            
+                            <div class="mb-3 bg-neutral rounded p-2">
+                                <p class="text-xs font-medium mb-1 text-dark">💡 AI推荐理由：</p>
+                                <div class="flex flex-wrap gap-1">
+                                    <span class="px-1.5 py-0.5 bg-white border border-gray-200 text-dark text-xs rounded">生活配套成熟</span>
+                                    <span class="px-1.5 py-0.5 bg-white border border-gray-200 text-dark text-xs rounded">性价比之选</span>
+                                    <span class="px-1.5 py-0.5 bg-white border border-gray-200 text-dark text-xs rounded">预算适配度契合</span>
+                                </div>
+                            </div>
+                            
+                            <div class="flex justify-between items-center border-t border-gray-100 pt-2">
+                                <div class="flex items-center">
+                                    <div class="relative group">
+                                        <div class="relative">
+                                            <img src="https://picsum.photos/40/40?random=102" alt="房主头像" class="w-8 h-8 rounded-full border-2 border-white shadow-sm cursor-pointer hover:border-primary transition">
+                                        </div>
+                                        <div class="contact-menu absolute left-0 bottom-full mb-2 w-36 bg-white rounded-lg shadow-xl border border-gray-200 p-2 z-10">
+                                            <div class="flex justify-between text-xs">
+                                                <button class="flex flex-col items-center p-1 hover:bg-neutral rounded text-dark">
+                                                    <i class="fa fa-commenting-o text-primary mb-1 text-sm"></i>
+                                                    <span>私聊</span>
+                                                </button>
+                                                <button class="flex flex-col items-center p-1 hover:bg-neutral rounded text-dark">
+                                                    <i class="fa fa-phone text-success mb-1 text-sm"></i>
+                                                    <span>通话</span>
+                                                </button>
+                                                <button class="flex flex-col items-center p-1 hover:bg-neutral rounded text-dark">
+                                                    <i class="fa fa-video-camera text-secondary mb-1 text-sm"></i>
+                                                    <span>视频</span>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="ml-2 flex flex-col">
+                                        <span class="text-xs font-medium text-dark">张先生 <span class="text-[10px] bg-primary/10 text-primary px-1 rounded ml-1">经纪人</span></span>
+                                        <span class="text-[10px] text-light">1小时前在线</span>
+                                    </div>
+                                </div>
+                                <button class="px-3 py-1.5 bg-primary text-white text-xs rounded-full hover:bg-blue-600 transition shadow-sm">
+                                    在线咨询
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="text-center py-2">
+                            <button class="text-primary text-xs flex items-center mx-auto hover:underline">
+                                加载剩余 8 套高匹配房源 <i class="fa fa-angle-double-down ml-1"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="text-sm font-medium mb-2 flex items-center">
+                        <i class="fa fa-comments text-primary mr-2"></i>
+                        AI中介智能咨询
+                    </h3>
+                    <div id="chat-container-agent" class="h-48 overflow-y-auto scrollbar-hide border border-gray-200 rounded-lg p-3 mb-3 space-y-3">
+                        <div class="flex items-start">
+                            <div class="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center text-xs mr-2">AI</div>
+                            <div class="bg-neutral rounded-lg px-3 py-2 text-sm max-w-[80%]">
+                               已为您智能匹配10套优质房源，点击房源即可预约看房，或在线沟通。若您有买房、卖房相关需求，欢迎随时咨询。
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex gap-2">
+                        <input type="text" id="chat-input-agent" placeholder="例如：首套房契税怎么算？" class="flex-1 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-primary">
+                        <button id="send-btn-agent" class="px-4 py-2 bg-primary text-white rounded-lg text-sm">
+                            <i class="fa fa-paper-plane mr-1"></i>发送
+                        </button>
+                    </div>
+                </div>
+            </section>
+        </section>
+    </main>
+
+    <script>
+        // 匹配过程展开/收起功能
+        document.getElementById('toggle-matching-process').addEventListener('click', function() {
+            const content = document.getElementById('matching-process-content');
+            const icon = this.querySelector('i');
+            
+            if (content.classList.contains('hidden')) {
+                content.classList.remove('hidden');
+                icon.classList.remove('fa-chevron-down');
+                icon.classList.add('fa-chevron-up');
+                this.innerHTML = '<i class="fa fa-chevron-up mr-1"></i>收起思考';
+                
+                // 逐步显示思考步骤动画
+                const steps = document.querySelectorAll('.thinking-step');
+                steps.forEach((step, index) => {
+                    // 重置状态
+                    step.classList.remove('active');
+                    // 逐步激活
+                    setTimeout(() => {
+                        step.classList.add('active');
+                    }, 300 * (index + 1));
+                });
+            } else {
+                content.classList.add('hidden');
+                icon.classList.remove('fa-chevron-up');
+                icon.classList.add('fa-chevron-down');
+                this.innerHTML = '<i class="fa fa-chevron-down mr-1"></i>展开详情';
+            }
+        });
+        
+        // 房主联系菜单交互
+        document.querySelectorAll('.relative.group').forEach(group => {
+            const img = group.querySelector('img');
+            const menu = group.querySelector('.contact-menu');
+            
+            if(img && menu) {
+                // 点击头像切换菜单
+                img.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    // 关闭其他打开的菜单
+                    document.querySelectorAll('.contact-menu.active').forEach(m => {
+                        if(m !== menu) m.classList.remove('active');
+                    });
+                    menu.classList.toggle('active');
+                });
+            }
+        });
+
+        // 点击页面其他地方关闭所有菜单
+        document.addEventListener('click', function() {
+            document.querySelectorAll('.contact-menu.active').forEach(menu => {
+                menu.classList.remove('active');
+            });
+        });
+        
+        // 发送消息功能
+        document.getElementById('send-btn-agent').addEventListener('click', function() {
+            const input = document.getElementById('chat-input-agent');
+            const message = input.value.trim();
+            if (message) {
+                const chatContainer = document.getElementById('chat-container-agent');
+                
+                // 添加用户消息
+                const userMessage = document.createElement('div');
+                userMessage.className = 'flex items-start justify-end';
+                userMessage.innerHTML = `
+                    <div class="bg-primary/10 rounded-lg px-3 py-2 text-sm max-w-[80%]">
+                        ${message}
+                    </div>
+                    <div class="w-8 h-8 rounded-full bg-gray-200 text-dark flex items-center justify-center text-xs ml-2">
+                        <i class="fa fa-user"></i>
+                    </div>
+                `;
+                chatContainer.appendChild(userMessage);
+                
+                // 清空输入框
+                input.value = '';
+                
+                // 滚动到底部
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+                
+                // 模拟AI回复
+                setTimeout(() => {
+                    const aiMessage = document.createElement('div');
+                    aiMessage.className = 'flex items-start';
+                    aiMessage.innerHTML = `
+                        <div class="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center text-xs mr-2">AI</div>
+                        <div class="bg-neutral rounded-lg px-3 py-2 text-sm max-w-[80%]">
+                            收到您的咨询。正在检索相关法律条款和市场数据，请稍候...
+                        </div>
+                    `;
+                    chatContainer.appendChild(aiMessage);
+                    chatContainer.scrollTop = chatContainer.scrollHeight;
+                }, 800);
+            }
+        });
+        
+        // 支持回车键发送消息
+        document.getElementById('chat-input-agent').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                document.getElementById('send-btn-agent').click();
+            }
+        });
+    </script>
+</body>
+</html>

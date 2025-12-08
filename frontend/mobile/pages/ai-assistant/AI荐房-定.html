@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer">
+    <title>常州住房AI助手 - 一站式房产服务</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        // Tailwind 自定义配置
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#165DFF', // 常州蓝主色调
+                        secondary: '#FF7D00', // 辅助色（常州橙）
+                        neutral: '#F5F7FA', // 中性背景色
+                        dark: '#1D2129', // 文字深色
+                        light: '#86909C', // 文字浅色
+                    },
+                    fontFamily: {
+                        sans: ['PingFang SC', 'Helvetica Neue', 'Arial', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto { content-visibility: auto; }
+            .scrollbar-hide {
+                -ms-overflow-style: none;
+                scrollbar-width: none;
+            }
+            .scrollbar-hide::-webkit-scrollbar { display: none; }
+            .card-shadow { box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.08); }
+            .thinking-step {
+                border-left: 2px solid #165DFF;
+                padding-left: 12px;
+                margin-left: 4px;
+                position: relative;
+                opacity: 0;
+                transform: translateX(-10px);
+                transition: all 0.5s ease;
+            }
+            .thinking-step.active {
+                opacity: 1;
+                transform: translateX(0);
+            }
+            .thinking-step::before {
+                content: '';
+                position: absolute;
+                left: -6px;
+                top: 6px;
+                width: 8px;
+                height: 8px;
+                border-radius: 50%;
+                background: #165DFF;
+                opacity: 0;
+                transition: opacity 0.3s ease 0.2s;
+            }
+            .thinking-step.active::before {
+                opacity: 1;
+            }
+            .thinking-loading {
+                display: inline-block;
+                width: 16px;
+                height: 16px;
+                border: 2px solid #165DFF;
+                border-radius: 50%;
+                border-top-color: transparent;
+                animation: spin 1s linear infinite;
+            }
+            @keyframes spin {
+                to { transform: rotate(360deg); }
+            }
+        }
+    </style>
+</head>
+<body class="font-sans bg-neutral text-dark antialiased">
+    <!-- 主内容区 -->
+    <main class="container mx-auto px-4 py-4">
+        <!-- ========== AI荐房模块 ========== -->
+        <section id="module-recommend" class="space-y-4">
+            <!-- AI选房推理过程区域 - 紧凑版 -->
+            <section class="bg-white rounded-lg card-shadow p-3 mb-4">
+                <h2 class="text-base font-medium mb-2 flex items-center">
+                    <i class="fa fa-cogs text-primary mr-2"></i>
+                    热力图AI选房
+                </h2>
+                
+                <!-- 画像数据分析进度条 - 紧凑化 -->
+                <div class="mb-3">
+                    <div class="flex justify-between text-xs mb-1">
+                        <span>画像数据分析进度</span>
+                        <span id="progress-text">100%</span>
+                    </div>
+                    <div class="w-full h-1.5 bg-neutral rounded-full overflow-hidden">
+                        <div id="progress-bar" class="h-full bg-primary rounded-full transition-all duration-1000" style="width: 100%"></div>
+                    </div>
+                </div>
+
+                <!-- AI深度思考过程（默认展开） - 紧凑化 -->
+                <div class="mb-3 border border-gray-200 rounded-lg p-2">
+                    <div class="flex justify-between items-center mb-1">
+                        <h3 class="text-xs font-medium flex items-center">
+                            <i class="fa fa-brain text-primary mr-1.5"></i>
+                            AI深度思考过程
+                        </h3>
+                        <button id="toggle-thinking" class="text-xs text-primary flex items-center">
+                            <i class="fa fa-chevron-up mr-1"></i>收起思考
+                        </button>
+                    </div>
+                    <!-- 深度思考内容（默认显示） - 紧凑化 -->
+                    <div id="thinking-content" class="mt-1 text-xs space-y-2">
+                        <!-- 思考加载提示 -->
+                        <div id="thinking-loading" class="flex items-center text-xs text-primary mb-1.5">
+                            <div class="thinking-loading mr-2"></div>
+                            <span>AI正在深度思考中...</span>
+                        </div>
+                        <!-- 思考步骤（精简版） -->
+                        <div class="thinking-step mb-1.5" data-step="1">
+                            <p class="font-medium text-primary text-xs mb-0.5">步骤1：用户需求整合排序</p>
+                            <p class="text-xs text-dark">• 优先级1：用户基本情况</p>
+                            
+                            <p class="text-xs text-dark mt-0.5">• 优先级2：核心诉求（匹配）</p>
+                            
+                            <p class="text-xs text-dark mt-0.5">• 优先级3：隐性偏好（优化）</p>
+                            
+                        </div>
+                        <div class="thinking-step mb-1.5" data-step="2">
+                            <p class="font-medium text-primary text-xs mb-0.5">步骤2：多维度数据验证</p>
+                            <p class="text-xs text-dark">• 行为验证：89%浏览记录匹配面积/价格需求</p>
+                            
+                        </div>
+                        <div class="thinking-step mb-1.5" data-step="3">
+                            <p class="font-medium text-primary text-xs mb-0.5">步骤3：房源匹配算法计算</p>
+                            <p class="text-xs text-dark">• 基础筛选：有效房源128套</p>
+                            
+                        </div>
+                        <div class="thinking-step mb-1.5" data-step="4">
+                            <p class="font-medium text-primary text-xs mb-0.5">步骤4：结果优化去重</p>
+                            <p class="text-xs text-dark">• 智能去重：剔除同板块相似度>90%房源</p>
+                            
+                        </div>
+                        <div class="thinking-step" data-step="5">
+                            <p class="font-medium text-primary text-xs mb-0.5">步骤5：最终推荐决策</p>
+                            <p class="text-xs text-dark">• 得分排序：国色风华96分 > 翠礼峰天玺93分 > 桃花院子90分<br>
+                               </p>
+                            
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 各项画像数据卡片 - 移除查看详情按钮 -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+                    <!-- 区域偏好 -->
+                    <div class="border border-gray-200 rounded-lg p-2">
+                        <div class="flex justify-between items-center mb-1">
+                            <h3 class="text-xs font-medium">区域偏好</h3>
+                        </div>
+                        <div class="text-xs">核心偏好：钟楼区 > 天宁区 > 新北区</div>
+                        <div class="reason-content mt-1.5 text-xs text-light">
+                            
+                            <p class="mt-0.5"><i class="fa fa-lightbulb-o mr-1"></i> 处理理由：用户浏览钟楼区高端房源次数达86次，远超其他区域，结合改善型购房需求，判定核心偏好为钟楼区改善板块</p>
+                        </div>
+                    </div>
+
+                    <!-- 面积需求 -->
+                    <div class="border border-gray-200 rounded-lg p-2">
+                        <div class="flex justify-between items-center mb-1">
+                            <h3 class="text-xs font-medium">面积需求</h3>
+                        </div>
+                        <div class="text-xs">核心需求：140-300㎡（改善型大平层/别墅）</div>
+                        <div class="reason-content mt-1.5 text-xs text-light">
+                            
+                            <p class="mt-0.5"><i class="fa fa-lightbulb-o mr-1"></i> 处理理由：用户筛选房源时18次选择140㎡以上区间，问卷明确填写需要改善型大户型，判定核心面积需求为140-300㎡</p>
+                        </div>
+                    </div>
+
+                    <!-- 价格预算 -->
+                    <div class="border border-gray-200 rounded-lg p-2">
+                        <div class="flex justify-between items-center mb-1">
+                            <h3 class="text-xs font-medium">价格预算</h3>
+                        </div>
+                        <div class="text-xs">核心预算：500-1200万</div>
+                        <div class="reason-content mt-1.5 text-xs text-light">
+                            
+                            <p class="mt-0.5"><i class="fa fa-lightbulb-o mr-1"></i> 处理理由：用户筛选房源时价格区间均设置为500-1200万，咨询过高端房源的贷款方案，判定核心预算为500-1200万</p>
+                        </div>
+                    </div>
+
+                    <!-- 配套需求 -->
+                    <div class="border border-gray-200 rounded-lg p-2">
+                        <div class="flex justify-between items-center mb-1">
+                            <h3 class="text-xs font-medium">配套需求</h3>
+                        </div>
+                        <div class="text-xs">核心需求：高端学区、地铁沿线、中式园林</div>
+                        <div class="reason-content mt-1.5 text-xs text-light">
+                            
+                            <p class="mt-0.5"><i class="fa fa-lightbulb-o mr-1"></i> 处理理由：用户多次选择"高端学区"、"地铁沿线"、"中式园林"筛选标签，搜索记录包含"常州钟楼区 中式园林 大平层"，判定核心配套需求为高端学区、地铁沿线、中式园林</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 推荐房源列表（常州安居客房源数据） -->
+            <section class="bg-white rounded-lg card-shadow p-4 mb-4">
+                <h2 class="text-base font-medium mb-3 flex items-center">
+                    <i class="fa fa-home text-primary mr-2"></i>
+                    AI推荐房源
+                </h2>
+
+                <!-- 房源列表导航按钮 - 增加新导航按钮 -->
+                <div class="flex items-center justify-between mb-4 flex-wrap gap-2">
+                    <div class="flex space-x-2">
+                        <button class="px-3 py-1 bg-primary text-white rounded text-xs flex items-center">
+                            <i class="fa fa-th-large mr-1"></i>全部房源
+                        </button>
+                        
+                        <button class="px-3 py-1 bg-white border border-gray-200 rounded text-xs flex items-center hover:bg-neutral transition">
+                            <i class="fa fa-sort mr-1"></i>排序
+                        </button>
+                        <!-- 新增导航按钮 -->
+                        <button class="px-3 py-1 bg-white border border-gray-200 rounded text-xs flex items-center hover:bg-neutral transition">
+                            <i class="fa fa-building mr-1"></i>新房
+                        </button>
+                        
+                        <button class="px-3 py-1 bg-white border border-gray-200 rounded text-xs flex items-center hover:bg-neutral transition">
+                            <i class="fa fa-map-marker mr-1"></i>按区域
+                        </button>
+                    </div>
+                    
+                </div>
+
+                <!-- 房源列表 -->
+                <div class="space-y-4">
+                    <!-- 房源1：常州国色风华（钟楼区）- 高端改善房源 -->
+                    <div class="border border-gray-200 rounded-lg overflow-hidden">
+                        <div class="flex flex-col md:flex-row">
+                            <div class="w-full md:w-1/3 bg-neutral h-40 md:h-auto flex items-center justify-center relative">
+                                <!-- 图片来源标注：常州安居客 https://cz.fang.anjuke.com/ -->
+                                <img src="https://img2-build.jiwu.com/album/manual/2025/07/09/141142450286.jpg/jiwu$800x600" alt="常州钟楼区国色风华新房" class="w-full h-full object-cover">
+                                
+                            </div>
+                            <div class="w-full md:w-2/3 p-3">
+                                <h3 class="font-medium text-base mb-1">国色风华（钟楼区）</h3>
+                                <div class="text-sm text-light mb-2">
+                                    4室2厅3卫 | 188㎡ | 均价38000元/㎡ | 总价714.4万 | 
+                                    常州市钟楼区实验小学（优质学区） | 地铁2号线勤业站（300米）
+                                </div>
+                                <div class="flex flex-wrap gap-1 mb-2">
+                                    <span class="px-2 py-0.5 bg-primary/10 text-primary text-xs rounded-full">AI推荐</span>
+                                    <span class="px-2 py-0.5 bg-green-100 text-green-600 text-xs rounded-full">品牌房企（建发）</span>
+                                    <span class="px-2 py-0.5 bg-blue-100 text-blue-600 text-xs rounded-full">现房在售</span>
+                                    <span class="px-2 py-0.5 bg-purple-100 text-purple-600 text-xs rounded-full">中式园林</span>
+                                    <span class="px-2 py-0.5 bg-yellow-100 text-yellow-600 text-xs rounded-full">改善型住宅</span>
+                                    <span class="px-2 py-0.5 bg-red-100 text-red-600 text-xs rounded-full">精装交付</span>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <span class="text-xs text-light">匹配度：96%</span>
+                                    <div class="flex space-x-2">
+                                        <button class="px-3 py-1 bg-white border border-primary text-primary text-xs rounded-full hover:bg-primary/5 transition">
+                                            <i class="fa fa-phone mr-1"></i>咨询
+                                        </button>
+                                        <button class="px-3 py-1 bg-primary text-white text-xs rounded-full">
+                                            <i class="fa fa-eye mr-1"></i>查看详情
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 房源2：常州翠礼峰天玺（天宁区）- 高端改善房源 -->
+                    <div class="border border-gray-200 rounded-lg overflow-hidden">
+                        <div class="flex flex-col md:flex-row">
+                            <div class="w-full md:w-1/3 bg-neutral h-40 md:h-auto flex items-center justify-center relative">
+                                <!-- 图片来源标注：常州安居客 https://cz.fang.anjuke.com/ -->
+                                <img src="https://p9.itc.cn/q_70/images01/20231012/ce912d35e8164e26819d0c08969e1d5a.png" alt="常州天宁区翠礼峰天玺新房" class="w-full h-full object-cover">
+                                
+                            </div>
+                            <div class="w-full md:w-2/3 p-3">
+                                <h3 class="font-medium text-base mb-1">翠礼峰天玺（天宁区）</h3>
+                                <div class="text-sm text-light mb-2">
+                                    3室2厅2卫 | 143㎡ | 均价35000元/㎡ | 总价500.5万 |
+                                    常州市局前街小学教育集团（学区） | 地铁1号线文化宫站（600米）
+                                </div>
+                                <div class="flex flex-wrap gap-1 mb-2">
+                                    <span class="px-2 py-0.5 bg-primary/10 text-primary text-xs rounded-full">AI推荐</span>
+                                    <span class="px-2 py-0.5 bg-green-100 text-green-600 text-xs rounded-full">央企开发（保利）</span>
+                                    <span class="px-2 py-0.5 bg-blue-100 text-blue-600 text-xs rounded-full">准现房</span>
+                                    <span class="px-2 py-0.5 bg-orange-100 text-orange-600 text-xs rounded-full">高端住宅</span>
+                                    <span class="px-2 py-0.5 bg-teal-100 text-teal-600 text-xs rounded-full">绿化率40%</span>
+                                    <span class="px-2 py-0.5 bg-indigo-100 text-indigo-600 text-xs rounded-full">智能家居</span>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <span class="text-xs text-light">匹配度：93%</span>
+                                    <div class="flex space-x-2">
+                                        <button class="px-3 py-1 bg-white border border-primary text-primary text-xs rounded-full hover:bg-primary/5 transition">
+                                            <i class="fa fa-phone mr-1"></i>咨询
+                                        </button>
+                                        <button class="px-3 py-1 bg-primary text-white text-xs rounded-full">
+                                            <i class="fa fa-eye mr-1"></i>查看详情
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 房源3：常州桃花院子（新北区）- 别墅房源 -->
+                    <div class="border border-gray-200 rounded-lg overflow-hidden">
+                        <div class="flex flex-col md:flex-row">
+                            <div class="w-full md:w-1/3 bg-neutral h-40 md:h-auto flex items-center justify-center relative">
+                                <!-- 图片来源标注：常州安居客 https://cz.fang.anjuke.com/ -->
+                                <img src="https://q3.itc.cn/images01/20251028/1f1fc69ea4c44290b8a39bcac27e65cd.jpeg" alt="常州新北区桃花院子别墅" class="w-full h-full object-cover">
+                                
+                            </div>
+                            <div class="w-full md:w-2/3 p-3">
+                                <h3 class="font-medium text-base mb-1">桃花院子（新北区）</h3>
+                                <div class="text-sm text-light mb-2">
+                                    5室2厅4卫 | 260㎡ | 均价42000元/㎡ | 总价1092万 |
+                                    常州市新北区河海实验小学 | 地铁1号线河海站（400米）
+                                </div>
+                                <div class="flex flex-wrap gap-1 mb-2">
+                                    <span class="px-2 py-0.5 bg-primary/10 text-primary text-xs rounded-full">AI推荐</span>
+                                    <span class="px-2 py-0.5 bg-green-100 text-green-600 text-xs rounded-full">品牌物业（绿城）</span>
+                                    <span class="px-2 py-0.5 bg-blue-100 text-blue-600 text-xs rounded-full">别墅产品</span>
+                                    <span class="px-2 py-0.5 bg-red-100 text-red-600 text-xs rounded-full">纯改善</span>
+                                    <span class="px-2 py-0.5 bg-indigo-100 text-indigo-600 text-xs rounded-full">低密社区</span>
+                                    <span class="px-2 py-0.5 bg-yellow-100 text-yellow-600 text-xs rounded-full">人车分流</span>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <span class="text-xs text-light">匹配度：90%</span>
+                                    <div class="flex space-x-2">
+                                        <button class="px-3 py-1 bg-white border border-primary text-primary text-xs rounded-full hover:bg-primary/5 transition">
+                                            <i class="fa fa-phone mr-1"></i>咨询
+                                        </button>
+                                        <button class="px-3 py-1 bg-primary text-white text-xs rounded-full">
+                                            <i class="fa fa-eye mr-1"></i>查看详情
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                
+            </section>
+
+            <!-- 对话页面区域 -->
+            <section class="bg-white rounded-lg card-shadow p-4 mb-4">
+                <h2 class="text-base font-medium mb-3 flex items-center">
+                    <i class="fa fa-comments text-primary mr-2"></i>
+                    AI助手对话
+                </h2>
+                
+                <!-- 对话内容区 -->
+                <div id="chat-container-recommend" class="h-64 overflow-y-auto scrollbar-hide border border-gray-200 rounded-lg p-3 mb-3 space-y-3">
+                    <!-- AI消息 -->
+                    <div class="flex items-start">
+                        <div class="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center text-xs mr-2">AI</div>
+                        <div class="bg-neutral rounded-lg px-3 py-2 text-sm max-w-[80%]">
+                            您好！根据您的高端改善型购房画像，我为您推荐了国色风华（钟楼区）、翠礼峰天玺（天宁区）、桃花院子（新北区）这三个房源，均符合您140-300㎡、500-1200万预算、高端学区和地铁沿线的核心需求。
+                        </div>
+                    </div>
+                    
+                    <!-- 用户消息 -->
+                    <div class="flex items-start justify-end">
+                        <div class="bg-primary/10 rounded-lg px-3 py-2 text-sm max-w-[80%]">
+                            国色风华的具体位置在哪里？周边有什么配套？
+                        </div>
+                        <div class="w-8 h-8 rounded-full bg-gray-200 text-dark flex items-center justify-center text-xs ml-2">
+                            <i class="fa fa-user"></i>
+                        </div>
+                    </div>
+                    
+                    <!-- AI消息 -->
+                    <div class="flex items-start">
+                        <div class="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center text-xs mr-2">AI</div>
+                        <div class="bg-neutral rounded-lg px-3 py-2 text-sm max-w-[80%]">
+                            国色风华位于常州市钟楼区勤业路与龙江路交汇处（数据来源：常州安居客 https://cz.fang.anjuke.com/），紧邻常州市钟楼区实验小学，步行仅需3分钟，距离地铁2号线勤业站约300米。周边配套包括：龙湖天街购物中心、常州市第二人民医院、青枫公园等，项目为建发打造的新中式高端住宅，现房在售，绿化率38%，纯改善型社区，品质与配套兼具。
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 消息输入区 -->
+                <div class="flex gap-2">
+                    <input type="text" id="chat-input-recommend" placeholder="请输入您的问题，比如：国色风华的物业费是多少？" class="flex-1 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-primary">
+                    <button id="send-btn-recommend" class="px-4 py-2 bg-primary text-white rounded-lg text-sm">
+                        <i class="fa fa-paper-plane mr-1"></i>发送
+                    </button>
+                </div>
+            </section>
+        </section>
+    </main>
+
+    <!-- 底部脚本 -->
+    <script>
+        // 思考过程展开/收起切换
+        document.getElementById('toggle-thinking').addEventListener('click', function() {
+            const content = document.getElementById('thinking-content');
+            const icon = this.querySelector('i');
+            
+            if (content.classList.contains('hidden')) {
+                content.classList.remove('hidden');
+                icon.classList.remove('fa-chevron-down');
+                icon.classList.add('fa-chevron-up');
+                this.innerHTML = '<i class="fa fa-chevron-up mr-1"></i>收起思考';
+                
+                // 激活思考步骤动画
+                activateThinkingSteps();
+            } else {
+                content.classList.add('hidden');
+                icon.classList.remove('fa-chevron-up');
+                icon.classList.add('fa-chevron-down');
+                this.innerHTML = '<i class="fa fa-chevron-down mr-1"></i>展开思考';
+            }
+        });
+
+        // 思考步骤动画激活
+        function activateThinkingSteps() {
+            const steps = document.querySelectorAll('.thinking-step');
+            steps.forEach((step, index) => {
+                setTimeout(() => {
+                    step.classList.add('active');
+                }, 300 * (index + 1));
+            });
+            
+            // 隐藏加载提示
+            setTimeout(() => {
+                document.getElementById('thinking-loading').style.display = 'none';
+            }, 2000);
+        }
+
+        // 页面加载完成后激活思考步骤
+        window.addEventListener('load', function() {
+            // 模拟进度条加载
+            const progressBar = document.getElementById('progress-bar');
+            const progressText = document.getElementById('progress-text');
+            
+            progressBar.style.width = '0%';
+            progressText.textContent = '0%';
+            
+            let progress = 0;
+            const progressInterval = setInterval(() => {
+                progress += 1;
+                progressBar.style.width = `${progress}%`;
+                progressText.textContent = `${progress}%`;
+                
+                if (progress >= 100) {
+                    clearInterval(progressInterval);
+                    // 激活思考步骤
+                    activateThinkingSteps();
+                }
+            }, 20);
+
+            // 聊天发送按钮逻辑 - AI荐房
+            document.getElementById('send-btn-recommend').addEventListener('click', sendRecommendMessage);
+            document.getElementById('chat-input-recommend').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') sendRecommendMessage();
+            });
+        });
+
+        // 发送AI荐房消息
+        function sendRecommendMessage() {
+            const input = document.getElementById('chat-input-recommend');
+            const message = input.value.trim();
+            
+            if (!message) return;
+            
+            // 添加用户消息
+            const chatContainer = document.getElementById('chat-container-recommend');
+            const userHtml = `
+                <div class="flex items-start justify-end">
+                    <div class="bg-primary/10 rounded-lg px-3 py-2 text-sm max-w-[80%]">
+                        ${message}
+                    </div>
+                    <div class="w-8 h-8 rounded-full bg-gray-200 text-dark flex items-center justify-center text-xs ml-2">
+                        <i class="fa fa-user"></i>
+                    </div>
+                </div>
+            `;
+            chatContainer.insertAdjacentHTML('beforeend', userHtml);
+            
+            // 清空输入框
+            input.value = '';
+            
+            // 模拟AI回复
+            setTimeout(() => {
+                let aiReply = '';
+                if (message.includes('物业费') || message.includes('物业')) {
+                    aiReply = '国色风华的物业费为4.2元/㎡/月（建发物业），翠礼峰天玺物业费为3.8元/㎡/月（保利物业），桃花院子物业费为5.5元/㎡/月（绿城物业），均为高端住宅一级物业服务标准，包含24小时安保、专属管家、园林维护等增值服务。数据来源：常州安居客 https://cz.fang.anjuke.com/';
+                } else if (message.includes('学区') || message.includes('学校')) {
+                    aiReply = '国色风华对口常州市钟楼区实验小学（省重点），翠礼峰天玺对口常州市局前街小学教育集团（市重点），桃花院子对口常州市新北区河海实验小学，均为常州顶级教育资源，学区划分以常州教育局2025年最新公示为准。';
+                } else if (message.includes('交通') || message.includes('地铁')) {
+                    aiReply = '国色风华距地铁2号线勤业站300米，翠礼峰天玺距地铁1号线文化宫站600米，桃花院子距地铁1号线河海站400米；常州地铁网络已覆盖核心改善板块，高端住宅项目均优先布局地铁500米范围内，出行便利度极高。';
+                } else if (message.includes('绿化率') || message.includes('绿化')) {
+                    aiReply = '国色风华绿化率38%（中式园林设计），翠礼峰天玺绿化率40%（现代轻奢园林），桃花院子绿化率45%（低密别墅社区），均远超常州高端住宅平均绿化率（35%），居住环境极佳。';
+                } else {
+                    aiReply = '非常抱歉，我暂时无法回答这个问题。您可以咨询高端改善房源的价格、面积、配套、学区、物业费、绿化率等相关问题，我会尽力解答。';
+                }
+                
+                const aiHtml = `
+                    <div class="flex items-start">
+                        <div class="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center text-xs mr-2">AI</div>
+                        <div class="bg-neutral rounded-lg px-3 py-2 text-sm max-w-[80%]">
+                            ${aiReply}
+                        </div>
+                    </div>
+                `;
+                chatContainer.insertAdjacentHTML('beforeend', aiHtml);
+                
+                // 滚动到底部
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+            }, 1000);
+            
+            // 滚动到底部
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+    </script>
+</body>
+</html>

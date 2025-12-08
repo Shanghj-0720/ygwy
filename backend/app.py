@@ -182,6 +182,12 @@ if __name__ == "__main__":
 
   移动端首页: http://localhost:{port}/
 
+  【新】AI住房助手 (移动端):
+    入口页面: http://localhost:{port}/frontend/mobile/pages/ai-assistant/index.html
+    └─ AI荐房: 智能房源推荐
+    └─ AI业委会: 智慧小区管理
+    └─ AI中介: 房产交易服务
+
   公共收益:
     PC端: http://localhost:{port}/frontend/pc/pages/benefit/index.html
     移动端: http://localhost:{port}/frontend/mobile/pages/benefit/index.html
