@@ -101,6 +101,12 @@ body {
     border-color: #fde68a;
 }
 
+.pill.property {
+    background: #d1fae5;
+    color: #047857;
+    border-color: #a7f3d0;
+}
+
 /* Page */
 .page {
     padding: 14px 16px 32px;
@@ -1023,6 +1029,10 @@ body {
     background: linear-gradient(135deg, #f59e0b, #fbbf24);
 }
 
+.identity-icon.property {
+    background: linear-gradient(135deg, #10b981, #34d399);
+}
+
 .identity-icon svg {
     width: 24px;
     height: 24px;
@@ -1197,6 +1207,196 @@ body {
 
 .card, .banner {
     animation: fadeIn 0.4s ease;
+}
+
+/* 物业端审核页面样式 */
+.status-tag {
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.status-tag.pending {
+    background: #fef3c7;
+    color: #b45309;
+}
+
+.status-tag.approved {
+    background: #d1fae5;
+    color: #047857;
+}
+
+.info-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.info-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.info-item:last-child {
+    border-bottom: none;
+}
+
+.info-label {
+    color: #64748b;
+    font-size: 14px;
+}
+
+.info-value {
+    color: #1e293b;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.review-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.review-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    background: #f8fafc;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.review-item:active {
+    background: #f1f5f9;
+}
+
+.review-icon {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.review-icon svg {
+    width: 20px;
+    height: 20px;
+    stroke: var(--primary);
+}
+
+.review-info {
+    flex: 1;
+}
+
+.review-title {
+    font-size: 14px;
+    font-weight: 500;
+    color: #1e293b;
+}
+
+.review-meta {
+    font-size: 12px;
+    color: #64748b;
+    margin-top: 2px;
+}
+
+.review-action {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    color: var(--primary);
+}
+
+.review-link {
+    font-size: 13px;
+}
+
+.review-action svg {
+    width: 16px;
+    height: 16px;
+}
+
+.action-buttons {
+    margin: 16px 0;
+}
+
+.action-buttons .btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.action-buttons .btn svg {
+    width: 18px;
+    height: 18px;
+}
+
+.checkbox-section {
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid #f1f5f9;
+}
+
+.btn.danger {
+    background: #fff;
+    color: #dc2626;
+    border-color: #fecaca;
+}
+
+.btn.danger:active {
+    background: #fef2f2;
+}
+
+.btn.primary.danger {
+    background: #dc2626;
+    color: #fff;
+    border-color: #dc2626;
+}
+
+.modal-icon.warning {
+    background: linear-gradient(135deg, #f59e0b, #fbbf24);
+}
+
+.reject-reason {
+    width: 100%;
+    min-height: 100px;
+    padding: 12px;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 14px;
+    resize: none;
+    margin: 16px 0;
+}
+
+.reject-reason:focus {
+    outline: none;
+    border-color: var(--primary);
+}
+
+.progress-step.completed .step-dot {
+    background: #10b981;
+}
+
+.progress-step.completed .step-dot svg {
+    width: 14px;
+    height: 14px;
+    stroke: #fff;
+}
+
+.progress-line.active {
+    background: linear-gradient(90deg, #10b981, var(--primary));
 }
 
 /* Responsive */

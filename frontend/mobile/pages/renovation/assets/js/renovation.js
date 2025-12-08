@@ -61,6 +61,9 @@ function selectIdentity(identity) {
     } else if (identity === 'tenant') {
         // 房屋使用人 - 跳转到租赁人上传页面
         window.location.href = 'upload-tenant.html';
+    } else if (identity === 'property') {
+        // 物业端 - 跳转到物业端上传页面
+        window.location.href = 'upload-property.html';
     }
 }
 
@@ -465,6 +468,66 @@ function submitFormTenant(event) {
 
     // 确认提交
     if (!confirm('确认提交装修登记申请？\n\n提交后物业将在1-3个工作日内完成审核。')) {
+        return;
+    }
+
+    // 模拟提交
+    simulateSubmit();
+}
+
+// 验证表单 - 物业端
+function validateFormProperty() {
+    const errors = [];
+
+    // 物业端必填项检查（6项）
+    if (!state.files.notice) {
+        errors.push('请上传已签字的《住宅室内装饰装修告知书》');
+    }
+    if (!state.files.idcard) {
+        errors.push('请上传使用人身份证');
+    }
+    if (!state.files.lease || state.files.lease.length === 0) {
+        errors.push('请上传有效房屋租赁合同');
+    }
+    if (!state.files.ownerConsent) {
+        errors.push('请上传产权人同意装修书面材料');
+    }
+    if (!state.files.property) {
+        errors.push('请上传房屋所有权证');
+    }
+    if (!state.files.plan || state.files.plan.length === 0) {
+        errors.push('请上传装饰装修方案');
+    }
+
+    // 条件必填项检查
+    if (state.conditions.design && (!state.files.design || state.files.design.length === 0)) {
+        errors.push('请上传设计方案（已勾选涉及变动主体/承重结构）');
+    }
+
+    if (state.conditions.company && !state.files.company) {
+        errors.push('请上传装修企业资质（已勾选委托装修企业施工）');
+    }
+
+    if (state.conditions.shared && !state.files.shared) {
+        errors.push('请上传共用人同意证明（已勾选涉及共用部位）');
+    }
+
+    return errors;
+}
+
+// 提交表单 - 物业端
+function submitFormProperty(event) {
+    event.preventDefault();
+
+    const errors = validateFormProperty();
+
+    if (errors.length > 0) {
+        alert('请完善以下信息：\n\n' + errors.join('\n'));
+        return;
+    }
+
+    // 确认提交
+    if (!confirm('确认完成装修登记？\n\n确认后将完成房屋使用人的装修登记。')) {
         return;
     }
 
