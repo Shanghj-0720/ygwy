@@ -356,6 +356,10 @@ body {
     background: #f8fafc;
 }
 
+.verify-card {
+    cursor: pointer;
+}
+
 .row {
     display: flex;
     justify-content: space-between;
@@ -433,6 +437,17 @@ body {
     display: flex;
     gap: 8px;
     margin-top: 10px;
+}
+
+.link {
+    margin-top: 8px;
+    background: none;
+    border: none;
+    padding: 0;
+    color: var(--primary);
+    font-weight: 700;
+    cursor: pointer;
+    text-align: left;
 }
 
 .btn {

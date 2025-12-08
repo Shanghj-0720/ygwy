@@ -104,7 +104,8 @@ const state = {
                 status: '待核验',
                 due: '12/18 18:00',
                 focus: '楼道保洁、车库照明恢复情况',
-                materials: ['整改照片', '照明恢复视频']
+                materials: ['整改照片', '照明恢复视频'],
+                detail: '查看车库照明亮度对比，确认楼道地面清洁无积尘。'
             },
             {
                 id: 'v2',
@@ -115,7 +116,8 @@ const state = {
                 result: '夜间巡逻打卡完整，岗亭值守正常',
                 due: '12/18 18:00',
                 focus: '巡逻频次 + 打卡轨迹',
-                materials: ['巡逻记录', '岗亭签到']
+                materials: ['巡逻记录', '岗亭签到'],
+                detail: '核验打卡轨迹、岗亭值守照片与夜间巡逻频次。'
             },
             {
                 id: 'v3',
@@ -125,7 +127,8 @@ const state = {
                 status: '待核验',
                 due: '12/18 18:00',
                 focus: '抽查随机报修回访满意度',
-                materials: ['派单记录', '回访录音']
+                materials: ['派单记录', '回访录音'],
+                detail: '抽查随机报修闭环，核查派单时效与回访满意度。'
             }
         ]
     },
@@ -226,6 +229,7 @@ function renderOverview() {
     state.steps.forEach((step, index) => {
         const item = document.createElement('div');
         item.className = `step-item ${step.status}`;
+        item.dataset.status = step.status;
         item.innerHTML = `
             <div class="step-index">${index + 1}</div>
             <div class="step-body">
@@ -237,12 +241,18 @@ function renderOverview() {
                 </div>
             </div>
         `;
+        item.addEventListener('click', () => showStepStatus(step.status));
         container.appendChild(item);
     });
 
     const activeStep = state.steps.find((s) => s.status === 'active');
     const summary = activeStep ? `当前阶段：${activeStep.title} · ${activeStep.time}` : '流程正常';
     document.getElementById('stepSummary').textContent = summary;
+}
+
+function showStepStatus(status) {
+    const text = status === 'done' ? '已完成' : status === 'active' ? '正在执行' : '待开始';
+    alert(text);
 }
 
 function renderQuestionnaire() {
@@ -300,6 +310,7 @@ function renderRectification() {
     state.rectification.items.forEach((item) => {
         const card = document.createElement('div');
         card.className = 'rect-card';
+        card.addEventListener('click', () => goRectificationDetail(item.id));
         card.innerHTML = `
             <div class="row">
                 <div class="title">${item.title}</div>
@@ -324,15 +335,7 @@ function renderVerification() {
     state.verification.tasks.forEach((task) => {
         const card = document.createElement('div');
         card.className = 'verify-card';
-
-        const actions = task.status === '待核验'
-            ? `
-                <div class="actions">
-                    <button class="btn primary" onclick="updateVerification('${task.id}', 'pass')">通过</button>
-                    <button class="btn outline" onclick="updateVerification('${task.id}', 'fail')">不通过</button>
-                </div>
-            `
-            : `<div class="muted">反馈：${task.result || '已记录'}</div>`;
+        card.addEventListener('click', () => goVerificationDetail(task.id));
 
         card.innerHTML = `
             <div class="row">
@@ -343,7 +346,6 @@ function renderVerification() {
             <div class="muted">关注点：${task.focus}</div>
             <div class="muted">核验截止：${task.due}</div>
             <div class="tags">${task.materials.map((m) => `<span class="tag">${m}</span>`).join('')}</div>
-            ${actions}
         `;
 
         list.appendChild(card);
@@ -398,6 +400,14 @@ function updateVerification(id, result) {
 
     renderVerification();
     renderPublish();
+}
+
+function goVerificationDetail(id) {
+    window.location.href = `verification.html?id=${id}`;
+}
+
+function goRectificationDetail(id) {
+    window.location.href = `rectification.html?id=${id}`;
 }
 
 function statusClass(status) {
