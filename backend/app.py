@@ -180,11 +180,13 @@ if __name__ == "__main__":
 ║           智慧服务平台后端服务已启动                        ║
 ╚══════════════════════════════════════════════════════════╝
 
-  移动端首页: http://localhost:{port}/
+  【新】移动端首页 (背景图 + AI助手):
+    http://localhost:{port}/frontend/mobile/home.html
+    └─ 点击AI助手图标 → AI住房助手
 
-  【新】AI住房助手 (移动端):
+  AI住房助手 (移动端):
     入口页面: http://localhost:{port}/frontend/mobile/pages/ai-assistant/index.html
-    └─ AI荐房: 智能房源推荐
+    └─ AI荐房: 智能房源推荐 (含用户画像详情页)
     └─ AI业委会: 智慧小区管理
     └─ AI中介: 房产交易服务
 
@@ -199,6 +201,9 @@ if __name__ == "__main__":
   智能客服:
     PC端: http://localhost:{port}/frontend/pc/pages/service/index.html
     移动端: http://localhost:{port}/frontend/mobile/pages/service/index.html
+
+  原移动端首页 (应用列表):
+    http://localhost:{port}/frontend/mobile/index.html
 
   健康检查: http://localhost:{port}/health
   API文档: http://localhost:{port}/docs

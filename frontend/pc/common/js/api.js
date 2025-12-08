@@ -1,5 +1,5 @@
-// API 基础配置
-const API_BASE_URL = 'http://localhost:8000/api';
+// API 基础配置 - 动态获取当前域名
+const API_BASE_URL = `${window.location.origin}/api`;
 
 // HTTP 请求封装
 class ApiClient {
