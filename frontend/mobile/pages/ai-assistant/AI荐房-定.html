@@ -75,6 +75,25 @@
             @keyframes spin {
                 to { transform: rotate(360deg); }
             }
+            /* 隐藏需要等待思考完成后才显示的内容 */
+            .wait-for-thinking {
+                display: none;
+                opacity: 0;
+                transform: translateY(-20px);
+                transition: opacity 0.5s ease, transform 0.5s ease;
+            }
+            .wait-for-thinking.show {
+                display: block;
+                opacity: 0;
+                transform: translateY(-20px);
+                animation: slideIn 0.5s ease forwards;
+            }
+            @keyframes slideIn {
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
         }
     </style>
 </head>
@@ -154,7 +173,7 @@
                 </div>
 
                 <!-- 各项画像数据卡片 -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-2 wait-for-thinking">
                     <!-- 区域偏好 -->
                     <div class="border border-gray-200 rounded-lg p-2 cursor-pointer hover:border-primary hover:shadow-md transition-all" onclick="window.location.href='pages/user-profile.html'">
                         <div class="flex justify-between items-center mb-1">
@@ -205,7 +224,7 @@
                 </div>
 
                 <!-- 查看完整画像按钮 -->
-                <div class="mt-3 text-center">
+                <div class="mt-3 text-center wait-for-thinking">
                     <button class="px-4 py-2 bg-white border border-primary text-primary text-xs rounded-full hover:bg-primary/5 transition" onclick="window.location.href='pages/user-profile.html'">
                         <i class="fa fa-user-circle mr-1"></i>查看完整用户画像
                     </button>
@@ -213,7 +232,7 @@
             </section>
 
             <!-- 推荐房源列表（常州安居客房源数据） -->
-            <section class="bg-white rounded-lg card-shadow p-4 mb-4">
+            <section class="bg-white rounded-lg card-shadow p-4 mb-4 wait-for-thinking">
                 <h2 class="text-base font-medium mb-3 flex items-center">
                     <i class="fa fa-home text-primary mr-2"></i>
                     AI推荐房源
@@ -355,16 +374,16 @@
                     </div>
                 </div>
 
-                
+
             </section>
 
-            <!-- 对话页面区域 -->
+            <!-- 对话页面区域 - 放在最后 -->
             <section class="bg-white rounded-lg card-shadow p-4 mb-4">
                 <h2 class="text-base font-medium mb-3 flex items-center">
                     <i class="fa fa-comments text-primary mr-2"></i>
                     AI助手对话
                 </h2>
-                
+
                 <!-- 对话内容区 -->
                 <div id="chat-container-recommend" class="h-64 overflow-y-auto scrollbar-hide border border-gray-200 rounded-lg p-3 mb-3 space-y-3">
                     <!-- AI消息 -->
@@ -374,7 +393,7 @@
                             您好！根据您的高端改善型购房画像，我为您推荐了国色风华（钟楼区）、翠礼峰天玺（天宁区）、桃花院子（新北区）这三个房源，均符合您140-300㎡、500-1200万预算、高端学区和地铁沿线的核心需求。
                         </div>
                     </div>
-                    
+
                     <!-- 用户消息 -->
                     <div class="flex items-start justify-end">
                         <div class="bg-primary/10 rounded-lg px-3 py-2 text-sm max-w-[80%]">
@@ -384,7 +403,7 @@
                             <i class="fa fa-user"></i>
                         </div>
                     </div>
-                    
+
                     <!-- AI消息 -->
                     <div class="flex items-start">
                         <div class="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center text-xs mr-2">AI</div>
@@ -393,7 +412,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <!-- 消息输入区 -->
                 <div class="flex gap-2">
                     <input type="text" id="chat-input-recommend" placeholder="请输入您的问题，比如：国色风华的物业费是多少？" class="flex-1 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-primary">
@@ -407,69 +426,141 @@
 
     <!-- 底部脚本 -->
     <script>
-        // 思考过程展开/收起切换
-        document.getElementById('toggle-thinking').addEventListener('click', function() {
-            const content = document.getElementById('thinking-content');
-            const icon = this.querySelector('i');
-            
-            if (content.classList.contains('hidden')) {
-                content.classList.remove('hidden');
-                icon.classList.remove('fa-chevron-down');
-                icon.classList.add('fa-chevron-up');
-                this.innerHTML = '<i class="fa fa-chevron-up mr-1"></i>收起思考';
-                
-                // 激活思考步骤动画
-                activateThinkingSteps();
-            } else {
-                content.classList.add('hidden');
-                icon.classList.remove('fa-chevron-up');
-                icon.classList.add('fa-chevron-down');
-                this.innerHTML = '<i class="fa fa-chevron-down mr-1"></i>展开思考';
+        const THINKING_STATE_KEY = 'ai-recommend-thinking-finished';
+        const SESSION_ID_KEY = 'ai-recommend-session-id';
+
+        // 页面加载完成后检查缓存状态
+        window.addEventListener('DOMContentLoaded', function() {
+            // 生成当前会话ID
+            const currentSessionId = Date.now() + '-' + Math.random();
+            const savedSessionId = sessionStorage.getItem(SESSION_ID_KEY);
+
+            // 检测刷新：使用performance API
+            const navigationEntries = performance.getEntriesByType('navigation');
+            const isPageRefresh = navigationEntries.length > 0 &&
+                                  navigationEntries[0].type === 'reload';
+
+            if (isPageRefresh) {
+                // 刷新浏览器时清除缓存并生成新会话ID
+                sessionStorage.removeItem(THINKING_STATE_KEY);
+                sessionStorage.setItem(SESSION_ID_KEY, currentSessionId);
+                console.log('页面刷新，清除缓存');
+            } else if (!savedSessionId) {
+                // 首次访问，设置会话ID
+                sessionStorage.setItem(SESSION_ID_KEY, currentSessionId);
             }
-        });
 
-        // 思考步骤动画激活
-        function activateThinkingSteps() {
-            const steps = document.querySelectorAll('.thinking-step');
-            steps.forEach((step, index) => {
-                setTimeout(() => {
-                    step.classList.add('active');
-                }, 300 * (index + 1));
-            });
-            
-            // 隐藏加载提示
-            setTimeout(() => {
-                document.getElementById('thinking-loading').style.display = 'none';
-            }, 2000);
-        }
-
-        // 页面加载完成后激活思考步骤
-        window.addEventListener('load', function() {
-            // 模拟进度条加载
-            const progressBar = document.getElementById('progress-bar');
-            const progressText = document.getElementById('progress-text');
-            
-            progressBar.style.width = '0%';
-            progressText.textContent = '0%';
-            
-            let progress = 0;
-            const progressInterval = setInterval(() => {
-                progress += 1;
-                progressBar.style.width = `${progress}%`;
-                progressText.textContent = `${progress}%`;
-                
-                if (progress >= 100) {
-                    clearInterval(progressInterval);
-                    // 激活思考步骤
-                    activateThinkingSteps();
-                }
-            }, 20);
+            const hasCompleted = sessionStorage.getItem(THINKING_STATE_KEY) === 'done';
+            if (hasCompleted && !isPageRefresh) {
+                // 从子页面返回，快速展示结果
+                fastForwardThinkingProcess();
+            } else {
+                // 首次加载或刷新，正常推理
+                startThinkingProcess();
+            }
 
             // 聊天发送按钮逻辑 - AI荐房
             document.getElementById('send-btn-recommend').addEventListener('click', sendRecommendMessage);
             document.getElementById('chat-input-recommend').addEventListener('keypress', function(e) {
                 if (e.key === 'Enter') sendRecommendMessage();
             });
+        });
+
+        // 开始AI推理过程（首次加载）
+        function startThinkingProcess() {
+            const progressBar = document.getElementById('progress-bar');
+            const progressText = document.getElementById('progress-text');
+
+            progressBar.style.width = '0%';
+            progressText.textContent = '0%';
+
+            let progress = 0;
+            const progressInterval = setInterval(() => {
+                progress += 1;
+                progressBar.style.width = `${progress}%`;
+                progressText.textContent = `${progress}%`;
+
+                if (progress >= 100) {
+                    clearInterval(progressInterval);
+                    // 激活思考步骤
+                    activateThinkingSteps(true);
+                }
+            }, 20);
+        }
+
+        // 快速前进（从子页面返回）
+        function fastForwardThinkingProcess() {
+            const progressBar = document.getElementById('progress-bar');
+            const progressText = document.getElementById('progress-text');
+            const steps = document.querySelectorAll('.thinking-step');
+
+            // 直接设置进度条为100%
+            progressBar.style.width = '100%';
+            progressText.textContent = '100%';
+
+            // 直接激活所有思考步骤
+            steps.forEach(step => step.classList.add('active'));
+
+            // 隐藏加载提示
+            document.getElementById('thinking-loading').style.display = 'none';
+
+            // 立即显示其他内容
+            const waitElements = document.querySelectorAll('.wait-for-thinking');
+            waitElements.forEach(el => {
+                el.classList.add('show');
+            });
+        }
+
+        // 思考步骤动画激活
+        function activateThinkingSteps(saveState = false) {
+            const steps = document.querySelectorAll('.thinking-step');
+            steps.forEach((step, index) => {
+                setTimeout(() => {
+                    step.classList.add('active');
+                }, 300 * (index + 1));
+            });
+
+            // 隐藏加载提示
+            setTimeout(() => {
+                document.getElementById('thinking-loading').style.display = 'none';
+            }, 2000);
+
+            // 思考完成后显示其他内容
+            setTimeout(() => {
+                const waitElements = document.querySelectorAll('.wait-for-thinking');
+                waitElements.forEach(el => {
+                    el.classList.add('show');
+                });
+
+                // 保存状态到sessionStorage
+                if (saveState) {
+                    sessionStorage.setItem(THINKING_STATE_KEY, 'done');
+                }
+            }, 2500); // 思考步骤全部显示后延迟500ms再显示其他内容
+        }
+
+        // 思考过程展开/收起切换
+        document.getElementById('toggle-thinking').addEventListener('click', function() {
+            const content = document.getElementById('thinking-content');
+            const icon = this.querySelector('i');
+
+            if (content.classList.contains('hidden')) {
+                content.classList.remove('hidden');
+                icon.classList.remove('fa-chevron-down');
+                icon.classList.add('fa-chevron-up');
+                this.innerHTML = '<i class="fa fa-chevron-up mr-1"></i>收起思考';
+
+                // 如果还没有完成推理，重新播放动画
+                const loadingElement = document.getElementById('thinking-loading');
+                if (loadingElement.style.display !== 'none') {
+                    activateThinkingSteps(false);
+                }
+            } else {
+                content.classList.add('hidden');
+                icon.classList.remove('fa-chevron-up');
+                icon.classList.add('fa-chevron-down');
+                this.innerHTML = '<i class="fa fa-chevron-down mr-1"></i>展开思考';
+            }
         });
 
         // 发送AI荐房消息

@@ -228,13 +228,13 @@
                                     <img src="https://img2-build.jiwu.com/album/manual/2025/07/09/141142450286.jpg/jiwu$800x600" alt="星河国际三期 实景" class="w-full h-full object-cover">
                                 </div>
                                 <div class="w-full md:w-2/3">
-                                    <div class="flex justify-between items-start mb-2">
-                                        <h4 class="font-medium text-sm">星河国际三期 118㎡ 三居室</h4>
-                                        <span class="match-tag match-tag-success">
+                                    <div class="flex justify-end mb-2">
+                                        <span class="match-tag match-tag-success whitespace-nowrap">
                                             <i class="fa fa-star mr-1"></i>AI匹配度 96%
                                         </span>
                                     </div>
-                                    
+                                    <h4 class="font-medium text-sm mb-2">星河国际三期 118㎡ 三居室</h4>
+
                                     <div class="text-xs text-light mb-3 flex flex-wrap gap-2">
                                         <span><i class="fa fa-map-marker mr-1"></i>武进区湖塘街道</span>
                                         <span><i class="fa fa-rmb mr-1"></i>挂牌价：192万</span>
@@ -302,13 +302,13 @@
                                     <img src="https://p9.itc.cn/q_70/images01/20231012/ce912d35e8164e26819d0c08969e1d5a.png" alt="世茂香槟湖 实景" class="w-full h-full object-cover">
                                 </div>
                                 <div class="w-full md:w-2/3">
-                                    <div class="flex justify-between items-start mb-2">
-                                        <h4 class="font-medium text-sm">世茂香槟湖二期 105㎡ 三居室</h4>
-                                        <span class="match-tag match-tag-primary">
+                                    <div class="flex justify-end mb-2">
+                                        <span class="match-tag match-tag-primary whitespace-nowrap">
                                             <i class="fa fa-star-half-o mr-1"></i>AI匹配度 91%
                                         </span>
                                     </div>
-                                    
+                                    <h4 class="font-medium text-sm mb-2">世茂香槟湖二期 105㎡ 三居室</h4>
+
                                     <div class="text-xs text-light mb-3 flex flex-wrap gap-2">
                                         <span><i class="fa fa-map-marker mr-1"></i>新北区太湖东路</span>
                                         <span><i class="fa fa-rmb mr-1"></i>挂牌价：185万</span>
@@ -406,11 +406,31 @@
 
     <script>
         const THINKING_STATE_KEY = 'ai-agent-thinking-finished';
+        const SESSION_ID_KEY = 'ai-agent-session-id';
 
         // 页面加载完成后自动执行AI推理过程
         window.addEventListener('DOMContentLoaded', function() {
+            // 生成当前会话ID
+            const currentSessionId = Date.now() + '-' + Math.random();
+            const savedSessionId = sessionStorage.getItem(SESSION_ID_KEY);
+
+            // 检测刷新：使用performance API
+            const navigationEntries = performance.getEntriesByType('navigation');
+            const isPageRefresh = navigationEntries.length > 0 &&
+                                  navigationEntries[0].type === 'reload';
+
+            if (isPageRefresh) {
+                // 刷新浏览器时清除缓存并生成新会话ID
+                sessionStorage.removeItem(THINKING_STATE_KEY);
+                sessionStorage.setItem(SESSION_ID_KEY, currentSessionId);
+                console.log('页面刷新，清除缓存');
+            } else if (!savedSessionId) {
+                // 首次访问，设置会话ID
+                sessionStorage.setItem(SESSION_ID_KEY, currentSessionId);
+            }
+
             const hasCompleted = sessionStorage.getItem(THINKING_STATE_KEY) === 'done';
-            if (hasCompleted) {
+            if (hasCompleted && !isPageRefresh) {
                 fastForwardThinkingProcess();
             } else {
                 startThinkingProcess();
@@ -599,12 +619,12 @@
                             <img src="${listing.cover}" alt="${listing.displayName}" class="w-full h-full object-cover">
                         </div>
                         <div class="w-full md:w-2/3 p-3">
-                            <div class="flex justify-between items-start mb-2">
-                                <h4 class="font-medium text-sm">${listing.displayName}</h4>
-                                <span class="match-tag ${matchClass}">
+                            <div class="flex justify-end mb-2">
+                                <span class="match-tag ${matchClass} whitespace-nowrap">
                                     <i class="fa fa-star mr-1"></i>AI匹配度 ${listing.matchRate || '--'}%
                                 </span>
                             </div>
+                            <h4 class="font-medium text-sm mb-2">${listing.displayName}</h4>
                             <div class="text-xs text-light mb-3 flex flex-wrap gap-2">
                                 ${district}
                                 ${price}

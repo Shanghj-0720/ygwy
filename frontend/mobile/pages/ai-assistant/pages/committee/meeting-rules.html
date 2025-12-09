@@ -88,7 +88,7 @@
 
             <div class="space-y-3">
                 <!-- 模板1 -->
-                <div class="template-card border border-border rounded-lg p-3 hover:border-primary/50 hover:shadow-md" onclick="viewTemplate(1)">
+                <div class="template-card border border-border rounded-lg p-3 hover:border-primary/50 hover:shadow-md cursor-pointer" onclick="viewTemplate(1)">
                     <div class="flex items-start justify-between mb-2">
                         <div class="flex-1">
                             <div class="flex items-center gap-2 mb-1">
@@ -108,7 +108,7 @@
                 </div>
 
                 <!-- 模板2 -->
-                <div class="template-card border border-border rounded-lg p-3 hover:border-primary/50 hover:shadow-md" onclick="viewTemplate(2)">
+                <div class="template-card border border-border rounded-lg p-3 hover:border-primary/50 hover:shadow-md cursor-pointer" onclick="viewTemplate(2)">
                     <div class="flex items-start justify-between mb-2">
                         <div class="flex-1">
                             <div class="flex items-center gap-2 mb-1">
@@ -127,7 +127,7 @@
                 </div>
 
                 <!-- 模板3 -->
-                <div class="template-card border border-border rounded-lg p-3 hover:border-primary/50 hover:shadow-md" onclick="viewTemplate(3)">
+                <div class="template-card border border-border rounded-lg p-3 hover:border-primary/50 hover:shadow-md cursor-pointer" onclick="viewTemplate(3)">
                     <div class="flex items-start justify-between mb-2">
                         <div class="flex-1">
                             <div class="flex items-center gap-2 mb-1">
@@ -241,6 +241,12 @@
     </div>
 
     <script>
+        // 测试函数是否加载
+        window.addEventListener('DOMContentLoaded', function() {
+            console.log('页面加载完成');
+            console.log('viewTemplate函数存在:', typeof viewTemplate);
+        });
+
         function showAIGenerate() {
             const modal = document.createElement('div');
             modal.className = 'fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4';
@@ -315,36 +321,82 @@
         }
 
         function viewTemplate(id) {
-            document.querySelectorAll('.fixed').forEach(el => el.remove());
+            console.log('viewTemplate called with id:', id);
+            // 先关闭其他可能打开的弹窗（但不包括template-modal）
+            document.querySelectorAll('.fixed:not(#template-modal)').forEach(el => el.remove());
 
-            const templateData = {
-                title: '业主大会议事规则（2024版）',
-                chapters: [
-                    '第一章 总则',
-                    '第二章 业主大会的召集',
-                    '第三章 业主大会的表决',
-                    '第四章 业主委员会的产生',
-                    '第五章 业主委员会的职责',
-                    '第六章 物业服务合同',
-                    '第七章 维修资金的使用',
-                    '第八章 附则'
-                ]
+            const templates = {
+                1: {
+                    title: '业主大会议事规则（2024版）',
+                    type: '标准版',
+                    description: '本规则依据《中华人民共和国民法典》《物业管理条例》等法律法规制定，用于规范业主大会的召集、表决等事项。',
+                    chapters: [
+                        { title: '第一章 总则', articles: 6 },
+                        { title: '第二章 业主大会的召集', articles: 8 },
+                        { title: '第三章 业主大会的表决', articles: 10 },
+                        { title: '第四章 业主委员会的产生', articles: 7 },
+                        { title: '第五章 业主委员会的职责', articles: 9 },
+                        { title: '第六章 物业服务合同', articles: 5 },
+                        { title: '第七章 维修资金的使用', articles: 6 },
+                        { title: '第八章 附则', articles: 4 }
+                    ]
+                },
+                2: {
+                    title: '业主大会议事规则（简化版）',
+                    type: '简化版',
+                    description: '适合小型小区使用，简化流程，保留核心条款，便于快速实施。',
+                    chapters: [
+                        { title: '第一章 总则', articles: 4 },
+                        { title: '第二章 业主大会召集与表决', articles: 6 },
+                        { title: '第三章 业主委员会', articles: 5 },
+                        { title: '第四章 物业管理', articles: 4 },
+                        { title: '第五章 附则', articles: 3 }
+                    ]
+                },
+                3: {
+                    title: '业主大会议事规则（详尽版）',
+                    type: '专业版',
+                    description: '适合大型小区，条款详尽，涵盖各种特殊情况处理，确保管理规范。',
+                    chapters: [
+                        { title: '第一章 总则', articles: 8 },
+                        { title: '第二章 业主与业主大会', articles: 10 },
+                        { title: '第三章 业主大会的筹备', articles: 9 },
+                        { title: '第四章 业主大会的召集', articles: 12 },
+                        { title: '第五章 业主大会的表决', articles: 14 },
+                        { title: '第六章 业主委员会的产生', articles: 11 },
+                        { title: '第七章 业主委员会的职责', articles: 13 },
+                        { title: '第八章 业主委员会的监督', articles: 8 },
+                        { title: '第九章 物业服务合同', articles: 10 },
+                        { title: '第十章 维修资金管理', articles: 9 },
+                        { title: '第十一章 争议处理', articles: 7 },
+                        { title: '第十二章 附则', articles: 5 }
+                    ]
+                }
             };
+
+            const templateData = templates[id] || templates[1];
 
             const content = `
                 <div class="mb-4">
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="text-xs bg-primary/10 text-primary px-2 py-1 rounded-full font-medium">${templateData.type}</span>
+                        <span class="text-xs text-light">${templateData.chapters.length}个章节</span>
+                    </div>
                     <h3 class="text-base font-bold text-dark mb-3">${templateData.title}</h3>
                     <div class="bg-neutral-light rounded-lg p-3 mb-4">
-                        <p class="text-xs text-light">本规则依据《中华人民共和国民法典》《物业管理条例》等法律法规制定，用于规范业主大会的召集、表决等事项。</p>
+                        <p class="text-xs text-light">${templateData.description}</p>
                     </div>
 
                     <div class="mb-4">
                         <p class="text-sm font-medium text-dark mb-2">目录</p>
                         <div class="space-y-2">
                             ${templateData.chapters.map((chapter, index) => `
-                                <div class="chapter-item border border-border rounded-lg p-3 hover:border-primary/30">
+                                <div class="chapter-item border border-border rounded-lg p-3 hover:border-primary/30" onclick="viewChapter(${id}, ${index})">
                                     <div class="flex items-center justify-between">
-                                        <span class="text-sm text-dark">${chapter}</span>
+                                        <div class="flex-1">
+                                            <span class="text-sm text-dark block">${chapter.title}</span>
+                                            <span class="text-xs text-light">共 ${chapter.articles} 条</span>
+                                        </div>
                                         <i class="fa fa-angle-right text-light"></i>
                                     </div>
                                 </div>
@@ -367,37 +419,308 @@
             document.getElementById('template-modal').classList.remove('hidden');
         }
 
+        function viewChapter(templateId, chapterIndex) {
+            const chapterContents = {
+                '1-0': {
+                    title: '第一章 总则',
+                    articles: [
+                        { num: 1, content: '为规范业主大会、业主委员会的活动，维护业主的合法权益，根据《中华人民共和国民法典》《物业管理条例》等法律法规，结合本物业管理区域的实际情况，制定本规则。' },
+                        { num: 2, content: '本规则适用于本物业管理区域内的业主大会、业主委员会及全体业主。' },
+                        { num: 3, content: '业主大会是由物业管理区域内全体业主组成，代表和维护全体业主在物业管理活动中的合法权益。' },
+                        { num: 4, content: '业主委员会是业主大会的执行机构，由业主大会选举产生，向业主大会负责。' },
+                        { num: 5, content: '业主大会、业主委员会应当依法履行职责，不得作出与物业管理无关的决定，不得从事与物业管理无关的活动。' },
+                        { num: 6, content: '业主参加业主大会会议，可以书面委托代理人参加。' }
+                    ]
+                },
+                '1-1': {
+                    title: '第二章 业主大会的召集',
+                    articles: [
+                        { num: 7, content: '业主大会会议分为定期会议和临时会议。' },
+                        { num: 8, content: '业主大会定期会议应当按照业主大会议事规则的规定召开。经20%以上的业主提议，业主委员会应当组织召开业主大会临时会议。' },
+                        { num: 9, content: '发生下列情况之一的，业主委员会应当及时组织召开业主大会会议：(一)需要改建、重建建筑物及其附属设施的；(二)需要筹集和使用建筑物及其附属设施的维修资金的；(三)需要选聘和解聘物业服务企业的。' },
+                        { num: 10, content: '召开业主大会会议，应当于会议召开15日前通知全体业主。' },
+                        { num: 11, content: '业主大会会议通知应当包括会议时间、地点、方式、议题等内容。' },
+                        { num: 12, content: '业主大会会议可以采用集体讨论的形式，也可以采用书面征求意见的形式。' },
+                        { num: 13, content: '业主委员会应当做好业主大会会议记录，妥善保管会议资料。' },
+                        { num: 14, content: '业主大会会议记录应当包括会议时间、地点、出席人数、议题、表决结果等内容。' }
+                    ]
+                },
+                '2-0': {
+                    title: '第一章 总则',
+                    articles: [
+                        { num: 1, content: '为规范业主大会活动，维护业主合法权益，根据相关法律法规制定本规则。' },
+                        { num: 2, content: '本规则适用于本物业管理区域内的业主大会及业主委员会。' },
+                        { num: 3, content: '业主大会由全体业主组成，代表业主共同利益。' },
+                        { num: 4, content: '业主委员会是业主大会执行机构，由业主大会选举产生。' }
+                    ]
+                }
+            };
+
+            const key = `${templateId}-${chapterIndex}`;
+            const chapterData = chapterContents[key] || chapterContents['1-0'];
+
+            const modal = document.createElement('div');
+            modal.className = 'fixed inset-0 bg-black/50 z-[60]';
+            modal.innerHTML = `
+                <div class="absolute inset-x-0 bottom-0 bg-white rounded-t-2xl max-h-[85vh] overflow-y-auto">
+                    <div class="sticky top-0 bg-white border-b border-border p-4 flex items-center justify-between z-10">
+                        <button onclick="this.closest('.fixed').remove()" class="w-8 h-8 flex items-center justify-center text-dark">
+                            <i class="fa fa-arrow-left text-lg"></i>
+                        </button>
+                        <h3 class="text-base font-bold text-dark">${chapterData.title}</h3>
+                        <div class="w-8"></div>
+                    </div>
+
+                    <div class="p-4">
+                        <div class="bg-primary/5 border border-primary/20 rounded-lg p-3 mb-4">
+                            <p class="text-xs text-primary">
+                                <i class="fa fa-info-circle mr-1"></i>
+                                本章共 ${chapterData.articles.length} 条款
+                            </p>
+                        </div>
+
+                        <div class="space-y-3">
+                            ${chapterData.articles.map(article => `
+                                <div class="bg-white border border-border rounded-lg p-4">
+                                    <div class="flex items-start gap-3">
+                                        <div class="flex-shrink-0 w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center">
+                                            <span class="text-xs font-bold text-primary">${article.num}</span>
+                                        </div>
+                                        <div class="flex-1">
+                                            <p class="text-sm text-dark leading-relaxed">${article.content}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+
+                        <div class="mt-4 pt-4 border-t border-border">
+                            <button onclick="this.closest('.fixed').remove()" class="w-full bg-primary text-white py-2.5 rounded-lg">
+                                返回目录
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+
         function closeTemplateModal() {
             document.getElementById('template-modal').classList.add('hidden');
         }
 
         function useTemplate() {
             closeTemplateModal();
-            alert('模板已加载，可以开始编辑');
+            // 显示成功提示
+            const toast = document.createElement('div');
+            toast.className = 'fixed top-20 left-1/2 -translate-x-1/2 bg-success text-white px-6 py-3 rounded-lg shadow-lg z-50 text-sm';
+            toast.innerHTML = '<i class="fa fa-check-circle mr-2"></i>模板已加载，可以开始编辑';
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 2000);
         }
 
         function viewRule(id) {
-            alert('查看规则详情 - ID: ' + id);
+            // 查看规则详情
+            const modal = document.createElement('div');
+            modal.className = 'fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4';
+            modal.innerHTML = `
+                <div class="bg-white rounded-xl p-6 max-w-lg w-full max-h-[80vh] overflow-y-auto">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-bold text-dark">规则详情</h3>
+                        <button onclick="this.closest('.fixed').remove()" class="w-8 h-8 flex items-center justify-center text-light hover:text-dark">
+                            <i class="fa fa-times text-xl"></i>
+                        </button>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="bg-neutral-light rounded-lg p-4">
+                            <p class="text-sm font-medium text-dark mb-2">规则名称</p>
+                            <p class="text-sm text-light">常州市XX小区业主大会议事规则</p>
+                        </div>
+                        <div class="bg-neutral-light rounded-lg p-4">
+                            <p class="text-sm font-medium text-dark mb-2">制定时间</p>
+                            <p class="text-sm text-light">2024-03-15</p>
+                        </div>
+                        <div class="bg-neutral-light rounded-lg p-4">
+                            <p class="text-sm font-medium text-dark mb-2">生效时间</p>
+                            <p class="text-sm text-light">2024-04-01</p>
+                        </div>
+                        <div class="bg-neutral-light rounded-lg p-4">
+                            <p class="text-sm font-medium text-dark mb-2">规则状态</p>
+                            <span class="text-xs bg-success/10 text-success px-2 py-1 rounded-full">
+                                <i class="fa fa-check-circle"></i> 已生效
+                            </span>
+                        </div>
+                    </div>
+                    <button onclick="this.closest('.fixed').remove()" class="w-full mt-4 bg-primary text-white py-2.5 rounded-lg">
+                        关闭
+                    </button>
+                </div>
+            `;
+            document.body.appendChild(modal);
         }
 
         function downloadRule(id) {
-            alert('下载规则文档 - ID: ' + id);
+            // 下载规则文档
+            const toast = document.createElement('div');
+            toast.className = 'fixed top-20 left-1/2 -translate-x-1/2 bg-primary text-white px-6 py-3 rounded-lg shadow-lg z-50 text-sm';
+            toast.innerHTML = '<i class="fa fa-download mr-2"></i>正在准备下载文档...';
+            document.body.appendChild(toast);
+            setTimeout(() => {
+                toast.innerHTML = '<i class="fa fa-check-circle mr-2"></i>下载完成';
+                setTimeout(() => toast.remove(), 1500);
+            }, 1500);
         }
 
         function editRule(id) {
-            alert('修订规则 - ID: ' + id);
+            // 修订规则
+            const modal = document.createElement('div');
+            modal.className = 'fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4';
+            modal.innerHTML = `
+                <div class="bg-white rounded-xl p-6 max-w-sm w-full">
+                    <div class="text-center mb-4">
+                        <div class="w-16 h-16 bg-warning/10 rounded-full flex items-center justify-center mx-auto mb-3">
+                            <i class="fa fa-edit text-warning text-2xl"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-dark mb-2">修订议事规则</h3>
+                        <p class="text-sm text-light">修订规则需要业主大会表决通过</p>
+                    </div>
+                    <div class="space-y-2 mb-4">
+                        <button onclick="this.closest('.fixed').remove(); showEditConfirm();" class="w-full bg-primary text-white rounded-lg p-3 hover:bg-primary-dark transition-all">
+                            <p class="text-sm font-medium">进入编辑模式</p>
+                        </button>
+                        <button onclick="this.closest('.fixed').remove();" class="w-full border border-border text-dark rounded-lg p-3 hover:bg-neutral transition-all">
+                            <p class="text-sm font-medium">取消</p>
+                        </button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+
+        function showEditConfirm() {
+            const toast = document.createElement('div');
+            toast.className = 'fixed top-20 left-1/2 -translate-x-1/2 bg-success text-white px-6 py-3 rounded-lg shadow-lg z-50 text-sm';
+            toast.innerHTML = '<i class="fa fa-check-circle mr-2"></i>已进入编辑模式';
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 2000);
         }
 
         function publicizeRule(id) {
-            alert('开始公示规则 - ID: ' + id);
+            // 开始公示规则
+            const modal = document.createElement('div');
+            modal.className = 'fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4';
+            modal.innerHTML = `
+                <div class="bg-white rounded-xl p-6 max-w-sm w-full">
+                    <div class="text-center mb-4">
+                        <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-3">
+                            <i class="fa fa-bullhorn text-primary text-2xl"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-dark mb-2">开始公示</h3>
+                        <p class="text-sm text-light">公示期为15天，期间业主可提出意见</p>
+                    </div>
+                    <div class="bg-neutral-light rounded-lg p-3 mb-4">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-xs text-light">公示开始时间</span>
+                            <span class="text-xs text-dark font-medium">2025-12-09</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-xs text-light">公示结束时间</span>
+                            <span class="text-xs text-dark font-medium">2025-12-24</span>
+                        </div>
+                    </div>
+                    <div class="flex gap-2">
+                        <button onclick="this.closest('.fixed').remove();" class="flex-1 border border-border text-dark py-2.5 rounded-lg hover:bg-neutral">
+                            取消
+                        </button>
+                        <button onclick="confirmPublicize()" class="flex-1 bg-primary text-white py-2.5 rounded-lg hover:bg-primary-dark">
+                            确认公示
+                        </button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+
+        function confirmPublicize() {
+            document.querySelector('.fixed.flex').remove();
+            const toast = document.createElement('div');
+            toast.className = 'fixed top-20 left-1/2 -translate-x-1/2 bg-success text-white px-6 py-3 rounded-lg shadow-lg z-50 text-sm';
+            toast.innerHTML = '<i class="fa fa-check-circle mr-2"></i>已开始公示，业主可在公告栏查看';
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 2500);
         }
 
         function createFromScratch() {
-            alert('跳转到自定义编辑页面');
+            // 跳转到自定义编辑页面
+            const modal = document.createElement('div');
+            modal.className = 'fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4';
+            modal.innerHTML = `
+                <div class="bg-white rounded-xl p-6 max-w-sm w-full">
+                    <div class="text-center mb-4">
+                        <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-3">
+                            <i class="fa fa-edit text-primary text-2xl"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-dark mb-2">自定义制定规则</h3>
+                        <p class="text-sm text-light">从空白文档开始编写议事规则</p>
+                    </div>
+                    <div class="bg-neutral-light rounded-lg p-3 mb-4">
+                        <p class="text-xs text-light">
+                            <i class="fa fa-info-circle text-primary mr-1"></i>
+                            建议参考《物业管理条例》等相关法律法规，确保规则的合法性和完整性
+                        </p>
+                    </div>
+                    <div class="flex gap-2">
+                        <button onclick="this.closest('.fixed').remove();" class="flex-1 border border-border text-dark py-2.5 rounded-lg hover:bg-neutral">
+                            取消
+                        </button>
+                        <button onclick="startCustomEdit()" class="flex-1 bg-primary text-white py-2.5 rounded-lg hover:bg-primary-dark">
+                            开始编辑
+                        </button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+
+        function startCustomEdit() {
+            document.querySelector('.fixed.flex').remove();
+            const toast = document.createElement('div');
+            toast.className = 'fixed top-20 left-1/2 -translate-x-1/2 bg-success text-white px-6 py-3 rounded-lg shadow-lg z-50 text-sm';
+            toast.innerHTML = '<i class="fa fa-check-circle mr-2"></i>已创建新文档';
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 2000);
         }
 
         function importRule() {
-            alert('打开文件上传对话框');
+            // 打开文件上传对话框
+            const modal = document.createElement('div');
+            modal.className = 'fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4';
+            modal.innerHTML = `
+                <div class="bg-white rounded-xl p-6 max-w-sm w-full">
+                    <div class="text-center mb-4">
+                        <div class="w-16 h-16 bg-success/10 rounded-full flex items-center justify-center mx-auto mb-3">
+                            <i class="fa fa-upload text-success text-2xl"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-dark mb-2">导入规则文档</h3>
+                        <p class="text-sm text-light">支持 Word、PDF 格式文档</p>
+                    </div>
+                    <div class="border-2 border-dashed border-border rounded-lg p-6 mb-4 text-center hover:border-primary transition-all cursor-pointer">
+                        <i class="fa fa-cloud-upload text-light text-3xl mb-2"></i>
+                        <p class="text-sm text-dark mb-1">点击选择文件</p>
+                        <p class="text-xs text-light">或拖拽文件到此处</p>
+                    </div>
+                    <div class="bg-neutral-light rounded-lg p-3 mb-4">
+                        <p class="text-xs text-light">
+                            <i class="fa fa-info-circle text-primary mr-1"></i>
+                            上传后系统会自动解析文档内容，您可以进一步编辑
+                        </p>
+                    </div>
+                    <button onclick="this.closest('.fixed').remove();" class="w-full border border-border text-dark py-2.5 rounded-lg hover:bg-neutral">
+                        取消
+                    </button>
+                </div>
+            `;
+            document.body.appendChild(modal);
         }
     </script>
 </body>
