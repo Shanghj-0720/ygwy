@@ -5,7 +5,8 @@
       "Skill(frontend-design)",
       "Bash(mkdir:*)",
       "Bash(cp:*)",
-      "Bash(tree:*)"
+      "Bash(tree:*)",
+      "WebFetch(domain:cdn.jsdelivr.net)"
     ],
     "deny": [],
     "ask": []

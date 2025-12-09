@@ -52,6 +52,7 @@
                     }
                 }
             }
+        }
     </script>
     <style type="text/tailwindcss">
         @layer utilities {
@@ -262,7 +263,7 @@
             <div class="flex items-center justify-between mb-6 md:mb-8 pb-4 border-b border-border">
                 <div class="flex items-center gap-3">
                     <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-                        <i class="fa fa-users text-primary"></i>
+                        <i class="fa fa-users text-primary text-lg"></i>
                     </div>
                     <div>
                         <h2 class="text-lg md:text-xl font-bold text-primary">AI业委会 · 智慧小区管理助手</h2>
@@ -296,7 +297,7 @@
                                 <p class="text-xs text-light font-medium">物业服务费</p>
                                 <i class="fa fa-rmb text-primary/70 text-xs"></i>
                             </div>
-                            <p class="text-lg md:text-xl font-bold text-primary">¥ <span id="home-fee-value" style="display: inline-block; min-width: 2em;">2.6</span><span class="text-sm font-medium text-primary/80">元/平</span></p>
+                            <p class="text-lg md:text-xl font-bold text-primary">¥ <span id="home-fee-value" style="display: inline-block; min-width: 2em;">2.6</span><span class="text-sm font-medium text-primary/70">元/平</span></p>
                             <div class="progress-bar mt-2">
                                 <div id="home-fee-progress" class="progress-fill transition-all duration-700" style="width: 85%"></div>
                             </div>
@@ -309,7 +310,7 @@
                                 <p class="text-xs text-light font-medium">公共收益</p>
                                 <i class="fa fa-line-chart text-success/70 text-xs"></i>
                             </div>
-                            <p class="text-lg md:text-xl font-bold text-dark">¥ <span id="home-income-value" style="display: inline-block; min-width: 2em;">58</span><span class="text-sm font-medium text-dark/80">万</span></p>
+                            <p class="text-lg md:text-xl font-bold text-success">¥ <span id="home-income-value" style="display: inline-block; min-width: 2em;">58</span><span class="text-sm font-medium text-success/70">万</span></p>
                             <div class="progress-bar mt-2">
                                 <div id="home-income-progress" class="progress-fill transition-all duration-700" style="width: 72%; background: linear-gradient(90deg, #00B96B 0%, #00A05A 100%)"></div>
                             </div>
@@ -322,7 +323,7 @@
                                 <p class="text-xs text-light font-medium">业主满意度</p>
                                 <i class="fa fa-smile-o text-warning/70 text-xs"></i>
                             </div>
-                            <p class="text-lg md:text-xl font-bold text-success"><span id="home-satisfaction-value" style="display: inline-block; min-width: 2em;">89</span><span class="text-sm font-medium text-success/80">%</span></p>
+                            <p class="text-lg md:text-xl font-bold text-warning"><span id="home-satisfaction-value" style="display: inline-block; min-width: 2em;">89</span><span class="text-sm font-medium text-warning/70">%</span></p>
                             <div class="progress-bar mt-2">
                                 <div id="home-satisfaction-progress" class="progress-fill transition-all duration-700" style="width: 89%; background: linear-gradient(90deg, #FF7D00 0%, #FFA940 100%)"></div>
                             </div>
@@ -335,7 +336,7 @@
                                 <p class="text-xs text-light font-medium">电梯维护资金</p>
                                 <i class="fa fa-arrow-up text-purple/70 text-xs"></i>
                             </div>
-                            <p class="text-lg md:text-xl font-bold text-purple">¥ <span id="home-elevator-value" style="display: inline-block; min-width: 2.5em;">15.8</span><span class="text-sm font-medium text-purple/80">万</span></p>
+                            <p class="text-lg md:text-xl font-bold text-purple">¥ <span id="home-elevator-value" style="display: inline-block; min-width: 2.5em;">15.8</span><span class="text-sm font-medium text-purple/70">万</span></p>
                             <div class="progress-bar mt-2">
                                 <div id="home-elevator-progress" class="progress-fill transition-all duration-700" style="width: 65%; background: linear-gradient(90deg, #8B5CF6 0%, #A78BFA 100%)"></div>
                             </div>
@@ -523,7 +524,7 @@
                         
                         <div class="flex gap-2 md:gap-3">
                             <div class="flex-1">
-                                <input type="text" placeholder="请输入您的问题..." class="w-full border border-border rounded-lg px-3 md:px-4 py-2 md:py-3 text-xs md:text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all duration-300">
+                                <input type="text" id="chat-input-committee" placeholder="请输入您的问题..." class="w-full border border-border rounded-lg px-3 md:px-4 py-2 md:py-3 text-xs md:text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all duration-300">
                             </div>
                             <button id="send-btn" class="w-10 h-10 md:w-12 md:h-12 rounded-lg bg-primary text-white flex items-center justify-center hover:bg-primary-dark transition-all duration-300 shadow-btn">
                                 <i class="fa fa-paper-plane text-sm md:text-base"></i>
@@ -556,7 +557,7 @@
         // 页面加载完成后执行
         document.addEventListener('DOMContentLoaded', function() {
             // AI业委会聊天框输入功能
-            const chatInput = document.querySelector('input[placeholder="请输入您的问题..."]');
+            const chatInput = document.getElementById('chat-input-committee');
             const sendBtn = document.getElementById('send-btn');
             const chatContainer = document.getElementById('chat-container-committee');
 
@@ -771,6 +772,6 @@
             setInterval(updateHomeData, 2000);
         });
     </script>
-    
+
 </body>
 </html>
